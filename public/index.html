@@ -480,6 +480,22 @@
         </div>
     </div>
 
+    <div class="analytics-row analytics-row-full">
+        <div class="analytics-panel">
+            <div class="analytics-panel-header">
+                <h2>Taxa de Conversão & Perda por Mês</h2>
+                <span class="panel-badge" id="conversion-client-badge">todos</span>
+            </div>
+            <div class="chart-wrapper">
+                <div class="bar-chart" id="conversion-chart"></div>
+                <div class="chart-legend">
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Taxa de Conversão</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--primary)"></div> Taxa de Perda</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="analytics-row">
         <div class="analytics-panel">
             <div class="analytics-panel-header">
@@ -502,22 +518,6 @@
             </div>
             <div class="loss-scroll-wrapper" id="loss-reasons-container">
                 <p class="no-data-msg">Carregando dados...</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="analytics-row analytics-row-full">
-        <div class="analytics-panel">
-            <div class="analytics-panel-header">
-                <h2>Taxa de Conversão & Perda por Mês</h2>
-                <span class="panel-badge" id="conversion-client-badge">todos</span>
-            </div>
-            <div class="chart-wrapper">
-                <div class="bar-chart" id="conversion-chart"></div>
-                <div class="chart-legend">
-                    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Taxa de Conversão</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:var(--primary)"></div> Taxa de Perda</div>
-                </div>
             </div>
         </div>
     </div>
@@ -581,9 +581,6 @@
         const dados = getDadosFiltrados();
         renderDashboard(dados);
         atualizarPipelinesDoClienteSelecionado();
-        renderMonthlyChart(dados);
-        renderLossReasons(dados);
-        renderConversionChart(dados);
     }
 
     const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -769,8 +766,7 @@
             container.appendChild(group);
         });
 
-        const clienteId = document.getElementById('client-selector').value;
-        document.getElementById('chart-client-badge').innerText = clienteId === 'todos' ? 'todos' : (clientesReais[0]?.name || 'cliente');
+        document.getElementById('chart-client-badge').innerText = clientesReais[0]?.name || 'todos';
     }
 
     // ─── LOSS REASONS ───
@@ -790,8 +786,7 @@
         });
         html += `<tr class="loss-total-row"><td><div class="loss-name-cell"><div class="loss-name" style="color:var(--text-muted);text-transform:uppercase;font-size:11px;letter-spacing:1px;">Total</div></div></td><td class="loss-count-cell"><span class="loss-count" style="color:var(--text-main);font-size:16px;">${total.toLocaleString('pt-BR')}</span></td><td class="loss-percent-cell"><span class="loss-percent-value" style="color:var(--text-muted);">100%</span></td></tr></tbody></table>`;
         container.innerHTML = html;
-        const clienteId = document.getElementById('client-selector').value;
-        document.getElementById('loss-client-badge').innerText = clienteId === 'todos' ? 'todos' : (clientesReais[0]?.name || 'cliente');
+        document.getElementById('loss-client-badge').innerText = clientesReais[0]?.name || 'todos';
     }
 
     // ─── CONVERSION RATE CHART ───
@@ -852,11 +847,26 @@
             container.appendChild(group);
         });
 
-        const clienteId = document.getElementById('client-selector').value;
-        document.getElementById('conversion-client-badge').innerText = clienteId === 'todos' ? 'todos' : (clientesReais[0]?.name || 'cliente');
+        document.getElementById('conversion-client-badge').innerText = clientesReais[0]?.name || 'todos';
     }
 
     // ─── FUNNEL ───
+    function getSelectedPipeline() {
+        const cid = document.getElementById('client-selector').value;
+        const pid = parseInt(document.getElementById('pipeline-selector').value);
+        const c = cid === "todos" ? dadosGlobais[0] : dadosGlobais.find(c => c.id === parseInt(cid));
+        if (c && c.pipelines) return c.pipelines.find(p => p.id === pid) || c.pipelines[0];
+        return null;
+    }
+
+    function atualizarGraficosPorPipeline(pd) {
+        if (!pd) return;
+        const pipelineData = [{ monthlyStats: pd.monthlyStats || [], lossReasons: pd.lossReasons || [], name: pd.name }];
+        renderMonthlyChart(pipelineData);
+        renderLossReasons(pipelineData);
+        renderConversionChart(pipelineData);
+    }
+
     function atualizarPipelinesDoClienteSelecionado() {
         const cid = document.getElementById('client-selector').value;
         const sel = document.getElementById('pipeline-selector');
@@ -867,6 +877,7 @@
             document.getElementById('funnel-title').innerText = `Detalhes do Funil: ${c.name}`;
             c.pipelines.forEach(p => { const o = document.createElement('option'); o.value = p.id; o.text = p.name; sel.appendChild(o); });
             renderFunnel(c.pipelines[0]);
+            atualizarGraficosPorPipeline(c.pipelines[0]);
         } else { sel.innerHTML = '<option value="">Nenhum funil</option>'; document.getElementById('funnel-stages-container').innerHTML = ''; }
     }
 
@@ -916,9 +927,6 @@
             const dados = getDadosFiltrados();
             renderDashboard(dados);
             atualizarPipelinesDoClienteSelecionado();
-            renderMonthlyChart(dados);
-            renderLossReasons(dados);
-            renderConversionChart(dados);
         } catch (error) {
             console.error("Erro Fatal:", error);
             document.querySelector('#clients-table tbody').innerHTML = `<tr><td colspan="10" style="color: var(--primary); text-align: center; padding: 48px;"><strong>ERRO:</strong> Não foi possível conectar ao servidor.</td></tr>`;
@@ -935,7 +943,10 @@
     document.getElementById('pipeline-selector').addEventListener('change', (e) => {
         const cid = document.getElementById('client-selector').value;
         const c = cid === "todos" ? dadosGlobais[0] : dadosGlobais.find(c => c.id === parseInt(cid));
-        if (c && c.pipelines) { const p = c.pipelines.find(p => p.id === parseInt(e.target.value)); if (p) renderFunnel(p); }
+        if (c && c.pipelines) {
+            const p = c.pipelines.find(p => p.id === parseInt(e.target.value));
+            if (p) { renderFunnel(p); atualizarGraficosPorPipeline(p); }
+        }
     });
 
     window.onload = async () => {

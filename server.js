@@ -256,11 +256,20 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
         const statsPorStatus = {};
         statusList.forEach(s => { statsPorStatus[s.id] = { count: 0, totalDays: 0, name: s.name }; });
 
+        let pipelineMonthly = {}, pipelineLossReasons = {};
+
         allLeads.forEach(lead => {
             if (lead.pipeline_id !== pipeline.id) return;
             totalLeadsNestePipeline++;
             const diasSemAtt = (hoje - lead.updated_at) / 86400;
             const price = Number(lead.price) || 0;
+
+            // Monthly stats per pipeline
+            const d = new Date(lead.created_at * 1000);
+            const mk = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            if (!pipelineMonthly[mk]) pipelineMonthly[mk] = { leads: 0, won: 0, lost: 0 };
+            pipelineMonthly[mk].leads++;
+
             if (!closedStatuses.includes(lead.status_id)) {
                 pipelineRevenue += price;
                 if (!exemptStatusIds.includes(lead.status_id)) {
@@ -276,6 +285,13 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
                     const closedAt = lead.closed_at || lead.updated_at;
                     const cycle = (closedAt - lead.created_at) / 86400;
                     if (cycle > 0) totalSalesCycleDays += cycle;
+                    pipelineMonthly[mk].won++;
+                } else if (lostStatusIds.includes(lead.status_id)) {
+                    pipelineMonthly[mk].lost++;
+                    const rid = lead.loss_reason_id;
+                    if (rid && lossReasonsMap[rid]) pipelineLossReasons[lossReasonsMap[rid]] = (pipelineLossReasons[lossReasonsMap[rid]] || 0) + 1;
+                    else if (rid) pipelineLossReasons['Motivo não identificado'] = (pipelineLossReasons['Motivo não identificado'] || 0) + 1;
+                    else pipelineLossReasons['Sem motivo registrado'] = (pipelineLossReasons['Sem motivo registrado'] || 0) + 1;
                 }
             }
             if (statsPorStatus[lead.status_id]) statsPorStatus[lead.status_id].count++;
@@ -288,7 +304,18 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             else stages.push({ id: status.id, name: status.name, count: stat.count, avgDays: stat.count > 0 ? (stat.totalDays / stat.count).toFixed(1) : 0 });
         });
 
-        pipelinesData.push({ id: pipeline.id, name: pipeline.name, totalLeadsEntrants: totalLeadsNestePipeline, stages, results: { won: wonCount, lost: lostCount } });
+        // Monthly array per pipeline
+        const pipelineMonthlyArray = Object.keys(pipelineMonthly).sort().map(key => {
+            const [year, month] = key.split('-');
+            return { key, label: `${MESES_PT[parseInt(month) - 1]}/${year.slice(2)}`, ...pipelineMonthly[key] };
+        });
+        // Loss reasons per pipeline
+        const pipelineTotalLost = Object.values(pipelineLossReasons).reduce((a, b) => a + b, 0);
+        const pipelineLossArray = Object.entries(pipelineLossReasons)
+            .map(([name, count]) => ({ name, count, percent: pipelineTotalLost > 0 ? parseFloat(((count / pipelineTotalLost) * 100).toFixed(2)) : 0 }))
+            .sort((a, b) => b.count - a.count);
+
+        pipelinesData.push({ id: pipeline.id, name: pipeline.name, totalLeadsEntrants: totalLeadsNestePipeline, stages, results: { won: wonCount, lost: lostCount }, monthlyStats: pipelineMonthlyArray, lossReasons: pipelineLossArray });
     });
 
     const avgSalesCycle = wonLeadsForCycle > 0 ? (totalSalesCycleDays / wonLeadsForCycle) : 0;
