@@ -887,13 +887,13 @@
             container.insertAdjacentHTML('beforeend', `<div class="funnel-stage"><h4>${stage.name}</h4><div class="count">${stage.count}</div><div class="time-in-stage">⏱ ${stage.avgDays}d média</div></div>`);
         });
 
-        const total = pd.totalLeadsEntrants;
-        const wonP = total === 0 ? 0 : ((pd.results.won / total) * 100).toFixed(1);
-        const lostP = total === 0 ? 0 : ((pd.results.lost / total) * 100).toFixed(1);
+        const decided = pd.results.won + pd.results.lost;
+        const wonP = decided === 0 ? 0 : ((pd.results.won / decided) * 100).toFixed(1);
+        const lostP = decided === 0 ? 0 : ((pd.results.lost / decided) * 100).toFixed(1);
         document.getElementById('funnel-won-count').innerText = pd.results.won;
-        document.getElementById('funnel-won-percent').innerText = `${wonP}% de conversão (de ${total} leads)`;
+        document.getElementById('funnel-won-percent').innerText = `${wonP}% de conversão (de ${decided} decididos)`;
         document.getElementById('funnel-lost-count').innerText = pd.results.lost;
-        document.getElementById('funnel-lost-percent').innerText = `${lostP}% de perdas (de ${total} leads)`;
+        document.getElementById('funnel-lost-percent').innerText = `${lostP}% de perda (de ${decided} decididos)`;
     }
 
     // ─── API FETCH ───
