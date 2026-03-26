@@ -237,6 +237,11 @@
         .decay-text { color: var(--purple) !important; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
         .tasks-overdue-text { color: var(--amber) !important; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
+        /* ─── RECURRENCE BADGES ─── */
+        .rec-badge { display: inline-block; font-size: 9px; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-left: 8px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.5px; }
+        .rec-yes { background: var(--green-soft); color: var(--green); border: 1px solid rgba(52,211,153,0.15); }
+        .rec-no { background: var(--primary-soft); color: var(--primary); border: 1px solid rgba(230,57,70,0.15); }
+
         /* ─── TOOLTIPS ─── */
         .th-tip { position: relative; cursor: help; }
         .th-tip .tip-icon {
@@ -407,6 +412,11 @@
             <select id="client-selector" class="form-control">
                 <option value="todos">Todos os Clientes</option>
             </select>
+            <select id="recorrencia-filter" class="form-control" title="Filtrar por recorrência">
+                <option value="todos">Todos (Recorrência)</option>
+                <option value="sim">Com Recorrência</option>
+                <option value="nao">Sem Recorrência</option>
+            </select>
             <input type="date" id="date-start" class="form-control" title="Data Inicial">
             <span class="date-separator">até</span>
             <input type="date" id="date-end" class="form-control" title="Data Final">
@@ -542,6 +552,21 @@
 
     let dadosGlobais = [];
 
+    function getDadosFiltrados() {
+        const filtro = document.getElementById('recorrencia-filter').value;
+        if (filtro === 'todos') return dadosGlobais;
+        const val = filtro === 'sim';
+        return dadosGlobais.filter(c => c.recorrencia === val);
+    }
+
+    function aplicarFiltroRecorrencia() {
+        const dados = getDadosFiltrados();
+        renderDashboard(dados);
+        atualizarPipelinesDoClienteSelecionado();
+        renderMonthlyChart(dados);
+        renderLossReasons(dados);
+    }
+
     const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
     // ─── CARREGAR CLIENTES DO SERVIDOR ───
@@ -639,9 +664,13 @@
             const cycleClass = getCycleClass(client.avgSalesCycle);
             const cycleDisplay = client.avgSalesCycle > 0 ? `${client.avgSalesCycle}d` : '—';
 
+            const recBadge = client.recorrencia
+                ? '<span class="rec-badge rec-yes">Recorrente</span>'
+                : '<span class="rec-badge rec-no">Avulso</span>';
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><strong>${client.name}</strong></td>
+                <td><strong>${client.name}</strong>${recBadge}</td>
                 <td><span class="status-badge ${health.class}">${health.label}</span></td>
                 <td class="finance-text">${formatCurrency(client.wonRevenue || 0)}</td>
                 <td><span class="cycle-text ${cycleClass}">${cycleDisplay}</span></td>
@@ -803,10 +832,11 @@
             if (!response.ok) throw new Error("Erro na resposta do servidor");
 
             dadosGlobais = await response.json();
-            renderDashboard(dadosGlobais);
+            const dados = getDadosFiltrados();
+            renderDashboard(dados);
             atualizarPipelinesDoClienteSelecionado();
-            renderMonthlyChart(dadosGlobais);
-            renderLossReasons(dadosGlobais);
+            renderMonthlyChart(dados);
+            renderLossReasons(dados);
         } catch (error) {
             console.error("Erro Fatal:", error);
             document.querySelector('#clients-table tbody').innerHTML = `<tr><td colspan="10" style="color: var(--primary); text-align: center; padding: 48px;"><strong>ERRO:</strong> Não foi possível conectar ao servidor.</td></tr>`;
@@ -819,6 +849,7 @@
     document.getElementById('btn-all-time').addEventListener('click', () => { document.getElementById('date-start').value = ''; document.getElementById('date-end').value = ''; buscarDadosDaApi(); });
     document.getElementById('btn-update').addEventListener('click', () => { buscarDadosDaApi(document.getElementById('date-start').value, document.getElementById('date-end').value); });
     document.getElementById('client-selector').addEventListener('change', () => { buscarDadosDaApi(document.getElementById('date-start').value, document.getElementById('date-end').value); });
+    document.getElementById('recorrencia-filter').addEventListener('change', () => { aplicarFiltroRecorrencia(); });
     document.getElementById('pipeline-selector').addEventListener('change', (e) => {
         const cid = document.getElementById('client-selector').value;
         const c = cid === "todos" ? dadosGlobais[0] : dadosGlobais.find(c => c.id === parseInt(cid));

@@ -26,7 +26,8 @@ function carregarClientes() {
             nome: process.env[`CLIENTE${id}_NOME`],
             subdominio: process.env[`CLIENTE${id}_SUBDOMINIO`],
             token: process.env[`CLIENTE${id}_TOKEN`],
-            vencimento: process.env[`CLIENTE${id}_VENCIMENTO`] || null
+            vencimento: process.env[`CLIENTE${id}_VENCIMENTO`] || null,
+            recorrencia: (process.env[`CLIENTE${id}_RECORRENCIA`] || 'sim').toLowerCase() === 'sim'
         });
         id++;
     }
@@ -316,7 +317,7 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
     }
 
     return {
-        id: cliente.id, name: cliente.nome,
+        id: cliente.id, name: cliente.nome, recorrencia: cliente.recorrencia,
         leadsLast30Days: allLeads.length, stagnantLeads: totalStagnantLeadsConta,
         dataDecayLeads: totalDataDecayConta, overdueTasks: tarefasAtrasadasCount,
         usersTotal: totalUsers, usersAdmins: adminUsers,
