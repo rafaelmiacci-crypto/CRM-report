@@ -184,62 +184,10 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    
-                    <div class="bg-cardbg hover:bg-cardhover border border-white/5 hover:border-v4red/30 rounded-2xl p-6 transition-all duration-300 group flex flex-col cursor-pointer">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="bg-green-500/10 text-green-400 border border-green-500/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Pronto para Call</span>
-                            <i class="fa-solid fa-file-lines text-gray-600 group-hover:text-v4red transition-colors text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-1">TechCorp Solutions</h3>
-                        <p class="text-sm text-gray-400 mb-6 line-clamp-2">Foco em estruturação de inside sales e redução de CAC. Ticket médio alto.</p>
-                        
-                        <div class="mt-auto border-t border-white/5 pt-4 flex justify-between items-center">
-                            <div class="text-xs text-gray-500 flex items-center gap-1">
-                                <i class="fa-regular fa-clock"></i> Gerado há 2h
-                            </div>
-                            <button class="text-white bg-white/5 hover:bg-v4red px-4 py-2 rounded-lg text-xs font-semibold transition-colors">
-                                Abrir Script
-                            </button>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-roteiros">
+                    <div class="col-span-full flex justify-center py-8">
+                        <i class="fa-solid fa-circle-notch fa-spin text-v4red text-3xl"></i>
                     </div>
-
-                    <div class="bg-cardbg hover:bg-cardhover border border-white/5 hover:border-v4red/30 rounded-2xl p-6 transition-all duration-300 group flex flex-col cursor-pointer">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="bg-green-500/10 text-green-400 border border-green-500/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Pronto para Call</span>
-                            <i class="fa-solid fa-file-lines text-gray-600 group-hover:text-v4red transition-colors text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-1">Construtora Apex</h3>
-                        <p class="text-sm text-gray-400 mb-6 line-clamp-2">Lançamento de empreendimento de alto padrão. Precisam de geração de leads qualificados MQL.</p>
-                        
-                        <div class="mt-auto border-t border-white/5 pt-4 flex justify-between items-center">
-                            <div class="text-xs text-gray-500 flex items-center gap-1">
-                                <i class="fa-regular fa-clock"></i> Gerado ontem
-                            </div>
-                            <button class="text-white bg-white/5 hover:bg-v4red px-4 py-2 rounded-lg text-xs font-semibold transition-colors">
-                                Abrir Script
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-cardbg hover:bg-cardhover border border-white/5 hover:border-v4red/30 rounded-2xl p-6 transition-all duration-300 group flex flex-col cursor-pointer">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Processando IA...</span>
-                            <i class="fa-solid fa-circle-notch fa-spin text-amber-500 transition-colors text-lg"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-1">Clínica Sorriso</h3>
-                        <p class="text-sm text-gray-400 mb-6 line-clamp-2">Expansão de franquias. Analisando documento de briefing anexado.</p>
-                        
-                        <div class="mt-auto border-t border-white/5 pt-4 flex justify-between items-center">
-                            <div class="text-xs text-gray-500 flex items-center gap-1">
-                                <i class="fa-regular fa-clock"></i> Enviado há 1 min
-                            </div>
-                            <button class="text-gray-500 bg-black/50 cursor-not-allowed px-4 py-2 rounded-lg text-xs font-semibold transition-colors">
-                                Aguarde...
-                            </button>
-                        </div>
-                    </div>
-
                 </div>
             </section>
 
@@ -277,6 +225,71 @@
             const modalIconContainer = document.querySelector('.modal-icon');
 
             let selectedFile = null;
+
+            // ========================================================
+            // 0. CARREGAR ROTEIROS SALVOS NO GITHUB
+            // ========================================================
+            async function carregarRoteiros() {
+                const repoOwner = 'rafaelmiacci-crypto';
+                const repoName = 'dashboard_crm';
+                const folderPath = 'roteiros';
+                const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`;
+                
+                const gridRoteiros = document.getElementById('grid-roteiros');
+                
+                try {
+                    // Busca a lista de arquivos na pasta do GitHub
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) throw new Error('Falha ao buscar arquivos do GitHub. Pode ser que a pasta ainda esteja vazia.');
+                    
+                    const files = await response.json();
+                    
+                    // Filtra apenas os arquivos .html e inverte para o mais novo ficar primeiro
+                    const htmlFiles = files.filter(file => file.name.endsWith('.html')).reverse();
+                    
+                    // Limpa o grid
+                    gridRoteiros.innerHTML = '';
+                    
+                    if (htmlFiles.length === 0) {
+                        gridRoteiros.innerHTML = '<p class="text-gray-500 col-span-full">Nenhum roteiro gerado ainda.</p>';
+                        return;
+                    }
+
+                    // Cria um card para cada arquivo encontrado
+                    htmlFiles.forEach(file => {
+                        const nomeCliente = file.name.replace('.html', '');
+                        const scriptUrl = `https://${repoOwner}.github.io/${repoName}/${file.path}`;
+
+                        const cardHtml = `
+                            <div class="fade-in-up bg-cardbg hover:bg-cardhover border border-white/5 hover:border-v4red/30 rounded-2xl p-6 transition-all duration-300 group flex flex-col cursor-pointer">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="bg-green-500/10 text-green-400 border border-green-500/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Pronto para Call</span>
+                                    <i class="fa-solid fa-file-lines text-gray-600 group-hover:text-v4red transition-colors text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-1 truncate">${nomeCliente}</h3>
+                                <p class="text-sm text-gray-400 mb-6 line-clamp-2">Roteiro gerado pela IA e sincronizado com o banco de dados.</p>
+                                
+                                <div class="mt-auto border-t border-white/5 pt-4 flex justify-between items-center">
+                                    <div class="text-xs text-gray-500 flex items-center gap-1">
+                                        <i class="fa-solid fa-cloud-check text-green-500"></i> Salvo na Nuvem
+                                    </div>
+                                    <a href="${scriptUrl}" target="_blank" class="text-white bg-white/5 hover:bg-v4red px-4 py-2 rounded-lg text-xs font-semibold transition-colors">
+                                        Abrir Script
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                        gridRoteiros.insertAdjacentHTML('beforeend', cardHtml);
+                    });
+
+                } catch (error) {
+                    console.error('Erro ao carregar roteiros:', error);
+                    gridRoteiros.innerHTML = '<p class="text-red-500 text-sm col-span-full">Aguardando a criação do primeiro roteiro ou ocorreu um erro de conexão.</p>';
+                }
+            }
+
+            // Chama a função assim que a página abre
+            carregarRoteiros();
 
             // ========================================================
             // 1. MODAL SYSTEM
@@ -353,7 +366,7 @@
             }
 
             // ========================================================
-            // 3. ENVIO PARA O N8N 
+            // 3. ENVIO PARA O N8N
             // ========================================================
             if (btnStart) {
                 btnStart.addEventListener('click', async () => {
@@ -373,56 +386,37 @@
                         formData.append('file', selectedFile);
                         formData.append('type', 'discovery_briefing');
                         
-                        // Faz a requisição para o n8n
+                        // Dispara o n8n
                         const response = await fetch(WEBHOOK_URL, {
                             method: 'POST',
                             body: formData
                         });
                         
                         if (!response.ok) throw new Error("Erro no servidor do n8n");
-                        
-                        // 1. Recebe o HTML preenchido da IA
-                        const roteiroHtml = await response.text();
 
-                        // 2. Transforma o HTML numa URL virtual para não ser bloqueada pelo Pop-up
-                        const blob = new Blob([roteiroHtml], { type: 'text/html' });
-                        const scriptUrl = URL.createObjectURL(blob);
-
-                        // 3. Pega o nome do arquivo PDF para usar como título do Card
-                        const nomeCliente = selectedFile.name.replace('.pdf', '');
-
-                        // 4. Cria o novo Card visual idêntico ao seu layout
-                        const novoCard = document.createElement('div');
-                        novoCard.className = "fade-in-up bg-cardbg hover:bg-cardhover border border-white/5 hover:border-v4red/30 rounded-2xl p-6 transition-all duration-300 group flex flex-col cursor-pointer";
-                        novoCard.innerHTML = `
-                            <div class="flex justify-between items-start mb-4">
-                                <span class="bg-green-500/10 text-green-400 border border-green-500/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Pronto para Call</span>
-                                <i class="fa-solid fa-file-lines text-gray-600 group-hover:text-v4red transition-colors text-xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-white mb-1">${nomeCliente}</h3>
-                            <p class="text-sm text-gray-400 mb-6 line-clamp-2">Roteiro gerado com sucesso após análise do briefing pela IA de Vendas.</p>
-                            
-                            <div class="mt-auto border-t border-white/5 pt-4 flex justify-between items-center">
-                                <div class="text-xs text-gray-500 flex items-center gap-1">
-                                    <i class="fa-regular fa-clock"></i> Agora mesmo
-                                </div>
-                                <a href="${scriptUrl}" target="_blank" class="text-white bg-white/5 hover:bg-v4red px-4 py-2 rounded-lg text-xs font-semibold transition-colors">
-                                    Abrir Script
-                                </a>
-                            </div>
-                        `;
-
-                        // 5. Injeta o novo Card na seção "Últimos Roteiros" (como o primeiro da lista)
-                        const gridRoteiros = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3');
-                        if (gridRoteiros) {
-                            gridRoteiros.prepend(novoCard);
-                        }
-
-                        // 6. Restaura o botão visualmente e mostra o modal de sucesso
+                        // Restaura o botão e mostra sucesso
                         btnStart.textContent = "Sucesso!";
                         btnStart.classList.replace('from-v4red', 'from-green-600');
                         btnStart.classList.replace('to-red-800', 'to-green-800');
-                        showModal("Roteiro Gerado!", "O roteiro já está disponível na lista de Últimos Roteiros logo abaixo.", "success");
+                        showModal("Roteiro Salvo!", "A IA finalizou e o roteiro está no GitHub. A lista de roteiros será atualizada.", "success");
+
+                        // Atualiza a grade de roteiros novamente após 2.5 segundos
+                        setTimeout(() => {
+                            carregarRoteiros();
+                            
+                            // Reseta o formulário
+                            btnStart.innerHTML = originalBtnContent;
+                            btnStart.disabled = false;
+                            btnStart.classList.remove('opacity-70', 'cursor-not-allowed', 'from-green-600', 'to-green-800');
+                            btnStart.classList.add('from-v4red', 'to-red-800');
+                            
+                            fileNameDisplay.textContent = 'Briefing do Lead';
+                            fileNameDisplay.className = "text-xl font-bold text-white mb-2";
+                            uploadIcon.className = "fa-regular fa-file-pdf text-4xl text-gray-500 group-hover:text-v4red transition-colors";
+                            dropZone.classList.remove('border-green-500/50', 'bg-green-500/5');
+                            dropZone.classList.add('border-white/20', 'bg-black/40');
+                            selectedFile = null;
+                        }, 2500);
 
                     } catch (error) {
                         console.error("Erro:", error);
