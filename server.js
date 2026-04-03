@@ -120,7 +120,7 @@ async function kommoGet(subdominio, token, urlPath) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// CACHE
+// CACHE INTERNO DE DADOS MENORES
 // ═══════════════════════════════════════════════════════════════
 
 const cache = {};
@@ -133,7 +133,7 @@ function getCached(key) {
 function setCache(key, data) { cache[key] = { data, timestamp: Date.now() }; }
 
 // ═══════════════════════════════════════════════════════════════
-// BUSCAR DADOS DO CLIENTE
+// LÓGICA PESADA — BUSCAR DADOS DO CLIENTE NA API
 // ═══════════════════════════════════════════════════════════════
 
 async function buscarDadosCliente(cliente, dataInicio, dataFim) {
@@ -270,13 +270,11 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             const diasSemAtt = (hoje - lead.updated_at) / 86400;
             const price = Number(lead.price) || 0;
 
-            // Leads count by creation date
             const dCreated = new Date(lead.created_at * 1000);
             const mkCreated = `${dCreated.getFullYear()}-${String(dCreated.getMonth() + 1).padStart(2, '0')}`;
             if (!pipelineMonthly[mkCreated]) pipelineMonthly[mkCreated] = { leads: 0, won: 0, lost: 0 };
             pipelineMonthly[mkCreated].leads++;
 
-            // Won/lost by closing date
             const closedTs = lead.closed_at || lead.updated_at;
             const dClosed = new Date(closedTs * 1000);
             const mkClosed = `${dClosed.getFullYear()}-${String(dClosed.getMonth() + 1).padStart(2, '0')}`;
@@ -315,12 +313,11 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             else stages.push({ id: status.id, name: status.name, count: stat.count, avgDays: stat.count > 0 ? (stat.totalDays / stat.count).toFixed(1) : 0 });
         });
 
-        // Monthly array per pipeline
         const pipelineMonthlyArray = Object.keys(pipelineMonthly).sort().map(key => {
             const [year, month] = key.split('-');
             return { key, label: `${MESES_PT[parseInt(month) - 1]}/${year.slice(2)}`, ...pipelineMonthly[key] };
         });
-        // Loss reasons per pipeline
+        
         const pipelineTotalLost = Object.values(pipelineLossReasons).reduce((a, b) => a + b, 0);
         const pipelineLossArray = Object.entries(pipelineLossReasons)
             .map(([name, count]) => ({ name, count, percent: pipelineTotalLost > 0 ? parseFloat(((count / pipelineTotalLost) * 100).toFixed(2)) : 0 }))
@@ -331,19 +328,16 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
 
     const avgSalesCycle = wonLeadsForCycle > 0 ? (totalSalesCycleDays / wonLeadsForCycle) : 0;
 
-    // Monthly array
     const monthlyArray = Object.keys(monthlyStats).sort().map(key => {
         const [year, month] = key.split('-');
         return { key, label: `${MESES_PT[parseInt(month) - 1]}/${year.slice(2)}`, labelFull: `${MESES_PT[parseInt(month) - 1]} ${year}`, ...monthlyStats[key] };
     });
 
-    // Loss reasons array
     const totalLost = Object.values(lossReasonCounts).reduce((a, b) => a + b, 0);
     const lossReasonsArray = Object.entries(lossReasonCounts)
         .map(([name, count]) => ({ name, count, percent: totalLost > 0 ? parseFloat(((count / totalLost) * 100).toFixed(2)) : 0 }))
         .sort((a, b) => b.count - a.count);
 
-    // Billing
     let diasRestantes = null, statusFatura = 'Sem Registro', dataFormatada = '--/--/----';
     if (cliente.vencimento) {
         const vd = new Date(`${cliente.vencimento}T23:59:59`);
@@ -367,6 +361,56 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// 🔥 SISTEMA SWR (STALE-WHILE-REVALIDATE) COM BACKGROUND SYNC
+// ═══════════════════════════════════════════════════════════════
+
+const dashboardCache = {};
+const SWR_TTL = 5 * 60 * 1000; // 5 minutos de validade dos dados
+
+async function getDashboardDataSWR(cliente, dataInicio, dataFim) {
+    const cacheKey = `dash_${cliente.id}_${dataInicio || 'all'}_${dataFim || 'all'}`;
+    const cached = dashboardCache[cacheKey];
+    const now = Date.now();
+
+    const fetchAndUpdate = async () => {
+        if (dashboardCache[cacheKey] && dashboardCache[cacheKey].isFetching) return;
+        
+        if (!dashboardCache[cacheKey]) dashboardCache[cacheKey] = { isFetching: true };
+        else dashboardCache[cacheKey].isFetching = true;
+
+        try {
+            const freshData = await buscarDadosCliente(cliente, dataInicio, dataFim);
+            dashboardCache[cacheKey] = {
+                data: freshData,
+                timestamp: Date.now(),
+                isFetching: false
+            };
+        } catch (error) {
+            console.error(`Erro no background fetch para ${cliente.nome}:`, error.message);
+            if (dashboardCache[cacheKey]) dashboardCache[cacheKey].isFetching = false;
+        }
+    };
+
+    // CENÁRIO 1: O cache não existe (Primeiro acesso)
+    if (!cached || !cached.data) {
+        console.log(`[SWR] ❌ Primeiro acesso de ${cliente.nome}. Aguardando API...`);
+        await fetchAndUpdate();
+        return dashboardCache[cacheKey].data;
+    }
+
+    // CENÁRIO 2: O dado existe, mas está VENCIDO (> 5 minutos).
+    if (now - cached.timestamp > SWR_TTL) {
+        console.log(`[SWR] 🔄 Dados vencidos para ${cliente.nome}. Entregando cache e atualizando no fundo...`);
+        fetchAndUpdate(); // Atualiza em segundo plano sem bloquear a resposta
+        return cached.data; 
+    }
+
+    // CENÁRIO 3: O dado existe e está FRESCO (< 5 minutos).
+    console.log(`[SWR] ⚡ Dados frescos entregues instantaneamente para ${cliente.nome}.`);
+    return cached.data;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // ROTAS
 // ═══════════════════════════════════════════════════════════════
 
@@ -382,10 +426,16 @@ app.get('/api/dados-dashboard', async (req, res) => {
         if (found) lista = [found];
     }
     let resultados = [];
+    
     for (let cliente of lista) {
-        try { resultados.push(await buscarDadosCliente(cliente, dataInicio, dataFim)); }
+        try { 
+            // Agora a requisição usa o motor de cache rápido (SWR)
+            const dados = await getDashboardDataSWR(cliente, dataInicio, dataFim);
+            if (dados) resultados.push(dados);
+        }
         catch (e) { console.error(`❌ ${cliente.nome}: ${e.response?.status || e.message}`); }
     }
+    
     res.json(resultados);
 });
 
@@ -395,5 +445,20 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+// ═══════════════════════════════════════════════════════════════
+// PRÉ-AQUECIMENTO DO CACHE
+// ═══════════════════════════════════════════════════════════════
+
+async function preWarmCache() {
+    console.log("\n🔥 Iniciando o Pré-Aquecimento SWR (Os próximos acessos serão instantâneos)...");
+    for (let cliente of clientes) {
+        await getDashboardDataSWR(cliente, '', '');
+    }
+    console.log("🚀 Todos os clientes em cache! Dashboard pronto para alta velocidade.\n");
+}
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Porta ${PORT} | ${clientes.length} clientes | Rate limiting ativo`));
+app.listen(PORT, () => {
+    console.log(`✅ Porta ${PORT} | ${clientes.length} clientes | Rate limiting ativo`);
+    preWarmCache(); // Aciona o carregamento dos dados quando o servidor inicia
+});
