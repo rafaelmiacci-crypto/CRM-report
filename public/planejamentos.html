@@ -82,26 +82,32 @@
     <!-- Menu de Navegação -->
             <nav class="flex flex-col w-full px-6 space-y-2">
                 
-                <!-- Link para o Dashboard (index.html) -->
+                <aside class="w-72 bg-sidebar h-full flex flex-col justify-between py-8 flex-shrink-0 z-20 shadow-2xl border-r border-white/5 relative">
+        <div class="w-full flex flex-col">
+            <div class="w-full flex justify-center px-8 mb-12 mt-2">
+                <div class="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300 cursor-pointer">
+                    <img src="https://carreira.inhire.com.br/wp-content/uploads/2024/04/v4company-02-03-1024x279.png" alt="Logo V4 Company" class="max-w-full h-9 object-contain drop-shadow-md" />
+                </div>
+            </div>
+
+            <nav class="flex flex-col w-full px-6 space-y-2">
+                
                 <a href="index.html" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
                     <i class="fa-solid fa-chart-pie text-lg group-hover:text-red-400 transition-colors w-6"></i>
                     <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Dashboard</span>
                 </a>
                 
-                <!-- Planejamentos: ATIVO (planejamentos.html) -->
                 <a href="planejamentos.html" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-white bg-gradient-to-r from-red-900/40 to-transparent border-l-4 border-red-600 shadow-sm transition-all duration-300 focus:outline-none">
                     <i class="fa-solid fa-bullhorn text-lg text-red-500 w-6"></i>
                     <span class="font-medium tracking-wide text-sm">Planejamentos</span>
                 </a>
                 
-                <!-- Link para Discovery (discovery.html) -->
                 <a href="discovery.html" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
                     <i class="fa-solid fa-file-lines text-lg group-hover:text-red-400 transition-colors w-6"></i>
                     <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Discovery</span>
                 </a>
 
                 <div class="pt-4 mt-2 border-t border-white/5">
-                    <!-- Link para Configurações (configuracoes.html) -->
                     <a href="configuracoes.html" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
                         <i class="fa-solid fa-gear text-lg group-hover:text-gray-200 transition-colors w-6"></i>
                         <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Configurações</span>
@@ -110,7 +116,6 @@
             </nav>
         </div>
 
-        <!-- Perfil do Usuário -->
         <div class="px-6 w-full mt-auto">
             <button class="flex items-center gap-3 w-full p-2.5 rounded-xl hover:bg-white/5 transition-colors text-left group focus:outline-none">
                 <img src="https://i.pravatar.cc/150?img=11" alt="Avatar Usuário" class="w-10 h-10 rounded-full border-2 border-gray-700 group-hover:border-red-500 transition-colors object-cover">
