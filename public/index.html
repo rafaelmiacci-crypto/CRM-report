@@ -392,11 +392,12 @@
                     <input type="date" id="date-end" class="form-control" title="Data Final">
                     <button id="btn-all-time" class="btn btn-secondary">Todo o Período</button>
                 </div>
-                <button id="btn-download-report" class="btn btn-secondary" style="margin-right: 10px;">
-    <i class="fa-solid fa-download"></i> Baixar One Page Report
-</button>
-<button id="btn-update" class="btn btn-primary">⟳ &nbsp;Atualizar Dados</button>
-            </div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+    <button id="btn-download-report" class="btn btn-secondary">
+        <i class="fa-solid fa-download"></i> Baixar One Page
+    </button>
+    <button id="btn-update" class="btn btn-primary">⟳ &nbsp;Atualizar Dados</button>
+</div>
 
             <div class="summary-cards">
                 <div class="card"><div class="card-accent"></div><h3>Total de Clientes</h3><div class="value" id="total-clients">0</div><div class="card-sub" id="total-leads-sub">0 leads no CRM</div></div>
@@ -898,7 +899,7 @@
             document.getElementById('funnel-lost-percent').innerText = `${lostP}% de perda`;
         }
 
-        // ─── GERAÇÃO DO ONE PAGE REPORT ───
+        // ─── GERAÇÃO DO ONE PAGE REPORT DINÂMICO ───
         function gerarOnePageReport() {
             const cid = document.getElementById('client-selector').value;
             
@@ -917,10 +918,48 @@
             const vendas = cliente.pipelines?.[0]?.results?.won || 0;
             const perdas = cliente.pipelines?.[0]?.results?.lost || 0;
             const receita = cliente.wonRevenue || 0;
-            const taxaConversao = vendas + perdas > 0 ? (vendas / (vendas + perdas) * 100).toFixed(1) : 0;
-            const taxaPerda = vendas + perdas > 0 ? (perdas / (vendas + perdas) * 100).toFixed(1) : 0;
+            const totalDecididos = vendas + perdas;
+            const taxaConversao = totalDecididos > 0 ? (vendas / totalDecididos * 100).toFixed(1) : 0;
+            const taxaPerda = totalDecididos > 0 ? (perdas / totalDecididos * 100).toFixed(1) : 0;
             const ciclo = cliente.avgSalesCycle || 0;
 
+            // --- LÓGICA DINÂMICA DA NOTA E STATUS ---
+            let nota = 5;
+            let badgeColor = 'bg-yellow-500 text-black';
+            let statusText = 'Atenção — Gargalos identificados';
+            let statusDot = 'bg-yellow-500';
+
+            if (taxaConversao >= 30 && ciclo <= 15) {
+                nota = Math.min(10, 8 + (taxaConversao > 40 ? 1 : 0));
+                badgeColor = 'bg-green-500 text-black';
+                statusText = 'Saudável — Alta Performance';
+                statusDot = 'bg-green-500';
+            } else if (taxaPerda > 60 || ciclo > 45) {
+                nota = Math.max(1, 4 - (taxaPerda > 80 ? 1 : 0));
+                badgeColor = 'bg-red-500 text-white';
+                statusText = 'Em Risco — Ação Imediata Necessária';
+                statusDot = 'bg-red-500';
+            } else {
+                nota = 6;
+            }
+
+            // --- TEXTO ESTRATÉGICO GERADO AUTOMATICAMENTE ---
+            let textoEstrategico = `A operação gerou um volume de <strong>${leadsTotais} leads</strong> no período. `;
+            if (ciclo <= 15 && ciclo > 0) {
+                textoEstrategico += `O ciclo de vendas de ${ciclo} dias indica um processo extremamente ágil. `;
+            } else if (ciclo > 30) {
+                textoEstrategico += `O ciclo de vendas alongado (${ciclo} dias) está retardando a entrada de receita. `;
+            }
+
+            if (taxaPerda > 60) {
+                textoEstrategico += `Entretanto, a <strong>alta taxa de perda (${taxaPerda}%)</strong> revela que a maior parte do esforço de aquisição está sendo desperdiçada. É crucial revisar os critérios de qualificação e os motivos de perda.`;
+            } else if (taxaConversao >= 30) {
+                textoEstrategico += `Com uma <strong>excelente taxa de conversão de ${taxaConversao}%</strong>, o foco atual deve ser em escalar o volume de leads mantendo a qualidade.`;
+            } else {
+                textoEstrategico += `A taxa de conversão atual é de ${taxaConversao}%. Há espaço para otimização no follow-up da equipe de vendas.`;
+            }
+
+            // --- GERAÇÃO DOS MOTIVOS DE PERDA ---
             let motivosPerdaHTML = '';
             if (cliente.pipelines?.[0]?.lossReasons && cliente.pipelines[0].lossReasons.length > 0) {
                 const totalPerdas = cliente.pipelines[0].lossReasons.reduce((acc, curr) => acc + curr.count, 0);
@@ -996,16 +1035,16 @@
                 <div class="card p-8 mb-8 relative overflow-hidden">
                     <div class="flex justify-between items-start mb-6">
                         <h3 class="text-xl font-bold">Avaliação de Saúde do CRM</h3>
-                        <div class="bg-green-500 text-black font-bold text-xl px-4 py-2 rounded-lg font-mono">7/10</div>
+                        <div class="${badgeColor} font-bold text-xl px-4 py-2 rounded-lg font-mono">${nota}/10</div>
                     </div>
-                    <div class="flex items-center gap-2 text-green-400 font-semibold mb-4">
-                        <span class="w-2 h-2 rounded-full bg-green-500"></span> Saudável — Recorrente
+                    <div class="flex items-center gap-2 text-gray-200 font-semibold mb-4">
+                        <span class="w-2 h-2 rounded-full ${statusDot}"></span> ${statusText}
                     </div>
                     <p class="text-gray-300 text-sm leading-relaxed mb-4">
                         <strong>Objetivo:</strong> Monitorar a eficiência do funil de vendas, identificar gargalos operacionais e maximizar a conversão de leads da ${cliente.name}.
                     </p>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        A operação apresenta um volume consistente de geração de leads e ciclo de vendas de (${ciclo}d), indicando um processo ágil. Porém, a taxa de perda de ${taxaPerda}% revela oportunidades significativas de melhoria na qualificação e follow-up.
+                        ${textoEstrategico}
                     </p>
                 </div>
 
