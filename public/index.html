@@ -360,27 +360,28 @@
             </header>
 
             <div class="toolbar">
-                <div class="toolbar-filters">
-                    <select id="client-selector" class="form-control">
-                        <option value="todos">Todos os Clientes</option>
-                    </select>
-                    <select id="recorrencia-filter" class="form-control" title="Filtrar por recorrência">
-                        <option value="todos">Todos (Recorrência)</option>
-                        <option value="sim">Com Recorrência</option>
-                        <option value="nao">Sem Recorrência</option>
-                    </select>
-                    <input type="date" id="date-start" class="form-control" title="Data Inicial">
-                    <span class="date-separator">até</span>
-                    <input type="date" id="date-end" class="form-control" title="Data Final">
-                <button id="btn-all-time" class="btn btn-secondary">Todo o Período</button>
-            </div>
-            
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <button id="btn-download-report" class="btn btn-secondary" style="color: white; border-color: rgba(255,255,255,0.2);">
-                    <i class="fa-solid fa-download"></i> Baixar Relatório
-                </button>
-                <button id="btn-update" class="btn btn-primary">⟳ &nbsp;Atualizar Dados</button>
-            </div>
+    <div class="toolbar-filters">
+        <select id="client-selector" class="form-control">
+            <option value="todos">Todos os Clientes</option>
+        </select>
+        <select id="recorrencia-filter" class="form-control" title="Filtrar por recorrência">
+            <option value="todos">Todos (Recorrência)</option>
+            <option value="sim">Com Recorrência</option>
+            <option value="nao">Sem Recorrência</option>
+        </select>
+        <input type="date" id="date-start" class="form-control" title="Data Inicial">
+        <span class="date-separator">até</span>
+        <input type="date" id="date-end" class="form-control" title="Data Final">
+        <button id="btn-all-time" class="btn btn-secondary">Todo o Período</button>
+    </div> <div style="display: flex; gap: 12px; align-items: center;">
+        <button id="btn-download-report" class="btn btn-secondary" style="color: white; border: 1px solid rgba(255,255,255,0.2);">
+            <i class="fa-solid fa-download"></i> Baixar Relatório
+        </button>
+        <button id="btn-update" class="btn btn-primary">
+            <i class="fa-solid fa-arrows-rotate"></i> Atualizar Dados
+        </button>
+    </div>
+</div>
             
         </div>
 
