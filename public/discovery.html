@@ -400,29 +400,33 @@
                     btnStart.classList.add('opacity-70', 'cursor-not-allowed');
 
                     try {
-                        // AQUI ENTRARIA A LÓGICA DE EXTRAÇÃO DO PDF SE NECESSÁRIO
-                        // const pdfText = await extractTextFromPDF(selectedFile);
-                        
-                        // SIMULAÇÃO DO TEMPO DE RESPOSTA DO N8N (Remova isso ao integrar a URL real)
-                        await new Promise(r => setTimeout(r, 2000));
-                        
                         const WEBHOOK_URL = 'https://ferrazpiai-n8n-editor.uyk8ty.easypanel.host/webhook-test/5f6f48fb-8ddc-4cd1-8371-ebcd3f6277de';
                         const formData = new FormData();
                         formData.append('file', selectedFile);
                         formData.append('type', 'discovery_briefing');
                         
+                        // Faz a requisição para o n8n
                         const response = await fetch(WEBHOOK_URL, {
                             method: 'POST',
                             body: formData
                         });
                         
-                        if (!response.ok) throw new Error("Erro no servidor");
-                        */
+                        if (!response.ok) throw new Error("Erro no servidor do n8n");
+                        
+                        // Recebe o HTML preenchido da IA
+                        const roteiroHtml = await response.text();
 
+                        // Restaura o botão visualmente
                         btnStart.textContent = "Sucesso!";
                         btnStart.classList.replace('from-v4red', 'from-green-600');
                         btnStart.classList.replace('to-red-800', 'to-green-800');
-                        showModal("Roteiro em Geração!", "O documento foi enviado. O roteiro de Discovery aparecerá na lista de recentes em instantes.", "success");
+                        showModal("Roteiro em Geração!", "O documento foi processado e aberto em uma nova aba.", "success");
+                        
+                        // Abre a nova guia com o roteiro pronto
+                        const novaAba = window.open('', '_blank');
+                        novaAba.document.open();
+                        novaAba.document.write(roteiroHtml);
+                        novaAba.document.close();
 
                     } catch (error) {
                         console.error("Erro:", error);
