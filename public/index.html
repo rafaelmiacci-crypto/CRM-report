@@ -99,6 +99,13 @@
         /* ─── TOOLBAR ─── */
         .toolbar { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 16px 22px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 32px; flex-wrap: wrap; gap: 14px; }
         .toolbar-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .toolbar-actions { 
+            display: flex !important; 
+            align-items: center !important; 
+            gap: 12px !important; 
+            flex-shrink: 0 !important; /* Proíbe o CSS de espremer esta div */
+            z-index: 50; /* Garante que fique por cima de tudo */
+        }
         .form-control { padding: 10px 14px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-main); background: var(--bg-surface); outline: none; font-family: 'Outfit', sans-serif; transition: all 0.2s; }
         .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
         .form-control option { background: var(--bg-color); color: var(--text-main); }
