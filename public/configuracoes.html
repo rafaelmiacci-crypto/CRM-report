@@ -6,7 +6,7 @@
     <title>Configurações - Discovery AI V4</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script>
@@ -15,9 +15,9 @@
                 extend: {
                     colors: {
                         sidebar: '#000000',
-                        mainbg: '#1a0404',
-                        cardbg: 'rgba(0, 0, 0, 0.4)',
-                        cardhover: 'rgba(0, 0, 0, 0.6)',
+                        mainbg: '#0a0a0a', 
+                        cardbg: '#141414',
+                        cardhover: '#1a1a1a',
                         v4red: '#dc2626',
                         v4redhover: '#ef4444'
                     },
@@ -48,11 +48,11 @@
         /* EFEITOS DE FUNDO (AMBIENT GLOW) */
         .glow-effect {
             position: absolute; width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(220,38,38,0.15) 0%, rgba(0,0,0,0) 70%);
+            background: radial-gradient(circle, rgba(220,38,38,0.1) 0%, rgba(0,0,0,0) 70%);
             border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(80px);
         }
         .glow-left { top: -100px; left: -100px; opacity: 0.8; }
-        .glow-right { bottom: 20%; right: -200px; opacity: 0.5; background: radial-gradient(circle, rgba(220,38,38,0.1) 0%, rgba(0,0,0,0) 70%); }
+        .glow-right { bottom: 20%; right: -200px; opacity: 0.5; }
 
         /* Animações UI Nativas */
         .fade-in-up { animation: fadeUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
@@ -64,13 +64,20 @@
         /* Area interna com scroll invisível mas utilizável */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Estilos específicos para a Matriz RACI */
+        .raci-r { @apply bg-blue-500/20 text-blue-400 border-blue-500/30; }
+        .raci-a { @apply bg-green-500/20 text-green-400 border-green-500/30; }
+        .raci-c { @apply bg-yellow-500/20 text-yellow-400 border-yellow-500/30; }
+        .raci-i { @apply bg-purple-500/20 text-purple-400 border-purple-500/30; }
+        .raci-badge { @apply px-3 py-1 rounded text-xs font-bold border inline-block w-8 text-center shadow-sm; }
     </style>
 </head>
 <body class="flex flex-col lg:flex-row h-screen w-full overflow-hidden bg-mainbg font-inter text-gray-200 relative">
 
     <!-- Mobile Header -->
     <div class="lg:hidden w-full bg-sidebar border-b border-white/5 px-6 py-4 flex justify-between items-center z-40 relative flex-shrink-0 shadow-lg">
-        <img src="https://carreira.inhire.com.br/wp-content/uploads/2024/04/v4company-02-03-1024x279.png" alt="Logo V4 Company" class="h-6 sm:h-8 object-contain drop-shadow-md" />
+        <img src="https://carreira.inhire.com.br/wp-content/uploads/2024/04/v4company-02-03-1024x279.png" alt="Logo V4 Company" class="h-6 sm:h-8 object-contain drop-shadow-md" onerror="this.src='https://via.placeholder.com/150x50?text=V4+Company'"/>
         <button id="mobile-menu-btn" class="text-gray-300 hover:text-white text-2xl focus:outline-none transition-colors">
             <i class="fa-solid fa-bars"></i>
         </button>
@@ -89,31 +96,31 @@
         <div class="w-full flex flex-col">
             <div class="w-full flex justify-center px-8 mb-12 mt-2">
                 <div class="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300 cursor-pointer">
-                    <img src="https://carreira.inhire.com.br/wp-content/uploads/2024/04/v4company-02-03-1024x279.png" alt="Logo V4 Company" class="max-w-full h-9 object-contain drop-shadow-md" />
+                    <img src="https://carreira.inhire.com.br/wp-content/uploads/2024/04/v4company-02-03-1024x279.png" alt="Logo V4 Company" class="max-w-full h-9 object-contain drop-shadow-md" onerror="this.src='https://via.placeholder.com/150x50?text=V4+Company'"/>
                 </div>
             </div>
 
             <nav class="flex flex-col w-full px-6 space-y-2">
-                <a href="index.html" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
+                <a href="#" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
                     <i class="fa-solid fa-chart-pie text-lg group-hover:text-red-400 transition-colors w-6"></i>
                     <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Dashboard</span>
                 </a>
                 
-                <a href="planejamentos.html" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
+                <a href="#" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
                     <i class="fa-solid fa-bullhorn text-lg group-hover:text-red-400 transition-colors w-6"></i>
                     <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Planejamentos</span>
                 </a>
                 
-                <a href="discovery.html" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
+                <a href="#" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
                     <i class="fa-solid fa-file-lines text-lg group-hover:text-red-400 transition-colors w-6"></i>
                     <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Discovery</span>
                 </a>
 
                 <div class="pt-4 mt-2 border-t border-white/5">
                     <!-- Configurações ATIVO -->
-                    <a href="configuracoes.html" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-white bg-gradient-to-r from-red-900/40 to-transparent border-l-4 border-v4red shadow-sm transition-all duration-300 focus:outline-none">
+                    <a href="#" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-white bg-gradient-to-r from-red-900/40 to-transparent border-l-4 border-v4red shadow-sm transition-all duration-300 focus:outline-none">
                         <i class="fa-solid fa-gear text-lg text-v4red w-6"></i>
-                        <span class="font-medium tracking-wide text-sm">Configurações</span>
+                        <span class="font-medium tracking-wide text-sm">Hub Operacional</span>
                     </a>
                 </div>
             </nav>
@@ -121,10 +128,10 @@
 
         <div class="px-6 w-full mt-auto">
             <button class="flex items-center gap-3 w-full p-2.5 rounded-xl hover:bg-white/5 transition-colors text-left group focus:outline-none">
-                <img src="https://i.pravatar.cc/150?img=11" alt="Avatar Usuário" class="w-10 h-10 rounded-full border-2 border-gray-700 group-hover:border-v4red transition-colors object-cover">
+                <img src="https://i.pravatar.cc/150?img=11" alt="Avatar Usuário" class="w-10 h-10 rounded-full border-2 border-gray-700 group-hover:border-v4red transition-colors object-cover" onerror="this.src='https://via.placeholder.com/150'">
                 <div class="flex flex-col flex-1 overflow-hidden">
-                    <span class="text-white text-sm font-semibold truncate">João Silva</span>
-                    <span class="text-gray-500 text-xs truncate">Gestor de Tráfego</span>
+                    <span class="text-white text-sm font-semibold truncate">Rafael Miacci</span>
+                    <span class="text-gray-500 text-xs truncate">Especialista CRM</span>
                 </div>
                 <i class="fa-solid fa-ellipsis-vertical text-gray-500 group-hover:text-white transition-colors px-2"></i>
             </button>
@@ -141,22 +148,28 @@
             <header class="flex flex-col md:flex-row justify-between items-center py-6 sm:py-8 mb-2 border-b border-white/5 gap-6 md:gap-0 relative z-20">
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-2 w-full md:w-auto text-center md:text-left">
                     <h2 class="text-white text-xl sm:text-2xl font-sans font-bold tracking-wide flex items-center gap-3">
-                        <i class="fa-solid fa-book-open text-v4red"></i> Hub de Conhecimento V4
+                        <i class="fa-solid fa-layer-group text-v4red"></i> Hub de Operações V4
                     </h2>
                 </div>
                 
-                <a href="https://wa.me/5512992140358" target="_blank" class="w-full md:w-auto justify-center bg-white/5 border border-white/10 hover:border-v4red hover:bg-v4red/10 text-white px-5 py-3 md:py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all duration-300">
-                    <i class="fa-solid fa-headset text-v4red"></i> Suporte V4
+                <a href="#" class="w-full md:w-auto justify-center bg-white/5 border border-white/10 hover:border-v4red hover:bg-v4red/10 text-white px-5 py-3 md:py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all duration-300">
+                    <i class="fa-solid fa-headset text-v4red"></i> Acionar Suporte
                 </a>
             </header>
 
             <!-- Toggle de Seções (Abas) -->
-            <div class="flex bg-black/40 p-1.5 rounded-xl border border-white/10 w-full sm:w-fit mb-6 mx-auto md:mx-0 z-20 relative">
-                <button id="btn-mode-pop" class="flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 bg-v4red text-white shadow-lg shadow-red-900/40">
-                    <i class="fa-solid fa-rocket mr-2"></i> POP Implementação
+            <div class="flex flex-wrap bg-black/40 p-1.5 rounded-xl border border-white/10 w-full xl:w-fit mb-6 mx-auto md:mx-0 z-20 relative gap-1">
+                <button id="btn-mode-guide" class="nav-btn flex-1 xl:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-cube mr-2"></i> Guia do Produto
                 </button>
-                <button id="btn-mode-manual" class="flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">
-                    <i class="fa-solid fa-chart-line mr-2"></i> Manual do Dashboard
+                <button id="btn-mode-pop" class="nav-btn active flex-1 xl:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 bg-v4red text-white shadow-lg shadow-red-900/40">
+                    <i class="fa-solid fa-rocket mr-2"></i> Ekyte: Fluxo CRM
+                </button>
+                <button id="btn-mode-raci" class="nav-btn flex-1 xl:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-sitemap mr-2"></i> Matriz RACI
+                </button>
+                <button id="btn-mode-manual" class="nav-btn flex-1 xl:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-chart-line mr-2"></i> Dash Manual
                 </button>
             </div>
 
@@ -164,10 +177,10 @@
             <section class="fade-in-up flex-1 flex flex-col md:flex-row gap-6 relative z-20 h-full max-h-[75vh]">
                 
                 <!-- Coluna Esquerda: Timeline / Menu de Navegação -->
-                <div class="w-full md:w-1/3 lg:w-1/4 bg-cardbg border border-white/5 rounded-3xl backdrop-blur-md flex flex-col overflow-hidden shadow-2xl">
+                <div id="sidebar-container" class="w-full md:w-1/3 lg:w-1/4 bg-cardbg border border-white/5 rounded-3xl backdrop-blur-md flex flex-col overflow-hidden shadow-2xl transition-all duration-500">
                     <div class="p-6 pb-4 border-b border-white/5 bg-black/20 flex justify-between items-center">
-                        <h3 id="sidebar-title" class="text-white font-sans font-bold text-lg">Fases do Projeto</h3>
-                        <span id="total-steps-badge" class="bg-v4red/20 text-v4red border border-v4red/30 px-2.5 py-1 rounded-full text-xs font-bold"></span>
+                        <h3 id="sidebar-title" class="text-white font-sans font-bold text-lg">Navegação</h3>
+                        <span id="total-steps-badge" class="bg-v4red/20 text-v4red border border-v4red/30 px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider"></span>
                     </div>
                     
                     <div id="timeline-container" class="flex-1 overflow-y-auto p-4 space-y-1">
@@ -176,41 +189,41 @@
                 </div>
 
                 <!-- Coluna Direita: Detalhes -->
-                <div class="w-full md:w-2/3 lg:w-3/4 bg-cardbg border border-white/5 rounded-3xl backdrop-blur-md flex flex-col overflow-hidden shadow-2xl relative">
+                <div id="content-container" class="w-full md:w-2/3 lg:w-3/4 bg-cardbg border border-white/5 rounded-3xl backdrop-blur-md flex flex-col overflow-hidden shadow-2xl relative transition-all duration-500">
                     
                     <!-- Estado Inicial (Welcome) -->
                     <div id="welcome-view" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center transition-opacity duration-500 z-10">
-                        <div class="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10">
-                            <i id="welcome-icon" class="fa-solid fa-route text-4xl text-v4red opacity-80 animate-bounce"></i>
+                        <div class="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10 shadow-[0_0_30px_rgba(220,38,38,0.2)]">
+                            <i id="welcome-icon" class="fa-solid fa-layer-group text-4xl text-v4red opacity-90 animate-bounce"></i>
                         </div>
-                        <h2 id="welcome-title" class="text-2xl sm:text-3xl font-sans font-bold mb-4 text-white">Bem-vindo ao Novo Fluxo</h2>
-                        <p id="welcome-desc" class="text-gray-400 text-sm sm:text-base max-w-lg leading-relaxed">
-                            Selecione uma etapa no menu à esquerda para visualizar os detalhes, instruções e requisitos do procedimento padrão.
+                        <h2 id="welcome-title" class="text-2xl sm:text-4xl font-sans font-black mb-4 text-white uppercase tracking-tight">Hub de Operações</h2>
+                        <p id="welcome-desc" class="text-gray-400 text-sm sm:text-base max-w-lg leading-relaxed font-light">
+                            Selecione um tópico no menu à esquerda para visualizar diretrizes, escopos e responsabilidades.
                         </p>
                     </div>
 
                     <!-- Card de Detalhes (Escondido inicialmente) -->
-                    <div id="detail-card" class="absolute inset-0 flex flex-col overflow-y-auto opacity-0 pointer-events-none transform scale-95 transition-all duration-500 z-20 bg-black/20">
+                    <div id="detail-card" class="absolute inset-0 flex flex-col overflow-y-auto opacity-0 pointer-events-none transform scale-95 transition-all duration-500 z-20 bg-[#0f0f0f]/90">
                         
-                        <!-- Cabeçalho do Card -->
-                        <div class="p-8 pb-6 border-b border-white/5 relative bg-gradient-to-b from-black/40 to-transparent flex-shrink-0">
+                        <!-- Cabeçalho do Card (Pode ser oculto via config do objeto) -->
+                        <div id="card-header" class="p-8 pb-6 border-b border-white/5 relative bg-gradient-to-b from-black/60 to-transparent flex-shrink-0">
                             <div class="absolute top-0 right-0 bg-v4red text-white text-[10px] font-bold px-4 py-1.5 rounded-bl-xl uppercase tracking-wider shadow-lg shadow-red-900/50">
-                                Passo <span id="card-step-number"></span> de <span id="total-steps-count"></span>
+                                Tarefa Ekyte: <span id="card-step-number"></span> de <span id="total-steps-count"></span>
                             </div>
                             
                             <div class="flex items-center gap-5 mt-2">
                                 <div id="card-icon-container" class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-v4red text-2xl shadow-inner flex-shrink-0">
                                     <!-- Icon -->
                                 </div>
-                                <h2 id="card-title" class="text-2xl sm:text-3xl font-sans font-bold text-white">Título</h2>
+                                <h2 id="card-title" class="text-2xl sm:text-3xl font-sans font-bold text-white tracking-tight">Título</h2>
                             </div>
                         </div>
 
                         <!-- Corpo do Card -->
-                        <div class="p-8 flex-1 flex flex-col">
+                        <div class="p-0 sm:p-8 flex-1 flex flex-col">
                             
                             <!-- Box de Alerta (Blocagem) -->
-                            <div id="card-alert" class="hidden mb-8 bg-v4red/10 border-l-4 border-v4red p-5 rounded-r-xl shadow-md flex-shrink-0">
+                            <div id="card-alert" class="hidden mx-8 mt-8 sm:m-0 sm:mb-8 bg-v4red/10 border-l-4 border-v4red p-5 rounded-r-xl shadow-md flex-shrink-0">
                                 <div class="flex items-start gap-4">
                                     <i class="fa-solid fa-circle-exclamation text-v4red text-2xl mt-0.5 flex-shrink-0"></i>
                                     <div>
@@ -221,25 +234,25 @@
                             </div>
 
                             <!-- Descrição -->
-                            <div class="mb-8 flex-1">
-                                <h3 id="card-desc-title" class="text-xs uppercase tracking-widest text-gray-500 font-semibold mb-4 border-b border-white/10 pb-2">Instruções e Documentação</h3>
+                            <div class="mb-8 flex-1 px-8 sm:px-0 pt-8 sm:pt-0">
+                                <h3 id="card-desc-title" class="text-xs uppercase tracking-widest text-gray-500 font-semibold mb-6 border-b border-white/10 pb-2 hidden">Instruções e Documentação</h3>
                                 <div id="card-desc" class="text-base text-gray-300 leading-relaxed font-light"></div>
                             </div>
 
                             <!-- Rodapé do Card (Infos Adicionais) -->
-                            <div id="card-footer" class="bg-black/40 rounded-xl p-5 border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 mt-auto flex-shrink-0">
+                            <div id="card-footer" class="bg-black/60 rounded-xl p-5 border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 mt-auto flex-shrink-0 mx-8 sm:mx-0 mb-8 sm:mb-0">
                                 <div class="flex items-center gap-4">
-                                    <div class="bg-white/5 text-gray-400 p-3 rounded-full border border-white/5">
-                                        <i class="fa-regular fa-calendar-check text-xl"></i>
+                                    <div class="bg-white/5 text-gray-400 p-3 rounded-full border border-white/5 flex-shrink-0">
+                                        <i class="fa-regular fa-clock text-xl"></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-sm font-bold text-white">Prazo de Execução</h4>
-                                        <p class="text-xs text-gray-500 mt-0.5">A ser definido e alinhado em contrato/kick-off</p>
+                                        <h4 class="text-sm font-bold text-white">SLA no Ekyte</h4>
+                                        <p id="card-sla-text" class="text-xs text-gray-500 mt-0.5">Prazo padrão de execução desta tarefa.</p>
                                     </div>
                                 </div>
-                                <div class="bg-white/5 border border-white/10 px-4 py-2 rounded-lg shadow-sm text-xs font-semibold text-v4red whitespace-nowrap">
-                                    Data: Acordada com Cliente
-                                </div>
+                                <button class="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-v4red px-4 py-2 rounded-lg shadow-sm text-xs font-semibold text-white transition-colors flex items-center gap-2">
+                                    <i class="fa-solid fa-check"></i> Marcar Feito
+                                </button>
                             </div>
 
                         </div>
@@ -279,15 +292,163 @@
             sidebarOverlay?.addEventListener('click', toggleSidebar);
 
             // ==========================================
-            // BASE DE DADOS 1: POP DE IMPLEMENTAÇÃO
+            // BASE 1: GUIA DO PRODUTO (ÚNICO DOCUMENTO)
+            // ==========================================
+            const guideSteps = [
+                {
+                    id: 1,
+                    title: "Documento Central de Vendas",
+                    shortDesc: "O Pitch, o Escopo e ICP.",
+                    hideHeader: true, // Ocultar o header padrão para o Hero visual brilhar
+                    fullDesc: `
+                        <div class="flex flex-col h-full -mt-8 -mx-8 sm:-mt-0 sm:-mx-0 pb-10">
+                            
+                            <!-- Hero Section (Referência Hualter IA SDR) -->
+                            <div class="bg-[#111] p-8 sm:p-16 border-b border-white/5 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-80 h-80 bg-v4red/15 rounded-full blur-[100px] -mr-20 -mt-20"></div>
+                                <h4 class="text-v4red font-bold tracking-widest text-xs mb-3 uppercase">Escopo e Produto Oficial</h4>
+                                <h1 class="text-4xl sm:text-6xl font-sans font-black text-white uppercase tracking-tighter leading-[1] mb-6 relative z-10">
+                                    O CORAÇÃO DA SUA <br/><span class="text-v4red">OPERAÇÃO DE VENDAS.</span>
+                                </h1>
+                                <p class="text-gray-400 text-lg max-w-2xl relative z-10">
+                                    Plataforma centralizadora que organiza leads, dita o ritmo de follow-up do time comercial e garante que nenhuma oportunidade seja esquecida. Seu melhor vendedor não precisa de memória, precisa de um processo.
+                                </p>
+                            </div>
+                            
+                            <!-- Stats / Capacidades Principais -->
+                            <div class="p-8 sm:p-16 pt-12 pb-8 bg-black/20">
+                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-8">Capacidades Principais</h3>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-v4red/50 transition-colors group">
+                                        <h2 class="text-4xl font-black text-white mb-2 group-hover:text-v4red transition-colors">100%</h2>
+                                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Leads Gravados no CRM</p>
+                                    </div>
+                                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-v4red/50 transition-colors group">
+                                        <h2 class="text-4xl font-black text-white mb-2 group-hover:text-v4red transition-colors">API</h2>
+                                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Integração Oficial Meta (S/ QR)</p>
+                                    </div>
+                                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-v4red/50 transition-colors group">
+                                        <h2 class="text-4xl font-black text-white mb-2 group-hover:text-v4red transition-colors">IA</h2>
+                                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Análise de Data Decay Nativa</p>
+                                    </div>
+                                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-v4red/50 transition-colors group">
+                                        <h2 class="text-4xl font-black text-white mb-2 group-hover:text-v4red transition-colors">3 Sem</h2>
+                                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">SLA Máximo de Implementação</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Diagnóstico (Checklist ICP) -->
+                            <div class="p-8 sm:p-16 pt-8 border-t border-white/5">
+                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-6">Diagnóstico do Produto (ICP)</h3>
+                                <p class="text-gray-400 mb-8 text-sm">Responda antes de entrar na call: Como o cliente atende os leads hoje principalmente? Marque para ver se o CRM é a solução indicada.</p>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div class="space-y-3">
+                                        <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-center gap-4">
+                                            <i class="fa-solid fa-check-circle text-v4red text-xl"></i>
+                                            <div>
+                                                <h4 class="text-white font-bold text-sm">Volume: 50 a 500 Leads/mês</h4>
+                                                <p class="text-[11px] text-gray-400 mt-1">Acima disso requer soluções enterprise.</p>
+                                            </div>
+                                        </div>
+                                        <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-center gap-4">
+                                            <i class="fa-solid fa-check-circle text-v4red text-xl"></i>
+                                            <div>
+                                                <h4 class="text-white font-bold text-sm">Venda Consultiva B2B/B2C</h4>
+                                                <p class="text-[11px] text-gray-400 mt-1">Exige interação humana via WhatsApp.</p>
+                                            </div>
+                                        </div>
+                                        <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-center gap-4">
+                                            <i class="fa-solid fa-check-circle text-v4red text-xl"></i>
+                                            <div>
+                                                <h4 class="text-white font-bold text-sm">Gargalo de Follow-up</h4>
+                                                <p class="text-[11px] text-gray-400 mt-1">Vendedores esquecem de retornar leads.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-gradient-to-br from-[#111] to-black p-6 rounded-2xl border border-white/10 flex flex-col justify-center">
+                                        <h4 class="font-black text-white text-xl mb-2">CRM É O PRODUTO INDICADO.</h4>
+                                        <p class="text-sm text-gray-400 leading-relaxed mb-4">Se o cliente preenche os requisitos ao lado, a centralização em um pipeline visível eliminará a perda de dados e organizará a esteira comercial imediatamente.</p>
+                                        <div class="text-xs bg-white/5 p-3 rounded text-gray-300 font-mono">
+                                            <span class="text-green-500">✅</span> Vendas Complexas <br>
+                                            <span class="text-red-500">❌</span> E-commerce transacional puro
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Escopo In/Out -->
+                            <div class="p-8 sm:p-16 pt-8 border-t border-white/5 bg-black/40">
+                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-8">Escopo Padrão (In vs Out)</h3>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <!-- DENTRO -->
+                                    <div>
+                                        <h4 class="text-white font-bold text-sm mb-4 border-b border-green-500/30 pb-2 uppercase tracking-wide flex items-center gap-2">
+                                            <i class="fa-solid fa-square-check text-green-500"></i> Dentro do Escopo (Entregáveis)
+                                        </h4>
+                                        <ul class="space-y-3">
+                                            <li class="flex items-start gap-3 text-sm text-gray-300">
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Desenho de até 2 Funis (Vendas/CS).
+                                            </li>
+                                            <li class="flex items-start gap-3 text-sm text-gray-300">
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Criação de Campos e Tags.
+                                            </li>
+                                            <li class="flex items-start gap-3 text-sm text-gray-300">
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Integração API Oficial Meta (WABA, IG, FB).
+                                            </li>
+                                            <li class="flex items-start gap-3 text-sm text-gray-300">
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Automações Padrões: Boas-vindas, Roleta, Alertas.
+                                            </li>
+                                            <li class="flex items-start gap-3 text-sm text-gray-300">
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Integração RD Station / Tipoform via Zapier/Pluga.
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- FORA -->
+                                    <div>
+                                        <h4 class="text-white font-bold text-sm mb-4 border-b border-red-500/30 pb-2 uppercase tracking-wide flex items-center gap-2">
+                                            <i class="fa-solid fa-square-xmark text-v4red"></i> Fora do Escopo (Não Fazemos)
+                                        </h4>
+                                        <ul class="space-y-3">
+                                            <li class="flex items-start gap-3 text-sm text-gray-400">
+                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Atendimento ao Lead (Não somos operação de vendas).
+                                            </li>
+                                            <li class="flex items-start gap-3 text-sm text-gray-400">
+                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> E-commerce (Disparo de carrinho abandonado).
+                                            </li>
+                                            <li class="flex items-start gap-3 text-sm text-gray-400">
+                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Mudança de Funil ou Refação PÓS aprovação do Blueprint.
+                                            </li>
+                                            <li class="flex items-start gap-3 text-sm text-gray-400">
+                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Integrações complexas com ERPs legados sem documentação.
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    `,
+                    icon: "fa-solid fa-map",
+                    isBlocker: false
+                }
+            ];
+
+            // ==========================================
+            // BASE 2: POP EKYTE (Formato Ekyte Tasks)
             // ==========================================
             const popSteps = [
                 {
                     id: 1,
-                    title: "Growth Class (Kick-off)",
-                    shortDesc: "Reunião inaugural de alinhamento.",
+                    title: "[Call] Growth Class (Kick-off)",
+                    shortDesc: "Reunião de Escopo e SLAs.",
                     fullDesc: `
-                        A <strong class="text-white font-medium">Growth Class</strong> é o marco zero da implementação. Momento essencial para recalibrar expectativas, alinhar o escopo e definir as responsabilidades do cliente.
+                        <strong class="text-white">O que fazer nesta tarefa do Ekyte:</strong> Realizar a Call inaugural com o cliente para ditar as regras do jogo.
                         <div class="mt-5 p-5 bg-black/40 border border-white/10 rounded-xl">
                             <h4 class="font-bold text-white mb-4 text-sm flex items-center gap-2 uppercase tracking-wide">
                                 <i class="fa-solid fa-list-check text-v4red"></i> Roteiro da Reunião (Pauta)
@@ -295,382 +456,288 @@
                             <ul class="list-none space-y-3 text-sm text-gray-400">
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
-                                    <span><strong class="text-gray-200">Apresentação & Fluxo:</strong> Apresentar o time do projeto, canais de comunicação e explicar as fases da implementação.</span>
+                                    <span><strong class="text-gray-200">Apresentação & Fluxo:</strong> Explicar que a implementação durará exatas 3 semanas.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-exclamation text-yellow-500 mt-1"></i>
+                                    <span><strong class="text-gray-200">Regra das 24 Horas:</strong> "Se você, cliente, demorar mais de 24h para aprovar o Blueprint ou liberar acesso à BM, adicionaremos 1 dia útil ao prazo final automaticamente."</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
-                                    <span><strong class="text-gray-200">Balizamento de Escopo:</strong> Explicar claramente o que a implementação abrange e o que fica de fora (ex: CRM não fará as vendas pelo time).</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
-                                    <span><strong class="text-gray-200">Responsabilidades do Cliente:</strong> Garantir que o cliente saiba que depende dele o preenchimento de formulários e aprovação de blueprints.</span>
+                                    <span><strong class="text-gray-200">Escopo Negativo:</strong> Explicar o que a V4 NÃO fará (Ex: "Não vamos vender por você, somos suporte tecnológico").</span>
                                 </li>
                             </ul>
                         </div>
                     `,
-                    icon: "fa-solid fa-person-chalkboard",
+                    icon: "fa-solid fa-video",
                     isBlocker: true,
                     alertTitle: "Atenção Crítica (Blocker)",
-                    alertText: "NÃO AVANÇAR SEM ESSA CALL. Apenas prossiga após o cliente assinar ou dar o 'de acordo' nas premissas alinhadas nesta etapa."
+                    alertText: "SÓ MARQUE COMO CONCLUÍDO NO EKYTE APÓS A CALL. Não prossiga sem o aceite formal do cliente sobre a Regra das 24h.",
+                    sla: "Executar no Dia 1."
                 },
                 {
                     id: 2,
-                    title: "Discovery Técnico",
-                    shortDesc: "Imersão no negócio do cliente.",
-                    fullDesc: "Realizar a <strong class='text-white'>Call de Discovery</strong> e aplicar formulários. O objetivo principal desta tarefa é coletar, ouvir e confirmar todas as informações estratégicas sobre o segmento, modelo de negócios, jornada atual do lead e requisitos técnicos do cliente.",
-                    icon: "fa-solid fa-phone-volume",
-                    isBlocker: false
+                    title: "[Call] Discovery Técnico",
+                    shortDesc: "Imersão técnica (BM, Acessos).",
+                    fullDesc: "Realizar a Call de Discovery Técnico com o foco em Mapear a operação.\n\n<strong class='text-white block mt-4 mb-2'>Dica (Integração com Time Saber):</strong> Se o cliente for originário do Squad Saber, exija o Handover completo (Mapeamento de vendas já desenhado) para que esta call seja puramente focada nos acessos Meta BM, senhas e fluxos de caixa de e-mail. Não seja repetitivo com o cliente.",
+                    icon: "fa-solid fa-magnifying-glass",
+                    isBlocker: false,
+                    sla: "Executar até o Dia 3."
                 },
                 {
                     id: 3,
-                    title: "Planejamento de CRM",
-                    shortDesc: "Documento detalhado de funil e usuários.",
-                    fullDesc: "Montar um documento de planejamento (Blueprint) de CRM detalhado. Este documento deve obrigatoriamente conter:<br><br><ul class='list-disc pl-5 space-y-2 text-base text-gray-400'><li>Mapeamento das Etapas de Funil.</li><li>Definição e número de usuários que acessarão a plataforma.</li><li>Desenho de todas as automações necessárias.</li><li>Textos e Modelos de Mensagens Padrões.</li></ul>",
-                    icon: "fa-solid fa-pen-ruler",
+                    title: "[Doc] Elaboração do Blueprint",
+                    shortDesc: "O Planejamento em PDF/PPT.",
+                    fullDesc: "Construir e enviar o documento de planejamento de CRM para o cliente aprovar. Ele DEVE conter:\n<br><br><ul class='list-disc pl-5 space-y-2 text-sm text-gray-300'><li>As Etapas do Funil (com descritivos p/ Vendedores).</li><li>Lista de todos os Campos e Tags Personalizadas.</li><li>Mapa Visual das Automações e Gatilhos.</li><li>Modelos de Mensagem Padrão.</li><li>Lista de Usuários.</li></ul>",
+                    icon: "fa-solid fa-file-pdf",
                     isBlocker: true,
-                    alertTitle: "Atenção Crítica (Blocker)",
-                    alertText: "ESSA TAREFA SÓ DEVERÁ SER CONCLUÍDA APÓS O CLIENTE APROVAR. Para dar início às próximas tarefas, precisamos deste documento aprovado e validado formalmente pelo cliente."
+                    alertTitle: "Trava de Escopo!",
+                    alertText: "O QUE FOR APROVADO AQUI, SERÁ CONSTRUÍDO. Se o cliente pedir mudanças grandes pós-aprovação deste Blueprint, o prazo é pausado e deve ser realinhado.",
+                    sla: "Entregar até o Dia 6."
                 },
                 {
                     id: 4,
-                    title: "Contratação da Plataforma",
-                    shortDesc: "Criar contas e assinar plano.",
-                    fullDesc: "Após o planejamento de CRM ser aprovado, realizar a criação da conta e a contratação da plataforma de CRM escolhida. Iniciar pelo menos no plano grátis de testes ou período de trial, garantindo acesso completo à equipe executora.",
+                    title: "[Ação] Contratação de Plataforma",
+                    shortDesc: "Criação de Trial / Plano.",
+                    fullDesc: "A partir da aprovação do Blueprint, abrir as contas grátis (Trials de 14 dias) na plataforma escolhida (Kommo, Hubspot). Imediatamente, enviar solicitação formal para a equipe de parcerias (Stec Digital/Henrique) para liberação das licenças finais. Cobrar diariamente, pois o SLA deles é de 1 dia útil.",
                     icon: "fa-solid fa-credit-card",
-                    isBlocker: false
+                    isBlocker: false,
+                    sla: "Executar no Dia 7."
                 },
                 {
                     id: 5,
-                    title: "Configuração Unificada",
-                    shortDesc: "Implementar fluxos e automações.",
-                    fullDesc: "<strong class='text-white'>Tarefa Unificada:</strong> Aqui centralizamos a execução do que foi aprovado no Planejamento. O executor deve configurar de uma só vez no sistema escolhido:<br><br><ul class='list-disc pl-5 space-y-2 text-base text-gray-400'><li>Criação das etapas do Funil e Fluxos.</li><li>Criação de Campos Personalizados e Tags.</li><li>Configuração das Automações Padrões.</li><li>Setup dos Modelos de Mensagens Padrões (WhatsApp, Email, SMS).</li></ul><br><div class='mt-4 p-3 bg-white/5 border border-white/10 rounded text-sm text-gray-400'><i class='fa-solid fa-circle-info text-v4red mr-2'></i>Nota: Tudo deve ser configurado seguindo rigidamente o blueprint validado.</div>",
-                    icon: "fa-solid fa-sliders",
-                    isBlocker: false
+                    title: "[Ação] Conexão de Fontes",
+                    shortDesc: "Integração WABA, FB e IG.",
+                    fullDesc: "Tarefa técnica no Meta Business Suite e CRM. Conectar e verificar o status do WhatsApp API, conectar as caixas de DM do Instagram e Messenger, e plugar webhooks de entrada de Landing Pages (RD Station / Active / Forms nativos).",
+                    icon: "fa-solid fa-link",
+                    isBlocker: false,
+                    sla: "Executar entre Dia 8 e Dia 9."
                 },
                 {
                     id: 6,
-                    title: "Testes e Validação",
-                    shortDesc: "Stress test de automações.",
-                    fullDesc: "Tarefa focada exclusivamente em Qualidade (QA). O executor deve testar e validar o CRM fazendo testes de estresse em todas as automações criadas, simulando a jornada real de um Lead (Mistery Shopper) por todas as etapas do funil de vendas, garantindo que gatilhos operem perfeitamente.",
-                    icon: "fa-solid fa-bug",
-                    isBlocker: false
+                    title: "[Setup] Configuração Unificada",
+                    shortDesc: "Construção de tudo no sistema.",
+                    fullDesc: "<strong class='text-white uppercase tracking-wider text-sm'>A Tarefa Master do Ekyte:</strong> Não abra várias tarefas picadas. Use esta única tarefa para construir tudo o que estava no Blueprint de uma vez na ferramenta:\n<br><br><ul class='list-disc pl-5 space-y-2 text-sm text-gray-300'><li>Construir pipeline e colunas.</li><li>Cadastrar Campos Customizados e Tags.</li><li>Montar os fluxos e Salesbots (Automações).</li><li>Inserir os atalhos de mensagens aprovados.</li></ul>",
+                    icon: "fa-solid fa-sliders",
+                    isBlocker: false,
+                    sla: "Executar entre Dia 10 e Dia 12."
                 },
                 {
                     id: 7,
-                    title: "Treinamento",
-                    shortDesc: "Capacitação da equipe na plataforma.",
-                    fullDesc: "Realizar a call de treinamento de CRM com o cliente e sua equipe de vendas. Garantir que eles saibam na prática como: operar os cards do funil, preencher campos obrigatórios, adicionar notas, fazer leitura de tags e utilizar os atalhos de mensagens no dia a dia.",
-                    icon: "fa-solid fa-person-rays",
-                    isBlocker: false
+                    title: "[QA] Testes de Estresse",
+                    shortDesc: "Validação interna antes da entrega.",
+                    fullDesc: "Simule ser um cliente chato. Conecte o seu celular (ou do Pedro) e percorra todo o funil do CRM. Preencha os forms. Dispare gatilhos. Veja se as automações agem conforme desenhado no Blueprint.",
+                    icon: "fa-solid fa-bug",
+                    isBlocker: false,
+                    sla: "Executar no Dia 13."
                 },
                 {
                     id: 8,
-                    title: "Gate de NPS (Trava)",
-                    shortDesc: "Liberação após pesquisa.",
-                    fullDesc: `
-                        O <strong class="text-white font-medium">Gate de NPS</strong> atua como a barreira final de qualidade antes de liberarmos as chaves do carro para o cliente dirigir.
-                        <div class="mt-5 p-5 bg-black/40 border-l-4 border-v4red rounded-r-xl shadow-md">
-                            <h4 class="font-bold text-white mb-2 uppercase text-xs tracking-wider">Protocolo de Ativação (Go-Live)</h4>
-                            <p class="text-sm text-gray-400 mb-4">A ativação oficial das automações em ambiente de produção só deverá ocorrer <strong class="text-white">após</strong> o preenchimento da pesquisa de NPS pelo cliente avaliando a implementação.</p>
-                            <ol class="list-decimal pl-4 space-y-2 text-sm text-gray-300">
-                                <li>Disparo do Link/Formulário de NPS pós-treinamento.</li>
-                                <li>Monitoramento do preenchimento e leitura da nota/feedback.</li>
-                                <li>Desbloqueio: Ativação definitiva das campanhas e do fluxo de entrada.</li>
-                            </ol>
-                        </div>
-                    `,
-                    icon: "fa-solid fa-lock",
-                    isBlocker: true,
-                    alertTitle: "Atenção Crítica (Blocker)",
-                    alertText: "OPERAÇÃO TRAVADA: As integrações finais (entrada de leads reais no sistema) SÓ PODEM SER ATIVADAS mediante a confirmação de recebimento da nota do NPS."
+                    title: "[Call] Treinamento de Ferramenta",
+                    shortDesc: "Não é treinamento de vendas.",
+                    fullDesc: "Reunião de entrega e onboarding com os vendedores do cliente. \n\n<strong class='text-white border-b border-v4red'>IMPORTANTE:</strong> Alinhe desde o primeiro minuto da call que este é um treinamento sistêmico (onde clicar, como mover o card, preencher os campos) e não um curso de técnicas de vendas. O processo comercial já está refletido nas automações.",
+                    icon: "fa-solid fa-chalkboard-user",
+                    isBlocker: false,
+                    sla: "Executar no Dia 14."
                 },
                 {
                     id: 9,
-                    title: "Auditoria Mensal",
-                    shortDesc: "Manutenção pós Go-Live.",
-                    fullDesc: `
-                        Fase Contínua. Uma vez entregue, o ecossistema de CRM precisa de monitoramento ativo. Execute este checklist <strong class="text-white">1x por mês</strong>.
-                        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-black/30 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                                <h5 class="font-bold text-sm text-white mb-2 flex items-center gap-2"><i class="fa-brands fa-whatsapp text-green-500 text-lg"></i> Saúde do Número</h5>
-                                <p class="text-xs text-gray-400 leading-relaxed">Revisar Meta Business Suite: status de bloqueio, taxa de quality rating e status de templates.</p>
-                            </div>
-                            <div class="bg-black/30 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                                <h5 class="font-bold text-sm text-white mb-2 flex items-center gap-2"><i class="fa-solid fa-plug text-blue-500 text-lg"></i> Conexões e APIs</h5>
-                                <p class="text-xs text-gray-400 leading-relaxed">Checar os logs de integrações. Reconectar acessos nativos expirados (ex: Token FB).</p>
-                            </div>
-                            <div class="bg-black/30 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                                <h5 class="font-bold text-sm text-white mb-2 flex items-center gap-2"><i class="fa-solid fa-robot text-purple-500 text-lg"></i> Automações Ativas</h5>
-                                <p class="text-xs text-gray-400 leading-relaxed">Inserir 1 lead "espião" para garantir que gatilhos e disparos estão operando sem falhas.</p>
-                            </div>
-                            <div class="bg-black/30 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                                <h5 class="font-bold text-sm text-white mb-2 flex items-center gap-2"><i class="fa-solid fa-broom text-v4red text-lg"></i> Higiene da Base</h5>
-                                <p class="text-xs text-gray-400 leading-relaxed">Auditar excesso de leads atrasados, remover duplicados e garantir padronização de Tags.</p>
-                            </div>
-                        </div>
-                    `,
-                    icon: "fa-solid fa-stethoscope",
-                    isBlocker: false
+                    title: "[Trava] Gate de NPS e Go-Live",
+                    shortDesc: "Liberação de chaves final.",
+                    fullDesc: "Envio do link da pesquisa NPS avaliando o trabalho do Suporte/Implementação. A plataforma e as integrações finais em produção (Go-live) só serão entregues oficialmente após a resposta da pesquisa.",
+                    icon: "fa-solid fa-lock",
+                    isBlocker: true,
+                    alertTitle: "Protocolo de Bloqueio",
+                    alertText: "A entrega definitiva (dar a chave do carro) DEPENDE da nota enviada no NPS. Não dê baixa no Ekyte antes disso.",
+                    sla: "Executar no Dia 15."
                 }
             ];
 
             // ==========================================
-            // BASE DE DADOS 2: MANUAL DO DASHBOARD
+            // BASE 3: MATRIZ RACI (Tabela Hualter)
             // ==========================================
-            const manualSteps = [
+            const raciSteps = [
                 {
                     id: 1,
-                    title: "Visão Geral e Filtros",
-                    shortDesc: "Como navegar no painel de CS.",
+                    title: "Como ler a Matriz",
+                    shortDesc: "Definição R.A.C.I.",
                     fullDesc: `
-                        O Dashboard foi construído para dar visão executiva e situacional das operações ativas.
-                        <div class="mt-6 space-y-4">
-                            <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                                <h4 class="text-white font-bold text-sm mb-1"><i class="fa-solid fa-filter text-blue-400 mr-2"></i> Seletores Globais</h4>
-                                <p class="text-sm text-gray-400">Use os filtros superiores para refinar a visão por <strong class="text-gray-200">Cliente Específico</strong> ou por <strong class="text-gray-200">Modelo de Negócio</strong> (Recorrente vs. Avulso).</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-[#111] border border-white/5 p-5 rounded-xl">
+                                <span class="raci-badge raci-r mb-2 block">R</span>
+                                <h4 class="text-white font-bold text-sm mb-1">Responsible (Executa)</h4>
+                                <p class="text-xs text-gray-400">O executor da tarefa. Quem suja as mãos e faz acontecer.</p>
                             </div>
-                            <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                                <h4 class="text-white font-bold text-sm mb-1"><i class="fa-solid fa-calendar-days text-green-400 mr-2"></i> Filtros de Data</h4>
-                                <p class="text-sm text-gray-400">Todo o painel reage às datas escolhidas. O botão <strong class="text-gray-200">Todo o Período</strong> limpa as datas para buscar todo o histórico retido na API do Kommo CRM.</p>
+                            <div class="bg-[#111] border border-white/5 p-5 rounded-xl">
+                                <span class="raci-badge raci-a mb-2 block">A</span>
+                                <h4 class="text-white font-bold text-sm mb-1">Accountable (Aprova)</h4>
+                                <p class="text-xs text-gray-400">Dono da bola. Quem aprova as entregas e responde pelo sucesso.</p>
                             </div>
-                            <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                                <h4 class="text-white font-bold text-sm mb-1"><i class="fa-solid fa-file-pdf text-v4red mr-2"></i> Relatório One Page</h4>
-                                <p class="text-sm text-gray-400">O botão <strong class="text-gray-200">Baixar Relatório</strong> consolida a visão atual em um PDF dinâmico com insights acionáveis (Vitórias, Oportunidades e Plano de Ação).</p>
+                            <div class="bg-[#111] border border-white/5 p-5 rounded-xl">
+                                <span class="raci-badge raci-c mb-2 block">C</span>
+                                <h4 class="text-white font-bold text-sm mb-1">Consulted (Consultado)</h4>
+                                <p class="text-xs text-gray-400">Especialista que fornece insumos essenciais antes ou durante a execução.</p>
+                            </div>
+                            <div class="bg-[#111] border border-white/5 p-5 rounded-xl">
+                                <span class="raci-badge raci-i mb-2 block">I</span>
+                                <h4 class="text-white font-bold text-sm mb-1">Informed (Informado)</h4>
+                                <p class="text-xs text-gray-400">Precisa saber que a etapa terminou para poder iniciar outra (ou gerenciar), mas não executa.</p>
                             </div>
                         </div>
                     `,
-                    icon: "fa-solid fa-map-location-dot",
+                    icon: "fa-solid fa-circle-question",
                     isBlocker: false
                 },
                 {
                     id: 2,
-                    title: "Indicadores Resumo (Cards)",
-                    shortDesc: "Leitura dos cards superiores.",
+                    title: "Tabela de Papéis",
+                    shortDesc: "Atribuições de cada Squad.",
+                    hideHeader: true, 
                     fullDesc: `
-                        Os quatro cartões no topo do painel reúnem o estado macrossintético da base de clientes sob gestão.
-                        <ul class="mt-5 space-y-4 text-sm text-gray-400">
-                            <li class="flex items-start gap-3">
-                                <div class="w-2 h-2 rounded-full bg-blue-500 mt-1.5 flex-shrink-0"></div>
-                                <div><strong class="text-white">Total de Clientes:</strong> Quantidade absoluta de painéis sincronizados e totalizador de leads.</div>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-2 h-2 rounded-full bg-green-500 mt-1.5 flex-shrink-0"></div>
-                                <div><strong class="text-white">Saudáveis:</strong> Operações sem alertas graves de inatividade ou estagnação.</div>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-2 h-2 rounded-full bg-yellow-500 mt-1.5 flex-shrink-0"></div>
-                                <div><strong class="text-white">Em Atenção:</strong> Operações que começam a apresentar acúmulo leve de leads parados.</div>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-2 h-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0"></div>
-                                <div><strong class="text-white">Em Risco:</strong> Operações com risco crônico (muito "Data Decay" ou zero usuários ativos).</div>
-                            </li>
-                        </ul>
-                    `,
-                    icon: "fa-solid fa-chart-simple",
-                    isBlocker: false
-                },
-                {
-                    id: 3,
-                    title: "Tabela Detalhada (Métricas)",
-                    shortDesc: "Como a IA classifica um cliente.",
-                    fullDesc: `
-                        A <strong class="text-white">Visão Detalhada dos Clientes</strong> (tabela principal) é o coração do dashboard. Ela expõe a saúde de cada funil de vendas.
-                        
-                        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-[#111] p-4 rounded-lg border border-gray-800 border-l-4 border-l-blue-500">
-                                <h4 class="text-white font-bold text-sm mb-1">Ciclo Médio</h4>
-                                <p class="text-xs text-gray-400">Média de dias da criação do lead até o status "Ganho". <br><span class="text-green-400 font-medium">≤ 15d (Rápido)</span> | <span class="text-yellow-500 font-medium">≤ 45d (Médio)</span> | <span class="text-red-500 font-medium">> 45d (Lento)</span></p>
-                            </div>
-                            <div class="bg-[#111] p-4 rounded-lg border border-gray-800 border-l-4 border-l-yellow-500">
-                                <h4 class="text-white font-bold text-sm mb-1">Parados (>14d)</h4>
-                                <p class="text-xs text-gray-400">Leads sem nenhuma interação (nota, mudança de status ou mensagem) nas últimas duas semanas. Indica falta de follow-up.</p>
-                            </div>
-                            <div class="bg-[#111] p-4 rounded-lg border border-gray-800 border-l-4 border-l-purple-500">
-                                <h4 class="text-white font-bold text-sm mb-1">Data Decay (>30d)</h4>
-                                <p class="text-xs text-gray-400">O <strong>Data Decay</strong> é crítico: leads inativos há mais de um mês <strong>sem tarefa futura agendada</strong>. São oportunidades praticamente mortas consumindo espaço.</p>
-                            </div>
-                            <div class="bg-[#111] p-4 rounded-lg border border-gray-800 border-l-4 border-l-red-500">
-                                <h4 class="text-white font-bold text-sm mb-1">Tarefas Atrasadas</h4>
-                                <p class="text-xs text-gray-400">Atividades com data de execução no passado. Quanto maior este número, pior a disciplina do time de vendas.</p>
+                        <div class="p-4 sm:p-8">
+                            <h2 class="text-2xl font-sans font-black text-white uppercase tracking-tight mb-6">Atribuições: Ciclo do Projeto</h2>
+                            <div class="overflow-x-auto rounded-xl border border-white/10 shadow-2xl">
+                                <table class="w-full text-sm text-left border-collapse min-w-[700px]">
+                                    <thead class="bg-[#1a1a1a] text-xs text-gray-300 uppercase tracking-wider">
+                                        <tr>
+                                            <th class="px-5 py-4 border-b border-r border-white/5 font-bold w-1/3">Etapa Ekyte</th>
+                                            <th class="px-4 py-4 border-b border-r border-white/5 text-center">Operação <br><span class="text-[9px] font-normal text-gray-500">(Comercial)</span></th>
+                                            <th class="px-4 py-4 border-b border-r border-white/5 text-center bg-white/5">Pedro <br><span class="text-[9px] font-normal text-gray-500">(Gestor)</span></th>
+                                            <th class="px-4 py-4 border-b border-r border-white/5 text-center bg-v4red/10 text-white">Rafael <br><span class="text-[9px] font-normal text-v4red">(Suporte/TER)</span></th>
+                                            <th class="px-4 py-4 border-b border-white/5 text-center">Cliente</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-[#0f0f0f]">
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-gray-200">Venda do CRM</td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-4 py-4 text-center">-</td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-white border-l-2 border-l-v4red">[Call] Growth Class & Discovery</td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-4 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-white border-l-2 border-l-v4red">[Doc] Elaboração de Blueprint</td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center">-</td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-4 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-white border-l-2 border-l-v4red">[Setup] Configuração Unificada</td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center">-</td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-4 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-gray-200">Revisão/Refação de Funil <br><span class="text-[10px] text-gray-500">(Pós-Entrega Oficial)</span></td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-4 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     `,
                     icon: "fa-solid fa-table",
-                    isBlocker: true,
-                    alertTitle: "Como o Status de Saúde é calculado?",
-                    alertText: "A IA marca o cliente como 'Em Risco' (Vermelho) se o Decay for ≥ 5, se Parados for ≥ 15, ou se houver ZERO usuários ativos. Entra em 'Atenção' se o Decay for ≥ 1 ou Parados ≥ 5. Do contrário, fica 'Saudável'."
-                },
-                {
-                    id: 4,
-                    title: "Inteligência de Funil",
-                    shortDesc: "Leitura do pipeline horizontal.",
-                    fullDesc: `
-                        Ao selecionar um cliente e um funil específico, a seção **Detalhes do Funil** mostra o fluxo exato de conversão em tempo real.
-                        <ul class="mt-5 space-y-4 text-sm text-gray-400">
-                            <li class="flex items-start gap-3">
-                                <i class="fa-solid fa-arrow-right-arrow-left text-blue-400 mt-1 flex-shrink-0"></i>
-                                <div><strong class="text-white">Taxa de Conversão (Setas):</strong> As setas entre as etapas mostram qual o percentual de leads que <em>passaram</em> daquela etapa em relação à etapa anterior. Revela onde os leads estão sendo descartados mais rápido.</div>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i class="fa-solid fa-stopwatch text-yellow-500 mt-1 flex-shrink-0"></i>
-                                <div><strong class="text-white">Tempo na Etapa:</strong> Mostra o tempo médio que os leads costumam estacionar em cada card do funil antes de se moverem.</div>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i class="fa-solid fa-check-double text-green-500 mt-1 flex-shrink-0"></i>
-                                <div><strong class="text-white">Vendas vs. Perdas:</strong> Os contadores inferiores agregam o total de ganhos/perdas absolutos e o percentual de Win Rate/Loss Rate do funil.</div>
-                            </li>
-                        </ul>
-                    `,
-                    icon: "fa-solid fa-filter-circle-dollar",
-                    isBlocker: false
-                },
-                {
-                    id: 5,
-                    title: "Gráficos Analíticos",
-                    shortDesc: "Motivos de perda e histórico mensal.",
-                    fullDesc: `
-                        A camada de *Analytics* oferece contexto temporal (tendência) sobre a operação do cliente selecionado.
-                        
-                        <div class="mt-6 space-y-5">
-                            <div>
-                                <h4 class="text-white font-bold text-sm mb-2 border-b border-gray-800 pb-1">Gráficos de Barras Mensais</h4>
-                                <p class="text-sm text-gray-400">Mostra evolução de volume (Leads vs. Vendas) e evolução de eficiência (Taxa de Conversão). Ideal para perceber sazonalidades ou se uma otimização no CRM refletiu em aumento de Win Rate.</p>
-                            </div>
-                            <div>
-                                <h4 class="text-white font-bold text-sm mb-2 border-b border-gray-800 pb-1">Ranking de Motivos de Perda</h4>
-                                <p class="text-sm text-gray-400">A lista elenca do maior ao menor motivo responsável pelas baixas no CRM. A IA do dashboard foi projetada para criticar fortemente o uso de motivos genéricos. Se a barra maior for <strong class="text-v4red">"Sem Motivo Registrado"</strong>, a inteligência de negócios está cega.</p>
-                            </div>
-                        </div>
-                    `,
-                    icon: "fa-solid fa-chart-pie",
-                    isBlocker: false
-                },
-                {
-                    id: 6,
-                    title: "One Page Report",
-                    shortDesc: "Como ler o relatório de saúde da IA.",
-                    fullDesc: `
-                        Ao clicar em <strong class="text-white">"Baixar Relatório"</strong>, a plataforma formata um relatório (PDF-ready) contendo a leitura estratégica da operação.
-                        
-                        <div class="mt-5 p-5 bg-[#14140b] border border-yellow-500/20 rounded-xl border-l-4 border-l-yellow-500">
-                            <h4 class="font-bold text-white mb-2 text-sm flex items-center gap-2">
-                                <i class="fa-solid fa-star text-yellow-500"></i> Score de 0 a 10 (Avaliação de Saúde)
-                            </h4>
-                            <p class="text-xs text-gray-400 leading-relaxed">
-                                A nota é computada dinamicamente. Ela parte de uma base 7 ou 4 (dependendo da gravidade) e sofre acréscimos/punições. 
-                                <br><br>
-                                <strong class="text-green-500">+ Pontos:</strong> Conversão alta (>40%), Poucos estagnados (<50) e Ciclo ágil (<5d).<br>
-                                <strong class="text-red-500">- Pontos:</strong> Perda crítica (>80%) ou excesso de leads abandonados (>200).
-                            </p>
-                        </div>
-                        <p class="text-sm text-gray-400 mt-5">
-                            O relatório também gera parágrafos automáticos de <strong class="text-white">Vitórias</strong> (quando acerta nas métricas), <strong class="text-white">Oportunidades</strong> (gargalos identificados) e um <strong class="text-white">Plano de Ação Executivo</strong> prescritivo.
-                        </p>
-                    `,
-                    icon: "fa-solid fa-file-invoice",
-                    isBlocker: false
-                },
-                {
-                    id: 7,
-                    title: "Faturamento Kommo",
-                    shortDesc: "Controle de vigência das licenças.",
-                    fullDesc: `
-                        No rodapé do painel, a seção <strong class="text-white">Status das Licenças Kommo CRM</strong> garante que o ecossistema tecnológico não seja desligado por falta de pagamento.
-                        <ul class="mt-5 space-y-4 text-sm text-gray-400">
-                            <li class="flex items-start gap-3">
-                                <span class="bg-green-500/20 text-green-500 px-2 py-0.5 rounded text-[10px] font-bold mt-0.5">OK</span>
-                                <div>Licenças vigentes com mais de 5 dias até a expiração.</div>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="bg-yellow-500/20 text-yellow-500 px-2 py-0.5 rounded text-[10px] font-bold mt-0.5">AVISO</span>
-                                <div>A licença do cliente expira em <strong class="text-white">5 dias ou menos</strong>, ou a data não foi configurada. Enviar lembrete financeiro.</div>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="bg-red-500/20 text-red-500 px-2 py-0.5 rounded text-[10px] font-bold mt-0.5">CRÍTICO</span>
-                                <div>A licença já expirou (dias restantes negativos). Acesso ao CRM provavelmente bloqueado.</div>
-                            </li>
-                        </ul>
-                    `,
-                    icon: "fa-solid fa-credit-card",
                     isBlocker: false
                 }
             ];
 
             // ==========================================
-            // Lógica de Renderização e Interação Dinâmica
+            // BASE 4: MANUAL DO DASHBOARD
             // ==========================================
-            let currentMode = 'pop'; // 'pop' or 'manual'
-            let activeIdPop = null;
-            let activeIdManual = null;
-
-            const btnModePop = document.getElementById('btn-mode-pop');
-            const btnModeManual = document.getElementById('btn-mode-manual');
-            const sidebarTitle = document.getElementById('sidebar-title');
-            
-            // Textos Iniciais
-            const texts = {
-                pop: {
-                    title: "Fases do Projeto",
-                    welcomeTitle: "Bem-vindo ao Novo Fluxo",
-                    welcomeDesc: "Selecione uma etapa no menu à esquerda para visualizar os detalhes, instruções e requisitos do procedimento padrão.",
-                    welcomeIcon: "fa-solid fa-route",
-                    descTitle: "Instruções e Documentação",
-                    showFooter: true
-                },
-                manual: {
-                    title: "Capítulos do Manual",
-                    welcomeTitle: "Manual do Dashboard",
-                    welcomeDesc: "Selecione um tópico à esquerda para entender o funcionamento mecânico das tabelas, funis e regras de negócio da IA.",
-                    welcomeIcon: "fa-solid fa-book-open-reader",
-                    descTitle: "Mecânicas e Funcionalidades",
-                    showFooter: false
+            const manualSteps = [
+                {
+                    id: 1,
+                    title: "O Painel Executivo",
+                    shortDesc: "Como usar os filtros.",
+                    fullDesc: "Dashboard para mensurar o status dos clientes. Filtros funcionam universalmente.",
+                    icon: "fa-solid fa-map-location-dot",
+                    isBlocker: false
                 }
+            ];
+
+            const dataSets = { guide: guideSteps, raci: raciSteps, pop: popSteps, manual: manualSteps };
+            
+            const texts = {
+                guide: { title: "Conteúdo", welcomeTitle: "Guia Oficial do CRM", welcomeIcon: "fa-solid fa-cube", descTitle: "Detalhes" },
+                raci: { title: "Seções da Matriz", welcomeTitle: "Matriz RACI", welcomeIcon: "fa-solid fa-sitemap", descTitle: "Detalhamento" },
+                pop: { title: "Tarefas Ekyte", welcomeTitle: "Fluxo de CRM", welcomeIcon: "fa-solid fa-rocket", descTitle: "Instruções do Card" },
+                manual: { title: "Índice", welcomeTitle: "Manual do Dash", welcomeIcon: "fa-solid fa-chart-line", descTitle: "Mecânicas" }
             };
 
-            function initApp() {
-                switchMode('pop');
-            }
+            const buttons = {
+                guide: document.getElementById('btn-mode-guide'),
+                pop: document.getElementById('btn-mode-pop'),
+                raci: document.getElementById('btn-mode-raci'),
+                manual: document.getElementById('btn-mode-manual')
+            };
+
+            let currentMode = 'pop';
+            let activeIds = { guide: null, raci: null, pop: null, manual: null };
+
+            // Layout Control variables
+            const sidebarContainer = document.getElementById('sidebar-container');
+            const contentContainer = document.getElementById('content-container');
 
             function switchMode(mode) {
                 currentMode = mode;
-                const data = mode === 'pop' ? popSteps : manualSteps;
+                const data = dataSets[mode];
                 const uiTexts = texts[mode];
 
-                // Atualizar Botões Toggle
-                if (mode === 'pop') {
-                    btnModePop.className = "flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 bg-v4red text-white shadow-lg shadow-red-900/40";
-                    btnModeManual.className = "flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5";
+                // Atualiza Sidebar se o modo for Guia de Produto (Centralização)
+                if (mode === 'guide') {
+                    // Esconde a sidebar no desktop para o Guia ficar centralizado e full width
+                    sidebarContainer.classList.add('hidden', 'md:hidden');
+                    contentContainer.classList.remove('md:w-2/3', 'lg:w-3/4');
+                    contentContainer.classList.add('w-full', 'md:w-full', 'lg:w-full');
                 } else {
-                    btnModeManual.className = "flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 bg-v4red text-white shadow-lg shadow-red-900/40";
-                    btnModePop.className = "flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5";
+                    sidebarContainer.classList.remove('hidden', 'md:hidden');
+                    contentContainer.classList.add('md:w-2/3', 'lg:w-3/4');
+                    contentContainer.classList.remove('md:w-full', 'lg:w-full');
                 }
 
-                // Atualizar Textos Estáticos
-                sidebarTitle.textContent = uiTexts.title;
-                document.getElementById('total-steps-badge').textContent = data.length + (mode === 'pop' ? ' Etapas' : ' Capítulos');
+                // UI Botões
+                Object.keys(buttons).forEach(key => {
+                    const btn = buttons[key];
+                    if (key === mode) {
+                        btn.className = "nav-btn active flex-1 xl:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 bg-v4red text-white shadow-lg shadow-red-900/40";
+                    } else {
+                        btn.className = "nav-btn flex-1 xl:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5";
+                    }
+                });
+
+                document.getElementById('sidebar-title').textContent = uiTexts.title;
+                document.getElementById('total-steps-badge').textContent = data.length + ' Itens';
                 document.getElementById('total-steps-count').textContent = data.length;
                 document.getElementById('welcome-title').textContent = uiTexts.welcomeTitle;
-                document.getElementById('welcome-desc').textContent = uiTexts.welcomeDesc;
-                document.getElementById('welcome-icon').className = uiTexts.welcomeIcon + " text-4xl text-v4red opacity-80 animate-bounce";
+                document.getElementById('welcome-icon').className = uiTexts.welcomeIcon + " text-4xl text-v4red opacity-90 animate-bounce";
                 document.getElementById('card-desc-title').textContent = uiTexts.descTitle;
-                
-                // Mostrar/Ocultar Rodapé do Card
-                const footer = document.getElementById('card-footer');
-                if (uiTexts.showFooter) footer.classList.remove('hidden');
-                else footer.classList.add('hidden');
 
-                // Renderizar a Timeline correta
                 renderTimeline(data);
 
-                // Voltar para a tela de Welcome
-                const welcomeView = document.getElementById('welcome-view');
-                const card = document.getElementById('detail-card');
-                
-                card.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
-                card.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
-                
-                welcomeView.classList.remove('opacity-0', 'pointer-events-none');
+                // Auto-selecionar o primeiro se só tiver 1 item (caso do Guide)
+                if (data.length === 1) {
+                    selectStep(data[0].id, true);
+                } else if (!activeIds[mode]) {
+                    const welcomeView = document.getElementById('welcome-view');
+                    const card = document.getElementById('detail-card');
+                    card.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+                    card.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
+                    welcomeView.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    selectStep(activeIds[mode], true); 
+                }
             }
 
             function renderTimeline(data) {
@@ -679,10 +746,15 @@
 
                 data.forEach((step, index) => {
                     const isLast = index === data.length - 1;
-                    
                     const stepEl = document.createElement('div');
                     stepEl.id = `step-container-${step.id}`;
-                    stepEl.className = 'relative flex gap-4 p-3 rounded-xl cursor-pointer group step-transition border border-transparent hover:bg-white/5 hover:border-white/10';
+                    
+                    const isActive = activeIds[currentMode] === step.id;
+                    const containerClass = isActive ? 'bg-white/5 border-white/10' : 'border-transparent hover:bg-white/5 hover:border-white/10';
+                    const bubbleClass = isActive ? 'bg-v4red border-v4red text-white shadow-[0_0_15px_rgba(220,38,38,0.4)]' : 'bg-black/50 border-white/10 text-gray-500 group-hover:text-white group-hover:border-v4red/50 shadow-sm';
+                    const titleClass = isActive ? 'text-white' : 'text-gray-300 group-hover:text-white';
+                    
+                    stepEl.className = `relative flex gap-4 p-3 rounded-xl cursor-pointer group step-transition border ${containerClass}`;
                     stepEl.onclick = () => selectStep(step.id);
 
                     const lineHtml = !isLast ? `<div class="absolute left-[2.15rem] top-12 bottom-[-16px] w-0.5 bg-white/5 group-hover:bg-white/10 transition-colors z-0"></div>` : '';
@@ -690,16 +762,11 @@
 
                     stepEl.innerHTML = `
                         ${lineHtml}
-                        <div id="bubble-${step.id}" class="w-11 h-11 rounded-xl border border-white/10 bg-black/50 flex items-center justify-center flex-shrink-0 z-10 transition-all duration-300 text-gray-500 group-hover:text-white group-hover:border-v4red/50 shadow-sm">
+                        <div id="bubble-${step.id}" class="w-11 h-11 rounded-xl border flex items-center justify-center flex-shrink-0 z-10 transition-all duration-300 ${bubbleClass}">
                             <i class="${step.icon} text-lg"></i>
                         </div>
-                        
                         <div class="pb-2 pt-1 flex-1">
-                            <div class="flex justify-between items-start">
-                                <h3 id="title-${step.id}" class="text-sm font-bold text-gray-300 group-hover:text-white transition-colors">
-                                    ${step.id}. ${step.title}
-                                </h3>
-                            </div>
+                            <h3 id="title-${step.id}" class="text-sm font-bold transition-colors ${titleClass}">${step.id}. ${step.title}</h3>
                             <p class="text-xs text-gray-500 mt-1 line-clamp-1">${step.shortDesc}</p>
                             ${blockerBadge}
                         </div>
@@ -708,63 +775,42 @@
                 });
             }
 
-            window.selectStep = function(id) {
-                const data = currentMode === 'pop' ? popSteps : manualSteps;
+            window.selectStep = function(id, skipAnimation = false) {
+                const data = dataSets[currentMode];
                 const step = data.find(s => s.id === id);
                 if (!step) return;
 
-                const activeId = currentMode === 'pop' ? activeIdPop : activeIdManual;
+                const activeId = activeIds[currentMode];
 
-                // 1. Resetar estado anterior
-                if (activeId) {
+                // Limpar seleção anterior
+                if (activeId && activeId !== id) {
                     const prevContainer = document.getElementById(`step-container-${activeId}`);
                     const prevBubble = document.getElementById(`bubble-${activeId}`);
                     const prevTitle = document.getElementById(`title-${activeId}`);
-                    
-                    if(prevContainer) {
-                        prevContainer.classList.remove('bg-white/5', 'border-white/10');
-                        prevContainer.classList.add('border-transparent');
-                    }
-                    if (prevBubble) {
-                        prevBubble.classList.remove('bg-v4red', 'border-v4red', 'text-white', 'shadow-[0_0_15px_rgba(220,38,38,0.4)]');
-                        prevBubble.classList.add('bg-black/50', 'border-white/10', 'text-gray-500');
-                    }
-                    if (prevTitle) {
-                        prevTitle.classList.remove('text-white');
-                        prevTitle.classList.add('text-gray-300');
-                    }
+                    if(prevContainer) { prevContainer.classList.remove('bg-white/5', 'border-white/10'); prevContainer.classList.add('border-transparent'); }
+                    if(prevBubble) { prevBubble.classList.remove('bg-v4red', 'border-v4red', 'text-white', 'shadow-[0_0_15px_rgba(220,38,38,0.4)]'); prevBubble.classList.add('bg-black/50', 'border-white/10', 'text-gray-500'); }
+                    if(prevTitle) { prevTitle.classList.remove('text-white'); prevTitle.classList.add('text-gray-300'); }
                 }
 
-                // 2. Setar novo estado ativo
+                // Aplicar nova
                 const activeContainer = document.getElementById(`step-container-${id}`);
                 const activeBubble = document.getElementById(`bubble-${id}`);
                 const activeTitle = document.getElementById(`title-${id}`);
-                
-                if(activeContainer) {
-                    activeContainer.classList.remove('border-transparent');
-                    activeContainer.classList.add('bg-white/5', 'border-white/10');
-                }
-                if (activeBubble) {
-                    activeBubble.classList.remove('bg-black/50', 'border-white/10', 'text-gray-500');
-                    activeBubble.classList.add('bg-v4red', 'border-v4red', 'text-white', 'shadow-[0_0_15px_rgba(220,38,38,0.4)]');
-                }
-                if (activeTitle) {
-                    activeTitle.classList.remove('text-gray-300');
-                    activeTitle.classList.add('text-white');
-                }
+                if(activeContainer) { activeContainer.classList.remove('border-transparent'); activeContainer.classList.add('bg-white/5', 'border-white/10'); }
+                if(activeBubble) { activeBubble.classList.remove('bg-black/50', 'border-white/10', 'text-gray-500'); activeBubble.classList.add('bg-v4red', 'border-v4red', 'text-white', 'shadow-[0_0_15px_rgba(220,38,38,0.4)]'); }
+                if(activeTitle) { activeTitle.classList.remove('text-gray-300'); activeTitle.classList.add('text-white'); }
 
-                // Atualizar rastreador ativo
-                if (currentMode === 'pop') activeIdPop = id;
-                else activeIdManual = id;
+                activeIds[currentMode] = id;
 
-                // 3. Atualizar o Card de Detalhes
                 const welcomeView = document.getElementById('welcome-view');
                 const card = document.getElementById('detail-card');
+                const cardHeader = document.getElementById('card-header');
+                const cardDescTitle = document.getElementById('card-desc-title');
+                const cardFooter = document.getElementById('card-footer');
                 
                 welcomeView.classList.add('opacity-0');
-                setTimeout(() => welcomeView.classList.add('pointer-events-none'), 300);
+                setTimeout(() => welcomeView.classList.add('pointer-events-none'), skipAnimation ? 0 : 300);
                 
-                // Animação de entrada do card
                 card.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
                 card.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
 
@@ -774,27 +820,39 @@
                     document.getElementById('card-icon-container').innerHTML = `<i class="${step.icon}"></i>`;
                     document.getElementById('card-desc').innerHTML = step.fullDesc;
 
+                    // Ocultar cabeçalhos em certas telas para visual Hero (Guia/Raci)
+                    if (step.hideHeader) {
+                        cardHeader.classList.add('hidden');
+                        cardDescTitle.classList.add('hidden');
+                        cardFooter.classList.add('hidden');
+                    } else {
+                        cardHeader.classList.remove('hidden');
+                        cardDescTitle.classList.remove('hidden');
+                        cardFooter.classList.remove('hidden');
+                        document.getElementById('card-sla-text').textContent = step.sla || "Definido em contrato.";
+                    }
+
                     const alertBox = document.getElementById('card-alert');
-                    if (step.isBlocker && step.alertText) {
+                    if (step.isBlocker) {
                         document.getElementById('card-alert-title').textContent = step.alertTitle || "Atenção Crítica";
-                        document.getElementById('card-alert-text').textContent = step.alertText;
+                        document.getElementById('card-alert-text').textContent = step.alertText || "Requisito obrigatório não pode ser ignorado.";
                         alertBox.classList.remove('hidden');
                     } else {
                         alertBox.classList.add('hidden');
                     }
 
-                    // Trigger reflow
-                    void card.offsetWidth;
+                    void card.offsetWidth; 
                     card.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
                     card.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
-                }, 200);
+                }, skipAnimation ? 0 : 200);
             }
 
-            // Listeners dos Botões de Modo
-            btnModePop.addEventListener('click', () => { if(currentMode !== 'pop') switchMode('pop'); });
-            btnModeManual.addEventListener('click', () => { if(currentMode !== 'manual') switchMode('manual'); });
+            Object.keys(buttons).forEach(key => {
+                buttons[key].addEventListener('click', () => { if(currentMode !== key) switchMode(key); });
+            });
 
-            initApp();
+            // Start Mode
+            switchMode('pop'); 
         });
     </script>
 </body>
