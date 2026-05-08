@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações - Discovery AI V4</title>
+    <title>Hub Operacional CRM - V4 Company</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -71,6 +71,7 @@
         .raci-c { @apply bg-yellow-500/20 text-yellow-400 border-yellow-500/30; }
         .raci-i { @apply bg-purple-500/20 text-purple-400 border-purple-500/30; }
         .raci-badge { @apply px-3 py-1 rounded text-xs font-bold border inline-block w-8 text-center shadow-sm; }
+        .timeline-badge { @apply text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full border mb-1 inline-block; }
     </style>
 </head>
 <body class="flex flex-col lg:flex-row h-screen w-full overflow-hidden bg-mainbg font-inter text-gray-200 relative">
@@ -168,9 +169,6 @@
                 <button id="btn-mode-raci" class="nav-btn flex-1 xl:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">
                     <i class="fa-solid fa-sitemap mr-2"></i> Matriz RACI
                 </button>
-                <button id="btn-mode-manual" class="nav-btn flex-1 xl:flex-none px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">
-                    <i class="fa-solid fa-chart-line mr-2"></i> Dash Manual
-                </button>
             </div>
 
             <!-- Container Principal -->
@@ -205,7 +203,7 @@
                     <!-- Card de Detalhes (Escondido inicialmente) -->
                     <div id="detail-card" class="absolute inset-0 flex flex-col overflow-y-auto opacity-0 pointer-events-none transform scale-95 transition-all duration-500 z-20 bg-[#0f0f0f]/90">
                         
-                        <!-- Cabeçalho do Card (Pode ser oculto via config do objeto) -->
+                        <!-- Cabeçalho do Card -->
                         <div id="card-header" class="p-8 pb-6 border-b border-white/5 relative bg-gradient-to-b from-black/60 to-transparent flex-shrink-0">
                             <div class="absolute top-0 right-0 bg-v4red text-white text-[10px] font-bold px-4 py-1.5 rounded-bl-xl uppercase tracking-wider shadow-lg shadow-red-900/50">
                                 Tarefa Ekyte: <span id="card-step-number"></span> de <span id="total-steps-count"></span>
@@ -215,7 +213,9 @@
                                 <div id="card-icon-container" class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-v4red text-2xl shadow-inner flex-shrink-0">
                                     <!-- Icon -->
                                 </div>
-                                <h2 id="card-title" class="text-2xl sm:text-3xl font-sans font-bold text-white tracking-tight">Título</h2>
+                                <div>
+                                    <h2 id="card-title" class="text-2xl sm:text-3xl font-sans font-bold text-white tracking-tight">Título</h2>
+                                </div>
                             </div>
                         </div>
 
@@ -247,7 +247,7 @@
                                     </div>
                                     <div>
                                         <h4 class="text-sm font-bold text-white">SLA no Ekyte</h4>
-                                        <p id="card-sla-text" class="text-xs text-gray-500 mt-0.5">Prazo padrão de execução desta tarefa.</p>
+                                        <p id="card-sla-text" class="text-xs text-gray-400 mt-0.5 font-mono bg-white/5 px-2 py-0.5 rounded border border-white/10">Prazo padrão de execução desta tarefa.</p>
                                     </div>
                                 </div>
                                 <button class="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-v4red px-4 py-2 rounded-lg shadow-sm text-xs font-semibold text-white transition-colors flex items-center gap-2">
@@ -292,53 +292,29 @@
             sidebarOverlay?.addEventListener('click', toggleSidebar);
 
             // ==========================================
-            // BASE 1: GUIA DO PRODUTO (ÚNICO DOCUMENTO)
+            // BASE 1: GUIA DO PRODUTO
             // ==========================================
             const guideSteps = [
                 {
                     id: 1,
                     title: "Documento Central de Vendas",
                     shortDesc: "O Pitch, o Escopo e ICP.",
-                    hideHeader: true, // Ocultar o header padrão para o Hero visual brilhar
+                    hideHeader: true,
                     fullDesc: `
                         <div class="flex flex-col h-full -mt-8 -mx-8 sm:-mt-0 sm:-mx-0 pb-10">
                             
-                            <!-- Hero Section (Referência Hualter IA SDR) -->
+                            <!-- Hero Section -->
                             <div class="bg-[#111] p-8 sm:p-16 border-b border-white/5 relative overflow-hidden">
                                 <div class="absolute top-0 right-0 w-80 h-80 bg-v4red/15 rounded-full blur-[100px] -mr-20 -mt-20"></div>
                                 <h4 class="text-v4red font-bold tracking-widest text-xs mb-3 uppercase">Escopo e Produto Oficial</h4>
-                                <h1 class="text-4xl sm:text-6xl font-sans font-black text-white uppercase tracking-tighter leading-[1] mb-6 relative z-10">
-                                    O CORAÇÃO DA SUA <br/><span class="text-v4red">OPERAÇÃO DE VENDAS.</span>
+                                <h1 class="text-4xl sm:text-5xl font-sans font-black text-white uppercase tracking-tighter leading-[1.1] mb-6 relative z-10">
+                                    NÃO INVENTE MODA.<br/><span class="text-v4red">SIGA O PROCESSO.</span>
                                 </h1>
                                 <p class="text-gray-400 text-lg max-w-2xl relative z-10">
-                                    Plataforma centralizadora que organiza leads, dita o ritmo de follow-up do time comercial e garante que nenhuma oportunidade seja esquecida. Seu melhor vendedor não precisa de memória, precisa de um processo.
+                                    A implementação do CRM deve seguir um padrão claro. Vender implementações fora do escopo (ex: Automações pesadas de E-commerce) gera gargalos e frustração. Este documento dita as regras do jogo.
                                 </p>
                             </div>
                             
-                            <!-- Stats / Capacidades Principais -->
-                            <div class="p-8 sm:p-16 pt-12 pb-8 bg-black/20">
-                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-8">Capacidades Principais</h3>
-                                
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-v4red/50 transition-colors group">
-                                        <h2 class="text-4xl font-black text-white mb-2 group-hover:text-v4red transition-colors">100%</h2>
-                                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Leads Gravados no CRM</p>
-                                    </div>
-                                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-v4red/50 transition-colors group">
-                                        <h2 class="text-4xl font-black text-white mb-2 group-hover:text-v4red transition-colors">API</h2>
-                                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Integração Oficial Meta (S/ QR)</p>
-                                    </div>
-                                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-v4red/50 transition-colors group">
-                                        <h2 class="text-4xl font-black text-white mb-2 group-hover:text-v4red transition-colors">IA</h2>
-                                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Análise de Data Decay Nativa</p>
-                                    </div>
-                                    <div class="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-v4red/50 transition-colors group">
-                                        <h2 class="text-4xl font-black text-white mb-2 group-hover:text-v4red transition-colors">3 Sem</h2>
-                                        <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">SLA Máximo de Implementação</p>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Diagnóstico (Checklist ICP) -->
                             <div class="p-8 sm:p-16 pt-8 border-t border-white/5">
                                 <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-6">Diagnóstico do Produto (ICP)</h3>
@@ -350,31 +326,31 @@
                                             <i class="fa-solid fa-check-circle text-v4red text-xl"></i>
                                             <div>
                                                 <h4 class="text-white font-bold text-sm">Volume: 50 a 500 Leads/mês</h4>
-                                                <p class="text-[11px] text-gray-400 mt-1">Acima disso requer soluções enterprise.</p>
+                                                <p class="text-[11px] text-gray-400 mt-1">Acima disso requer soluções enterprise pesadas.</p>
                                             </div>
                                         </div>
                                         <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-center gap-4">
                                             <i class="fa-solid fa-check-circle text-v4red text-xl"></i>
                                             <div>
                                                 <h4 class="text-white font-bold text-sm">Venda Consultiva B2B/B2C</h4>
-                                                <p class="text-[11px] text-gray-400 mt-1">Exige interação humana via WhatsApp.</p>
+                                                <p class="text-[11px] text-gray-400 mt-1">Exige interação humana e consultiva via WhatsApp.</p>
                                             </div>
                                         </div>
                                         <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-center gap-4">
                                             <i class="fa-solid fa-check-circle text-v4red text-xl"></i>
                                             <div>
                                                 <h4 class="text-white font-bold text-sm">Gargalo de Follow-up</h4>
-                                                <p class="text-[11px] text-gray-400 mt-1">Vendedores esquecem de retornar leads.</p>
+                                                <p class="text-[11px] text-gray-400 mt-1">Vendedores esquecem de retornar leads. Processo não mapeado.</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="bg-gradient-to-br from-[#111] to-black p-6 rounded-2xl border border-white/10 flex flex-col justify-center">
                                         <h4 class="font-black text-white text-xl mb-2">CRM É O PRODUTO INDICADO.</h4>
-                                        <p class="text-sm text-gray-400 leading-relaxed mb-4">Se o cliente preenche os requisitos ao lado, a centralização em um pipeline visível eliminará a perda de dados e organizará a esteira comercial imediatamente.</p>
+                                        <p class="text-sm text-gray-400 leading-relaxed mb-4">Se o cliente preenche os requisitos ao lado, a centralização organizará a esteira comercial.</p>
                                         <div class="text-xs bg-white/5 p-3 rounded text-gray-300 font-mono">
-                                            <span class="text-green-500">✅</span> Vendas Complexas <br>
-                                            <span class="text-red-500">❌</span> E-commerce transacional puro
+                                            <span class="text-green-500">✅</span> Vendas Complexas e Serviços <br>
+                                            <span class="text-red-500">❌</span> E-commerce transacional puro (Sem vendedor)
                                         </div>
                                     </div>
                                 </div>
@@ -392,19 +368,16 @@
                                         </h4>
                                         <ul class="space-y-3">
                                             <li class="flex items-start gap-3 text-sm text-gray-300">
-                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Desenho de até 2 Funis (Vendas/CS).
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Planejamento de CRM detalhado e aprovado pelo cliente.
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-300">
-                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Criação de Campos e Tags.
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Desenho dos funis de vendas que serão necessários de acordo com as dores mapeadas na call de discovery.
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-300">
-                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Integração API Oficial Meta (WABA, IG, FB).
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Criação de Tags, Campos personalizados e automações de Follow.
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-300">
-                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Automações Padrões: Boas-vindas, Roleta, Alertas.
-                                            </li>
-                                            <li class="flex items-start gap-3 text-sm text-gray-300">
-                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Integração RD Station / Tipoform via Zapier/Pluga.
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Integrações com plataformas do tipo: Google ADS, Meta, Site e LPs.
                                             </li>
                                         </ul>
                                     </div>
@@ -416,16 +389,98 @@
                                         </h4>
                                         <ul class="space-y-3">
                                             <li class="flex items-start gap-3 text-sm text-gray-400">
+                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Plataformas que exigem integrações com APIs ou integrações muito complexas.
+                                            </li>
+                                            <li class="flex items-start gap-3 text-sm text-gray-400">
                                                 <i class="fa-solid fa-ban text-v4red mt-1"></i> Atendimento ao Lead (Não somos operação de vendas).
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-400">
-                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> E-commerce (Disparo de carrinho abandonado).
+                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Disparo de carrinho abandonado de E-commerce.
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-400">
-                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Mudança de Funil ou Refação PÓS aprovação do Blueprint.
+                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Mudança ou refação de funil PÓS aprovação do Blueprint. (Custa extra).
                                             </li>
-                                            <li class="flex items-start gap-3 text-sm text-gray-400">
-                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Integrações complexas com ERPs legados sem documentação.
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Regras de Prazos e Atrasos -->
+                            <div class="p-8 sm:p-16 pt-8 border-t border-white/5 bg-[#111]">
+                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-6 flex items-center gap-3">
+                                    <i class="fa-solid fa-clock-rotate-left text-yellow-500"></i> Alinhamento de Prazos e Atrasos
+                                </h3>
+                                
+                                <div class="bg-yellow-500/10 border border-yellow-500/30 p-6 rounded-2xl flex flex-col gap-4">
+                                    <div class="flex items-start gap-4">
+                                        <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-2xl mt-1"></i>
+                                        <div>
+                                            <h4 class="text-yellow-500 font-bold text-base uppercase mb-1 tracking-wide">A responsabilidade é mútua</h4>
+                                            <p class="text-gray-300 text-sm leading-relaxed">
+                                                Qualquer atraso por parte do cliente ocorrerá a alteração direta e proporcional dos prazos de implementação. Nosso cronograma depende ativamente da cooperação e do tempo de resposta do contratante.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="ml-10">
+                                        <h5 class="text-white text-xs font-bold uppercase tracking-wider mb-3 opacity-80">Gatilhos que alteram o prazo:</h5>
+                                        <ul class="list-none space-y-3 text-sm text-gray-400">
+                                            <li class="flex items-start gap-2">
+                                                <i class="fa-solid fa-arrow-right text-v4red text-xs mt-1"></i> 
+                                                <span>Se o cliente demorar para aprovar o <strong>Planejamento de CRM</strong>, o prazo de entrega será postergado.</span>
+                                            </li>
+                                            <li class="flex items-start gap-2">
+                                                <i class="fa-solid fa-arrow-right text-v4red text-xs mt-1"></i> 
+                                                <span>Se o cliente demorar para repassar <strong>informações vitais</strong> (como números de telefone, acessos ao Facebook/BM ou liberação de licenças), as etapas técnicas serão pausadas e os prazos finais realinhados.</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Recorrência: CRM Report -->
+                            <div class="p-8 sm:p-16 pt-8 border-t border-white/5 bg-black/40">
+                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-6 flex items-center gap-3">
+                                    <i class="fa-solid fa-chart-line text-blue-500"></i> Recorrência (CRM Report Mensal)
+                                </h3>
+                                
+                                <div class="bg-[#111] border border-white/10 p-6 rounded-2xl">
+                                    <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                                        Caso o cliente tenha a contratação de CRM com <strong>Recorrência</strong>, o time será responsável por entregar um <strong>Relatório Mensal de CRM (CRM Report)</strong>. Este documento é vital para garantir o uso correto da ferramenta e otimizar a operação comercial.
+                                    </p>
+                                    
+                                    <h4 class="text-white font-bold text-sm uppercase tracking-wide mb-4 border-b border-white/10 pb-2">O relatório mensal deve detalhar:</h4>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <ul class="space-y-4">
+                                            <li class="flex items-start gap-3">
+                                                <i class="fa-solid fa-bullseye text-blue-500 mt-1"></i>
+                                                <div>
+                                                    <strong class="text-gray-200 text-sm block">Visão Geral e Saúde (Health Score)</strong>
+                                                    <span class="text-xs text-gray-400">Total de leads, taxa de conversão, taxa de perda, receita gerada, ciclo médio de vendas e uma nota geral de saúde da operação avaliando possíveis riscos.</span>
+                                                </div>
+                                            </li>
+                                            <li class="flex items-start gap-3">
+                                                <i class="fa-solid fa-filter text-blue-500 mt-1"></i>
+                                                <div>
+                                                    <strong class="text-gray-200 text-sm block">Análise de Funil e Leads Estagnados</strong>
+                                                    <span class="text-xs text-gray-400">Volume de leads em cada etapa (Entrada, Atendimento, Qualificado, Vendas, Perdas) e monitoramento crítico de leads sem resposta ou parados.</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <ul class="space-y-4">
+                                            <li class="flex items-start gap-3">
+                                                <i class="fa-solid fa-chart-pie text-blue-500 mt-1"></i>
+                                                <div>
+                                                    <strong class="text-gray-200 text-sm block">Motivos de Perda (Loss Reasons)</strong>
+                                                    <span class="text-xs text-gray-400">Mapeamento detalhado dos motivos de perda (ex: "Orçamento", "Sem Motivo Registrado", "Concorrente") para ações de treinamento comercial da equipe.</span>
+                                                </div>
+                                            </li>
+                                            <li class="flex items-start gap-3">
+                                                <i class="fa-solid fa-chess-knight text-blue-500 mt-1"></i>
+                                                <div>
+                                                    <strong class="text-gray-200 text-sm block">Leitura Estratégica e Plano de Ação</strong>
+                                                    <span class="text-xs text-gray-400">Diagnóstico executivo apontando as vitórias do período, gargalos identificados e um plano de ação tático com metas estipuladas para o mês seguinte.</span>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -445,26 +500,28 @@
             const popSteps = [
                 {
                     id: 1,
-                    title: "[Call] Growth Class (Kick-off)",
-                    shortDesc: "Reunião de Escopo e SLAs.",
+                    timeline: "Semana 1",
+                    title: "[Call] Growth Class",
+                    shortDesc: "Reunião de Escopo e Prazos.",
                     fullDesc: `
-                        <strong class="text-white">O que fazer nesta tarefa do Ekyte:</strong> Realizar a Call inaugural com o cliente para ditar as regras do jogo.
+                        <strong class="text-white text-lg block mb-2 border-b border-white/10 pb-2">Objetivo: Alinhamento das Regras do Jogo</strong>
+                        O que fazer nesta tarefa do Ekyte: Realizar a Call inaugural com o cliente para ditar como as 3 semanas vão funcionar.
                         <div class="mt-5 p-5 bg-black/40 border border-white/10 rounded-xl">
                             <h4 class="font-bold text-white mb-4 text-sm flex items-center gap-2 uppercase tracking-wide">
-                                <i class="fa-solid fa-list-check text-v4red"></i> Roteiro da Reunião (Pauta)
+                                <i class="fa-solid fa-list-check text-v4red"></i> Pauta Obrigatória
                             </h4>
                             <ul class="list-none space-y-3 text-sm text-gray-400">
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
-                                    <span><strong class="text-gray-200">Apresentação & Fluxo:</strong> Explicar que a implementação durará exatas 3 semanas.</span>
+                                    <i class="fa-solid fa-calendar text-green-500 mt-1"></i>
+                                    <span><strong class="text-gray-200">Cronograma Fixo:</strong> Explicar que a implementação dura exatas 3 semanas (Planejamento > Configuração > Entrega).</span>
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-circle-exclamation text-yellow-500 mt-1"></i>
-                                    <span><strong class="text-gray-200">Regra das 24 Horas:</strong> "Se você, cliente, demorar mais de 24h para aprovar o Blueprint ou liberar acesso à BM, adicionaremos 1 dia útil ao prazo final automaticamente."</span>
+                                    <i class="fa-solid fa-clock text-yellow-500 mt-1"></i>
+                                    <span><strong class="text-gray-200">A Regra das 24 Horas:</strong> Deixar explícito que se o cliente demorar mais de 24h para aprovar uma solicitação (ex: Blueprint), o prazo total será estendido proporcionalmente. Não é atraso nosso, é repriorização de pauta.</span>
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
-                                    <span><strong class="text-gray-200">Escopo Negativo:</strong> Explicar o que a V4 NÃO fará (Ex: "Não vamos vender por você, somos suporte tecnológico").</span>
+                                    <i class="fa-solid fa-ban text-red-500 mt-1"></i>
+                                    <span><strong class="text-gray-200">Fora do Escopo:</strong> Explicar o que a V4 NÃO fará (vender pelo cliente, etc).</span>
                                 </li>
                             </ul>
                         </div>
@@ -472,89 +529,147 @@
                     icon: "fa-solid fa-video",
                     isBlocker: true,
                     alertTitle: "Atenção Crítica (Blocker)",
-                    alertText: "SÓ MARQUE COMO CONCLUÍDO NO EKYTE APÓS A CALL. Não prossiga sem o aceite formal do cliente sobre a Regra das 24h.",
-                    sla: "Executar no Dia 1."
+                    alertText: "Não avance sem o 'aceite formal' do cliente sobre a Regra das 24h e o prazo de 3 semanas.",
+                    sla: "Semana 1 - Executar até o Dia 2"
                 },
                 {
                     id: 2,
+                    timeline: "Semana 1",
                     title: "[Call] Discovery Técnico",
-                    shortDesc: "Imersão técnica (BM, Acessos).",
-                    fullDesc: "Realizar a Call de Discovery Técnico com o foco em Mapear a operação.\n\n<strong class='text-white block mt-4 mb-2'>Dica (Integração com Time Saber):</strong> Se o cliente for originário do Squad Saber, exija o Handover completo (Mapeamento de vendas já desenhado) para que esta call seja puramente focada nos acessos Meta BM, senhas e fluxos de caixa de e-mail. Não seja repetitivo com o cliente.",
+                    shortDesc: "Acessos e Mapeamento.",
+                    fullDesc: `
+                        <strong class="text-white block mb-2">Mapeamento da Operação</strong>
+                        Realizar a Call para entender o momento atual do cliente e coletar acessos (Meta BM, credenciais).
+                        
+                        <div class="mt-6 bg-blue-900/10 border border-blue-500/30 p-4 rounded-xl">
+                            <h4 class="text-blue-400 font-bold flex items-center gap-2 text-sm uppercase tracking-wide mb-2"><i class="fa-solid fa-handshake"></i> Handover Squad Saber</h4>
+                            <p class="text-gray-300 text-sm">Se o cliente veio do "Saber", exija do account o handover completo (eles já mapeiam funil de vendas, cliente oculto, etc). Use esses dados para não fazer o cliente repetir tudo do zero. Foque essa call apenas nos acessos técnicos e confirmações.</p>
+                        </div>
+                    `,
                     icon: "fa-solid fa-magnifying-glass",
                     isBlocker: false,
-                    sla: "Executar até o Dia 3."
+                    sla: "Semana 1 - Executar até o Dia 3"
                 },
                 {
                     id: 3,
-                    title: "[Doc] Elaboração do Blueprint",
-                    shortDesc: "O Planejamento em PDF/PPT.",
-                    fullDesc: "Construir e enviar o documento de planejamento de CRM para o cliente aprovar. Ele DEVE conter:\n<br><br><ul class='list-disc pl-5 space-y-2 text-sm text-gray-300'><li>As Etapas do Funil (com descritivos p/ Vendedores).</li><li>Lista de todos os Campos e Tags Personalizadas.</li><li>Mapa Visual das Automações e Gatilhos.</li><li>Modelos de Mensagem Padrão.</li><li>Lista de Usuários.</li></ul>",
+                    timeline: "Semana 1",
+                    title: "[Doc] Planejamento / Blueprint",
+                    shortDesc: "Aprovação do documento de base.",
+                    fullDesc: `
+                        <strong class="text-white block mb-4 border-b border-white/10 pb-2">O Documento Sagrado do CRM</strong>
+                        A configuração do CRM NÃO COMEÇA sem este documento estar 100% aprovado. Construa a apresentação contendo:
+                        <br><br>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-gray-300">
+                            <li>Etapas do Funil (com descritivos p/ vendedores não se perderem).</li>
+                            <li>Lista exata de Campos e Tags.</li>
+                            <li>Desenho de Automações e Gatilhos (Trackeamento de leads).</li>
+                            <li>Modelos de Mensagem Padrão.</li>
+                            <li>Lista de Usuários.</li>
+                        </ul>
+                    `,
                     icon: "fa-solid fa-file-pdf",
                     isBlocker: true,
                     alertTitle: "Trava de Escopo!",
-                    alertText: "O QUE FOR APROVADO AQUI, SERÁ CONSTRUÍDO. Se o cliente pedir mudanças grandes pós-aprovação deste Blueprint, o prazo é pausado e deve ser realinhado.",
-                    sla: "Entregar até o Dia 6."
+                    alertText: "O QUE FOR APROVADO AQUI, SERÁ CONSTRUÍDO. Mudanças de escopo solicitadas após a aprovação pausarão o projeto e os prazos serão recalculados. Não crie funis antes do 'OK' no documento.",
+                    sla: "Semana 1 - Entregar até o Dia 5"
                 },
                 {
                     id: 4,
-                    title: "[Ação] Contratação de Plataforma",
-                    shortDesc: "Criação de Trial / Plano.",
-                    fullDesc: "A partir da aprovação do Blueprint, abrir as contas grátis (Trials de 14 dias) na plataforma escolhida (Kommo, Hubspot). Imediatamente, enviar solicitação formal para a equipe de parcerias (Stec Digital/Henrique) para liberação das licenças finais. Cobrar diariamente, pois o SLA deles é de 1 dia útil.",
+                    timeline: "Semana 2",
+                    title: "[Ação] Contratação da Plataforma",
+                    shortDesc: "Criação do trial e licenças.",
+                    fullDesc: `
+                        <strong class="text-white block mb-2">Liberação de Licenças</strong>
+                        Após a aprovação do Planejamento, iniciar o trial de 14 dias (Kommo/Hubspot) para iniciarmos a montagem técnica.
+                        <br><br>
+                        Enviar solicitação formal para a Stec Digital/Henrique para faturamento das licenças. 
+                        <strong class="text-v4red">Regra:</strong> Cobrar diariamente caso passe do SLA de 1 dia útil. O cliente será avisado de que a contratação já ocorreu e deve pagar posteriormente.
+                    `,
                     icon: "fa-solid fa-credit-card",
                     isBlocker: false,
-                    sla: "Executar no Dia 7."
+                    sla: "Semana 2 - Iniciar no Dia 6"
                 },
                 {
                     id: 5,
-                    title: "[Ação] Conexão de Fontes",
-                    shortDesc: "Integração WABA, FB e IG.",
-                    fullDesc: "Tarefa técnica no Meta Business Suite e CRM. Conectar e verificar o status do WhatsApp API, conectar as caixas de DM do Instagram e Messenger, e plugar webhooks de entrada de Landing Pages (RD Station / Active / Forms nativos).",
-                    icon: "fa-solid fa-link",
+                    timeline: "Semana 2",
+                    title: "[Setup] Configuração Unificada",
+                    shortDesc: "A Grande Construção.",
+                    fullDesc: `
+                        <strong class="text-white uppercase tracking-wider text-sm block mb-4 border-b border-white/10 pb-2">Tarefa Centralizada no Ekyte</strong>
+                        Para evitar desorganização no Ekyte com 10 tarefas picadas, unificamos tudo aqui. Construa tudo o que foi aprovado no Planejamento de uma só vez:
+                        <br><br>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-gray-300">
+                            <li>Construir pipeline e colunas.</li>
+                            <li>Cadastrar Campos Customizados e Tags.</li>
+                            <li>Montar as Automações, fluxos e Salesbots.</li>
+                            <li>Inserir os atalhos de mensagens aprovados.</li>
+                        </ul>
+                    `,
+                    icon: "fa-solid fa-sliders",
                     isBlocker: false,
-                    sla: "Executar entre Dia 8 e Dia 9."
+                    sla: "Semana 2 - Executar até o Dia 9"
                 },
                 {
                     id: 6,
-                    title: "[Setup] Configuração Unificada",
-                    shortDesc: "Construção de tudo no sistema.",
-                    fullDesc: "<strong class='text-white uppercase tracking-wider text-sm'>A Tarefa Master do Ekyte:</strong> Não abra várias tarefas picadas. Use esta única tarefa para construir tudo o que estava no Blueprint de uma vez na ferramenta:\n<br><br><ul class='list-disc pl-5 space-y-2 text-sm text-gray-300'><li>Construir pipeline e colunas.</li><li>Cadastrar Campos Customizados e Tags.</li><li>Montar os fluxos e Salesbots (Automações).</li><li>Inserir os atalhos de mensagens aprovados.</li></ul>",
-                    icon: "fa-solid fa-sliders",
+                    timeline: "Semana 2",
+                    title: "[Ação] Conexão de Fontes",
+                    shortDesc: "Integrações WhatsApp e Redes.",
+                    fullDesc: `
+                        Ocorre em paralelo à Configuração Unificada.
+                        Conectar e verificar o status da WABA API, conectar as caixas de DM do Instagram e Messenger, e plugar webhooks de entrada de Landing Pages.
+                    `,
+                    icon: "fa-solid fa-link",
                     isBlocker: false,
-                    sla: "Executar entre Dia 10 e Dia 12."
+                    sla: "Semana 2 - Executar até o Dia 10"
                 },
                 {
                     id: 7,
-                    title: "[QA] Testes de Estresse",
-                    shortDesc: "Validação interna antes da entrega.",
-                    fullDesc: "Simule ser um cliente chato. Conecte o seu celular (ou do Pedro) e percorra todo o funil do CRM. Preencha os forms. Dispare gatilhos. Veja se as automações agem conforme desenhado no Blueprint.",
+                    timeline: "Semana 3",
+                    title: "[QA] Testes de Validação",
+                    shortDesc: "Estressar a plataforma internamente.",
+                    fullDesc: `
+                        <strong class="text-white block mb-2">Garantia de Qualidade</strong>
+                        Antes de chamar o cliente para o Treinamento, valide. Conecte seu número de teste e percorra o funil de ponta a ponta. Dispare todas as automações e veja se os alertas estão batendo corretamente. O cliente não deve ser o "beta tester" da implementação.
+                    `,
                     icon: "fa-solid fa-bug",
                     isBlocker: false,
-                    sla: "Executar no Dia 13."
+                    sla: "Semana 3 - Executar no Dia 11"
                 },
                 {
                     id: 8,
-                    title: "[Call] Treinamento de Ferramenta",
-                    shortDesc: "Não é treinamento de vendas.",
-                    fullDesc: "Reunião de entrega e onboarding com os vendedores do cliente. \n\n<strong class='text-white border-b border-v4red'>IMPORTANTE:</strong> Alinhe desde o primeiro minuto da call que este é um treinamento sistêmico (onde clicar, como mover o card, preencher os campos) e não um curso de técnicas de vendas. O processo comercial já está refletido nas automações.",
+                    timeline: "Semana 3",
+                    title: "[Call] Treinamento da Ferramenta",
+                    shortDesc: "Treinamento de sistema, não de vendas.",
+                    fullDesc: `
+                        Reunião de entrega e onboarding com os usuários/vendedores. 
+                        
+                        <div class="mt-6 bg-red-900/10 border border-v4red/30 p-4 rounded-xl">
+                            <strong class="text-v4red flex items-center gap-2 mb-2"><i class="fa-solid fa-triangle-exclamation"></i> ALINHAMENTO IMPORTANTE:</strong>
+                            <p class="text-sm text-gray-300">"Cliente, este é um treinamento sistêmico sobre onde clicar, como mover o card e como a plataforma funciona. A sua parte comercial de como a vendedora deve falar ou o que significa cada etapa, nós já validamos no nosso Documento de Planejamento aprovado."</p>
+                        </div>
+                    `,
                     icon: "fa-solid fa-chalkboard-user",
                     isBlocker: false,
-                    sla: "Executar no Dia 14."
+                    sla: "Semana 3 - Executar no Dia 13"
                 },
                 {
                     id: 9,
-                    title: "[Trava] Gate de NPS e Go-Live",
-                    shortDesc: "Liberação de chaves final.",
-                    fullDesc: "Envio do link da pesquisa NPS avaliando o trabalho do Suporte/Implementação. A plataforma e as integrações finais em produção (Go-live) só serão entregues oficialmente após a resposta da pesquisa.",
+                    timeline: "Semana 3",
+                    title: "[Gate] NPS e Oficialização",
+                    shortDesc: "Trava final antes da baixa no Ekyte.",
+                    fullDesc: `
+                        Envio do link da pesquisa NPS avaliando o trabalho do Suporte/Implementação. A plataforma e as integrações finais em produção só serão validadas como "Entregues" formalmente após a resposta da pesquisa.
+                    `,
                     icon: "fa-solid fa-lock",
                     isBlocker: true,
-                    alertTitle: "Protocolo de Bloqueio",
-                    alertText: "A entrega definitiva (dar a chave do carro) DEPENDE da nota enviada no NPS. Não dê baixa no Ekyte antes disso.",
-                    sla: "Executar no Dia 15."
+                    alertTitle: "Protocolo de Retenção",
+                    alertText: "A entrega definitiva depende da nota enviada no NPS. Não dê baixa no Ekyte e não inicie a fase de 'Manutenção Recorrente' antes disso.",
+                    sla: "Semana 3 - Executar no Dia 15"
                 }
             ];
 
             // ==========================================
-            // BASE 3: MATRIZ RACI (Tabela Hualter)
+            // BASE 3: MATRIZ RACI (Tabela de Papéis)
             // ==========================================
             const raciSteps = [
                 {
@@ -590,59 +705,162 @@
                 },
                 {
                     id: 2,
-                    title: "Tabela de Papéis",
-                    shortDesc: "Atribuições de cada Squad.",
+                    title: "Tabela de Papéis Oficial",
+                    shortDesc: "RACI completo das tarefas Ekyte.",
                     hideHeader: true, 
                     fullDesc: `
                         <div class="p-4 sm:p-8">
-                            <h2 class="text-2xl font-sans font-black text-white uppercase tracking-tight mb-6">Atribuições: Ciclo do Projeto</h2>
-                            <div class="overflow-x-auto rounded-xl border border-white/10 shadow-2xl">
-                                <table class="w-full text-sm text-left border-collapse min-w-[700px]">
-                                    <thead class="bg-[#1a1a1a] text-xs text-gray-300 uppercase tracking-wider">
+                            <h2 class="text-2xl font-sans font-black text-white uppercase tracking-tight mb-2">Atribuições: Ciclo Completo do Projeto</h2>
+                            <p class="text-gray-400 text-sm mb-6 max-w-2xl">Esta matriz mapeia as obrigações e aprovações de cada tarefa do Ekyte, eliminando ruídos entre os squads. O TER executa a implementação; o Comercial vende e fornece insumos; o Gestor aprova a qualidade.</p>
+                            
+                            <div class="overflow-hidden rounded-xl border border-white/10 shadow-2xl overflow-x-auto">
+                                <table class="w-full text-sm text-left border-collapse min-w-[800px]">
+                                    <thead class="bg-[#1a1a1a] text-[11px] text-gray-300 uppercase tracking-widest">
                                         <tr>
-                                            <th class="px-5 py-4 border-b border-r border-white/5 font-bold w-1/3">Etapa Ekyte</th>
-                                            <th class="px-4 py-4 border-b border-r border-white/5 text-center">Operação <br><span class="text-[9px] font-normal text-gray-500">(Comercial)</span></th>
-                                            <th class="px-4 py-4 border-b border-r border-white/5 text-center bg-white/5">Pedro <br><span class="text-[9px] font-normal text-gray-500">(Gestor)</span></th>
-                                            <th class="px-4 py-4 border-b border-r border-white/5 text-center bg-v4red/10 text-white">Rafael <br><span class="text-[9px] font-normal text-v4red">(Suporte/TER)</span></th>
-                                            <th class="px-4 py-4 border-b border-white/5 text-center">Cliente</th>
+                                            <th class="px-5 py-4 border-b border-r border-white/5 font-bold w-2/5">Etapa Ekyte / Tarefa</th>
+                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight">Operação / Account <br><span class="text-[9px] font-normal text-gray-500">(Comercial)</span></th>
+                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight bg-white/5">Pedro <br><span class="text-[9px] font-normal text-gray-500">(Gestor TER)</span></th>
+                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight bg-v4red/10 text-white">Squad TER <br><span class="text-[9px] font-normal text-v4red">(Especialista)</span></th>
+                                            <th class="px-3 py-4 border-b border-white/5 text-center">Cliente</th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-[#0f0f0f]">
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-gray-200">Venda do CRM</td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-c">C</span></td>
-                                            <td class="px-4 py-4 text-center">-</td>
+                                        
+                                        <!-- GRUPO: PRÉ-PROJETO -->
+                                        <tr class="bg-black">
+                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-gray-500 uppercase tracking-widest">Fase 0: Pré-Projeto</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-white border-l-2 border-l-v4red">[Call] Growth Class & Discovery</td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-4 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-gray-200">Venda Original e Escopo Comercial</span><br>
+                                                <span class="text-[10px] text-gray-500">Vender apenas o que está no guia.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-3 py-4 text-center">-</td>
+                                        </tr>
+
+                                        <!-- GRUPO: SEMANA 1 -->
+                                        <tr class="bg-black">
+                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 1: Planejamento (SLA: 5 Dias)</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-white border-l-2 border-l-v4red">[Doc] Elaboração de Blueprint</td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center">-</td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-4 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">1. [Call] Growth Class</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Alinhamento da regra de 24h e cronograma.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-white border-l-2 border-l-v4red">[Setup] Configuração Unificada</td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center">-</td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-4 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">2. [Call] Discovery Técnico</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Mapear Dores, Funil e coletar Handover do Saber.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5 font-medium text-gray-200">Revisão/Refação de Funil <br><span class="text-[10px] text-gray-500">(Pós-Entrega Oficial)</span></td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-4 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-c">C</span></td>
-                                            <td class="px-4 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">3. [Doc] Blueprint de CRM</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Montar DOC de aprovação visual das automações.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
                                         </tr>
+
+                                        <!-- GRUPO: SEMANA 2 -->
+                                        <tr class="bg-black">
+                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 2: Setup e Conexões (SLA: 5 Dias)</td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">4. [Ação] Setup & Conexões (Ekyte)</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Criar funis, tags, conectar WABA, Site, Meta.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
+                                        </tr>
+
+                                        <!-- GRUPO: SEMANA 3 -->
+                                        <tr class="bg-black">
+                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 3: Entrega e QA (SLA: 5 Dias)</td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">5. [QA] Testes de Estresse</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Passar em todo funil simulando o lead.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 text-center">-</td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">6. [Call] Treinamento (Plataforma)</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Onboarding técnico do sistema com vendedores.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">7. [Trava] Gate NPS de Entrega</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Finaliza o processo de setup inicial.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
+                                        </tr>
+
+                                        <!-- GRUPO: MANUTENÇÃO & EXTRAS -->
+                                        <tr class="bg-black">
+                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-blue-500 uppercase tracking-widest">Pós-Projeto: Recorrência e Ajustes</td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">CRM Report Mensal</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Apresentar Health Score, Funil e plano de ação.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">Suporte Técnico de Rotina</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Corrigir falhas de conexão ou dúvidas pontuais.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-v4red border-l-2 border-v4red pl-2">Nova Refação de Funil / Escopo</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Novas regras cobradas via Orçamento Adicional.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
+                                        </tr>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -653,38 +871,22 @@
                 }
             ];
 
-            // ==========================================
-            // BASE 4: MANUAL DO DASHBOARD
-            // ==========================================
-            const manualSteps = [
-                {
-                    id: 1,
-                    title: "O Painel Executivo",
-                    shortDesc: "Como usar os filtros.",
-                    fullDesc: "Dashboard para mensurar o status dos clientes. Filtros funcionam universalmente.",
-                    icon: "fa-solid fa-map-location-dot",
-                    isBlocker: false
-                }
-            ];
-
-            const dataSets = { guide: guideSteps, raci: raciSteps, pop: popSteps, manual: manualSteps };
-            
             const texts = {
                 guide: { title: "Conteúdo", welcomeTitle: "Guia Oficial do CRM", welcomeIcon: "fa-solid fa-cube", descTitle: "Detalhes" },
                 raci: { title: "Seções da Matriz", welcomeTitle: "Matriz RACI", welcomeIcon: "fa-solid fa-sitemap", descTitle: "Detalhamento" },
-                pop: { title: "Tarefas Ekyte", welcomeTitle: "Fluxo de CRM", welcomeIcon: "fa-solid fa-rocket", descTitle: "Instruções do Card" },
-                manual: { title: "Índice", welcomeTitle: "Manual do Dash", welcomeIcon: "fa-solid fa-chart-line", descTitle: "Mecânicas" }
+                pop: { title: "Tarefas Ekyte", welcomeTitle: "Fluxo de CRM", welcomeIcon: "fa-solid fa-rocket", descTitle: "Instruções do Card" }
             };
+
+            const dataSets = { guide: guideSteps, raci: raciSteps, pop: popSteps };
 
             const buttons = {
                 guide: document.getElementById('btn-mode-guide'),
                 pop: document.getElementById('btn-mode-pop'),
-                raci: document.getElementById('btn-mode-raci'),
-                manual: document.getElementById('btn-mode-manual')
+                raci: document.getElementById('btn-mode-raci')
             };
 
             let currentMode = 'pop';
-            let activeIds = { guide: null, raci: null, pop: null, manual: null };
+            let activeIds = { guide: null, raci: null, pop: null };
 
             // Layout Control variables
             const sidebarContainer = document.getElementById('sidebar-container');
@@ -696,15 +898,21 @@
                 const uiTexts = texts[mode];
 
                 // Atualiza Sidebar se o modo for Guia de Produto (Centralização)
-                if (mode === 'guide') {
-                    // Esconde a sidebar no desktop para o Guia ficar centralizado e full width
-                    sidebarContainer.classList.add('hidden', 'md:hidden');
-                    contentContainer.classList.remove('md:w-2/3', 'lg:w-3/4');
-                    contentContainer.classList.add('w-full', 'md:w-full', 'lg:w-full');
+                if (mode === 'guide' || mode === 'raci') {
+                    // Esconde a sidebar no desktop para telas que são majoritariamente 1 passo gigante
+                    if(data.length === 1) {
+                        sidebarContainer.classList.add('hidden', 'md:hidden');
+                        contentContainer.classList.remove('md:w-2/3', 'lg:w-3/4');
+                        contentContainer.classList.add('w-full', 'md:w-full', 'lg:w-full');
+                    } else {
+                        sidebarContainer.classList.remove('hidden', 'md:hidden');
+                        contentContainer.classList.add('md:w-2/3', 'lg:w-3/4');
+                        contentContainer.classList.remove('w-full', 'md:w-full', 'lg:w-full');
+                    }
                 } else {
                     sidebarContainer.classList.remove('hidden', 'md:hidden');
                     contentContainer.classList.add('md:w-2/3', 'lg:w-3/4');
-                    contentContainer.classList.remove('md:w-full', 'lg:w-full');
+                    contentContainer.classList.remove('w-full', 'md:w-full', 'lg:w-full');
                 }
 
                 // UI Botões
@@ -726,7 +934,7 @@
 
                 renderTimeline(data);
 
-                // Auto-selecionar o primeiro se só tiver 1 item (caso do Guide)
+                // Auto-selecionar
                 if (data.length === 1) {
                     selectStep(data[0].id, true);
                 } else if (!activeIds[mode]) {
@@ -744,7 +952,18 @@
                 const container = document.getElementById('timeline-container');
                 container.innerHTML = '';
 
+                let currentTimelineGroup = '';
+
                 data.forEach((step, index) => {
+                    // Inject Timeline Header se existir
+                    if (step.timeline && step.timeline !== currentTimelineGroup) {
+                        currentTimelineGroup = step.timeline;
+                        const header = document.createElement('div');
+                        header.className = "mt-4 mb-2 first:mt-1 px-2";
+                        header.innerHTML = `<span class="text-xs uppercase tracking-widest text-v4red font-black border-b border-v4red/30 pb-1 w-full flex">${currentTimelineGroup}</span>`;
+                        container.appendChild(header);
+                    }
+
                     const isLast = index === data.length - 1;
                     const stepEl = document.createElement('div');
                     stepEl.id = `step-container-${step.id}`;
@@ -757,7 +976,7 @@
                     stepEl.className = `relative flex gap-4 p-3 rounded-xl cursor-pointer group step-transition border ${containerClass}`;
                     stepEl.onclick = () => selectStep(step.id);
 
-                    const lineHtml = !isLast ? `<div class="absolute left-[2.15rem] top-12 bottom-[-16px] w-0.5 bg-white/5 group-hover:bg-white/10 transition-colors z-0"></div>` : '';
+                    const lineHtml = (!isLast && data[index+1]?.timeline === currentTimelineGroup) ? `<div class="absolute left-[2.15rem] top-12 bottom-[-16px] w-0.5 bg-white/5 group-hover:bg-white/10 transition-colors z-0"></div>` : '';
                     const blockerBadge = step.isBlocker ? '<span class="inline-block mt-2 text-[10px] bg-v4red/20 border border-v4red/30 text-v4red px-2 py-0.5 rounded font-bold uppercase tracking-wider">Atenção</span>' : '';
 
                     stepEl.innerHTML = `
@@ -820,7 +1039,6 @@
                     document.getElementById('card-icon-container').innerHTML = `<i class="${step.icon}"></i>`;
                     document.getElementById('card-desc').innerHTML = step.fullDesc;
 
-                    // Ocultar cabeçalhos em certas telas para visual Hero (Guia/Raci)
                     if (step.hideHeader) {
                         cardHeader.classList.add('hidden');
                         cardDescTitle.classList.add('hidden');
