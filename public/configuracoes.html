@@ -281,13 +281,13 @@
             sidebarOverlay?.addEventListener('click', toggleSidebar);
 
             // ==========================================
-            // BASE 1: GUIA DO PRODUTO
+            // BASE 1: GUIA DO PRODUTO (APROFUNDADO)
             // ==========================================
             const guideSteps = [
                 {
                     id: 1,
-                    title: "Documento Central de Vendas",
-                    shortDesc: "O Pitch, o Escopo e ICP.",
+                    title: "Guia de Arquitetura e Produto CRM",
+                    shortDesc: "O Pitch, o Escopo e Definição de ICP.",
                     hideHeader: true,
                     fullDesc: `
                         <div class="flex flex-col h-full -mt-8 -mx-8 sm:-mt-0 sm:-mx-0 pb-10">
@@ -295,51 +295,51 @@
                             <!-- Hero Section -->
                             <div class="bg-[#111] p-8 sm:p-16 border-b border-white/5 relative overflow-hidden">
                                 <div class="absolute top-0 right-0 w-80 h-80 bg-v4red/15 rounded-full blur-[100px] -mr-20 -mt-20"></div>
-                                <h4 class="text-v4red font-bold tracking-widest text-xs mb-3 uppercase">Escopo e Produto Oficial</h4>
+                                <h4 class="text-v4red font-bold tracking-widest text-xs mb-3 uppercase">Arquitetura de Produto</h4>
                                 <h1 class="text-4xl sm:text-5xl font-sans font-black text-white uppercase tracking-tighter leading-[1.1] mb-6 relative z-10">
-                                    NÃO INVENTE MODA.<br/><span class="text-v4red">SIGA O PROCESSO.</span>
+                                    NÃO INVENTE MODA.<br/><span class="text-v4red">SIGA A ARQUITETURA.</span>
                                 </h1>
                                 <p class="text-gray-400 text-lg max-w-2xl relative z-10">
-                                    A implementação do CRM deve seguir um padrão claro. Vender implementações fora do escopo (ex: Automações pesadas de E-commerce) gera gargalos e frustração. Este documento dita as regras do jogo.
+                                    O CRM não é apenas um software de prateleira; é a espinha dorsal da operação comercial do cliente. Vender customizações que fogem da nossa esteira de processos ágeis (como integrações sistêmicas via código livre ou ERPs legados) gera gargalos irrecuperáveis e destrói o SLA da operação. Este documento dita as regras inegociáveis do jogo.
                                 </p>
                             </div>
                             
                             <!-- Diagnóstico (Checklist ICP) -->
                             <div class="p-8 sm:p-16 pt-8 border-t border-white/5">
-                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-6">Diagnóstico do Produto (ICP)</h3>
-                                <p class="text-gray-400 mb-8 text-sm">Responda antes de entrar na call: Como o cliente atende os leads hoje principalmente? Marque para ver se o CRM é a solução indicada.</p>
+                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-6">Diagnóstico do Produto Comercial (ICP)</h3>
+                                <p class="text-gray-400 mb-8 text-sm">Antes de iniciar o Discovery, valide o cenário do cliente. O produto de implementação de CRM padrão atende perfeitamente operações que preenchem a tríade abaixo. Casos fora disso demandam arquitetura de solução personalizada (Enterprise).</p>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div class="space-y-3">
-                                        <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-center gap-4">
-                                            <i class="fa-solid fa-check-circle text-v4red text-xl"></i>
+                                        <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-start gap-4">
+                                            <i class="fa-solid fa-check-circle text-v4red text-xl mt-0.5"></i>
                                             <div>
-                                                <h4 class="text-white font-bold text-sm">Volume: 50 a 500 Leads/mês</h4>
-                                                <p class="text-[11px] text-gray-400 mt-1">Acima disso requer soluções enterprise pesadas.</p>
+                                                <h4 class="text-white font-bold text-sm">Volume Saudável: 50 a 1.500 Leads/mês</h4>
+                                                <p class="text-[11px] text-gray-400 mt-1">Acima de 2.000 leads/mês e com tickets elevadíssimos, a operação exige hardwares de roteamento complexos (Salesforce, Dynamics) que não fazem parte da esteira ágil. Menos de 50 leads mensais geralmente aponta para um problema de geração de demanda, e o CRM ficará ocioso.</p>
                                             </div>
                                         </div>
-                                        <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-center gap-4">
-                                            <i class="fa-solid fa-check-circle text-v4red text-xl"></i>
+                                        <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-start gap-4">
+                                            <i class="fa-solid fa-check-circle text-v4red text-xl mt-0.5"></i>
                                             <div>
-                                                <h4 class="text-white font-bold text-sm">Venda Consultiva B2B/B2C</h4>
-                                                <p class="text-[11px] text-gray-400 mt-1">Exige interação humana e consultiva via WhatsApp.</p>
+                                                <h4 class="text-white font-bold text-sm">Venda Consultiva (Ciclo Longo/Médio)</h4>
+                                                <p class="text-[11px] text-gray-400 mt-1">B2B puro ou B2C de Alto Ticket (Imobiliário, Serviços Premium, Estética Avançada). Exige etapas de qualificação, superação de objeções e negociação ativa humana. Não serve para produtos de compra por impulso.</p>
                                             </div>
                                         </div>
-                                        <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-center gap-4">
-                                            <i class="fa-solid fa-check-circle text-v4red text-xl"></i>
+                                        <div class="bg-v4red/10 p-4 rounded-xl border border-v4red/30 flex items-start gap-4">
+                                            <i class="fa-solid fa-check-circle text-v4red text-xl mt-0.5"></i>
                                             <div>
-                                                <h4 class="text-white font-bold text-sm">Gargalo de Follow-up</h4>
-                                                <p class="text-[11px] text-gray-400 mt-1">Vendedores esquecem de retornar leads. Processo não mapeado.</p>
+                                                <h4 class="text-white font-bold text-sm">Gargalo de Follow-up e Previsibilidade</h4>
+                                                <p class="text-[11px] text-gray-400 mt-1">O cliente perde vendas porque a equipe comercial esquece de retornar os leads, não há cadência documentada de tentativas de contato, e o gestor não sabe calcular sua taxa de conversão real.</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="bg-gradient-to-br from-[#111] to-black p-6 rounded-2xl border border-white/10 flex flex-col justify-center">
-                                        <h4 class="font-black text-white text-xl mb-2">CRM É O PRODUTO INDICADO.</h4>
-                                        <p class="text-sm text-gray-400 leading-relaxed mb-4">Se o cliente preenche os requisitos ao lado, a centralização organizará a esteira comercial.</p>
-                                        <div class="text-xs bg-white/5 p-3 rounded text-gray-300 font-mono">
-                                            <span class="text-green-500">✅</span> Vendas Complexas e Serviços <br>
-                                            <span class="text-red-500">❌</span> E-commerce transacional puro (Sem vendedor)
+                                        <h4 class="font-black text-white text-xl mb-2">VALIDAÇÃO DE MODELO</h4>
+                                        <p class="text-sm text-gray-400 leading-relaxed mb-4">Se a resposta para a tríade for "Sim", a centralização tecnológica organizará a esteira comercial e trará escala garantida.</p>
+                                        <div class="text-xs bg-white/5 p-3 rounded text-gray-300 font-mono space-y-1">
+                                            <div class="flex gap-2"><span class="text-green-500">✅</span> <span>Perfeito: Consultorias, Saas, Clínicas, Seguros, B2B Geral.</span></div>
+                                            <div class="flex gap-2"><span class="text-red-500">❌</span> <span>Não Atende: E-commerce transacional puro (Venda Self-Service onde o vendedor não intervém na transação).</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -348,26 +348,38 @@
                             <!-- Capacidades e Integrações -->
                             <div class="p-8 sm:p-16 pt-8 border-t border-white/5 bg-[#0a0a0a]">
                                 <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-6 flex items-center gap-3">
-                                    <i class="fa-solid fa-plug text-v4red"></i> Capacidades & Integrações (Gerais)
+                                    <i class="fa-solid fa-network-wired text-v4red"></i> Arquitetura de Integrações
                                 </h3>
-                                <p class="text-gray-400 text-sm mb-6">As integrações possíveis dependem fortemente do CRM que será implementado. Abaixo estão as integrações que <strong>estão no nosso escopo padrão</strong>, desde que a plataforma escolhida ofereça suporte nativo ou via Zapier/Pluga:</p>
+                                <p class="text-gray-400 text-sm mb-6">O escopo base prevê a construção de ecossistemas conectados. Garantimos as seguintes conexões sem orçamentos adicionais, utilizando APIs Nativas, Webhooks diretos ou plataformas de middleware (Pluga/Zapier/Make) dentro do limite de requisições de planos iniciais:</p>
                                 
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-3">
+                                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-3 hover:border-green-500/50 transition-colors">
                                         <i class="fa-brands fa-whatsapp text-green-500 text-2xl"></i>
-                                        <span class="text-sm font-bold text-white">WhatsApp</span>
+                                        <div>
+                                            <span class="text-sm font-bold text-white block">WhatsApp</span>
+                                            <span class="text-[10px] text-gray-500">API Oficial (WABA)</span>
+                                        </div>
                                     </div>
-                                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-3">
+                                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-3 hover:border-blue-500/50 transition-colors">
                                         <i class="fa-brands fa-meta text-blue-500 text-2xl"></i>
-                                        <span class="text-sm font-bold text-white">FB / IG Direct</span>
+                                        <div>
+                                            <span class="text-sm font-bold text-white block">Social Inbound</span>
+                                            <span class="text-[10px] text-gray-500">IG Direct / Messenger</span>
+                                        </div>
                                     </div>
-                                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-3">
+                                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-3 hover:border-red-500/50 transition-colors">
                                         <i class="fa-brands fa-google text-red-500 text-2xl"></i>
-                                        <span class="text-sm font-bold text-white">Google Ads (Forms)</span>
+                                        <div>
+                                            <span class="text-sm font-bold text-white block">Ads & Tráfego</span>
+                                            <span class="text-[10px] text-gray-500">Google Forms / Meta Lead Ads</span>
+                                        </div>
                                     </div>
-                                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-3">
+                                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-3 hover:border-purple-500/50 transition-colors">
                                         <i class="fa-solid fa-pager text-purple-500 text-2xl"></i>
-                                        <span class="text-sm font-bold text-white">LPs / RD / Active</span>
+                                        <div>
+                                            <span class="text-sm font-bold text-white block">Marketing Hubs</span>
+                                            <span class="text-[10px] text-gray-500">RD Station / ActiveCampaign</span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -375,10 +387,11 @@
                                     <div class="flex items-start gap-4">
                                         <i class="fa-solid fa-triangle-exclamation text-v4red text-xl mt-0.5"></i>
                                         <div>
-                                            <h4 class="text-v4red font-bold text-sm uppercase mb-1 tracking-wide">Atenção: Validação de Complexidade</h4>
-                                            <p class="text-gray-300 text-sm leading-relaxed">
-                                                Integrações com <strong>Sistemas Próprios, ERPs legados (ex: Sankhya, Totvs), ou ferramentas obscuras</strong> que exigem documentação de API avançada <strong>NÃO</strong> podem ser confirmadas na venda imediatamente. Elas dependem de validação prévia com o Squad TER. Se for complexo, precisará de orçamento de desenvolvimento à parte.
+                                            <h4 class="text-v4red font-bold text-sm uppercase mb-1 tracking-wide">Atenção Crítica: Limites de Middleware e ERPs</h4>
+                                            <p class="text-gray-300 text-sm leading-relaxed mb-2">
+                                                Integrações com <strong>Sistemas Próprios desenvolvidos in-house, ERPs legados pesados (Sankhya, Totvs, SAP) ou ferramentas que exigem leitura profunda de documentação de API Restful/SOAP</strong> não estão no escopo base de 3 semanas.
                                             </p>
+                                            <p class="text-gray-400 text-xs">A promessa dessas integrações na venda requer validação prévia obrigatória com a engenharia do Squad TER e gerará orçamento de desenvolvimento técnico à parte.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -387,80 +400,97 @@
                             <!-- Comparativo CRMs -->
                             <div class="p-8 sm:p-16 pt-8 border-t border-white/5 bg-[#111]">
                                 <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-6 flex items-center gap-3">
-                                    <i class="fa-solid fa-scale-balanced text-gray-400"></i> A Escolha do CRM
+                                    <i class="fa-solid fa-scale-balanced text-gray-400"></i> A Escolha da Plataforma Core
                                 </h3>
                                 
                                 <div class="bg-blue-900/10 border border-blue-500/30 p-6 rounded-2xl mb-8 flex items-start gap-4">
                                     <i class="fa-solid fa-circle-info text-blue-500 text-xl mt-0.5"></i>
                                     <div>
-                                        <h4 class="text-blue-400 font-bold text-sm uppercase mb-1 tracking-wide">A Regra de Ouro: O Vendedor NÃO escolhe o CRM</h4>
+                                        <h4 class="text-blue-400 font-bold text-sm uppercase mb-1 tracking-wide">Diretriz Inegociável: A Operação Define o Software</h4>
                                         <p class="text-gray-300 text-sm leading-relaxed">
-                                            A recomendação da ferramenta de CRM <strong>será feita EXCLUSIVAMENTE pelo Especialista após a Call de Discovery com o cliente</strong>. Cada operação (B2B, B2C, volume de Chat vs E-mail) demanda uma arquitetura diferente e o vendedor não deve prometer uma ferramenta "A" ou "B" na negociação. Abaixo estão os principais CRMs do mercado que costumamos avaliar:
+                                            O Executivo de Vendas não deve prometer ou fechar contrato garantindo a ferramenta "A" ou "B". O CRM adequado <strong>será recomendado e definido EXCLUSIVAMENTE pelo Especialista após a Call de Discovery Técnico</strong>. A escolha baseia-se na origem primária de atendimento (WhatsApp x E-mail x Reuniões) e no perfil de negócio do cliente.
                                         </p>
                                     </div>
                                 </div>
                                 
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div class="bg-black/50 border border-white/10 p-6 rounded-2xl relative overflow-hidden">
-                                        <h4 class="font-black text-white text-lg mb-2">Kommo CRM</h4>
-                                        <p class="text-xs text-gray-400 mb-4 h-16">Para operações focadas em <strong>WhatsApp e Redes Sociais</strong>. Venda rápida/média B2C e B2B. Excelente automação de Chat (Salesbots).</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div class="bg-black/50 border border-white/10 p-5 rounded-2xl relative overflow-hidden group hover:border-green-500/30 transition-colors">
+                                        <h4 class="font-black text-white text-base mb-1">Kommo CRM</h4>
+                                        <p class="text-[11px] font-bold text-green-500 mb-3 uppercase tracking-wider">Social / Conversational</p>
+                                        <p class="text-xs text-gray-400 leading-relaxed">Arquitetura focada totalmente em <strong>WhatsApp e Mensageria Inbound</strong>. Ideal para vendas rápidas/médias e B2C. Possui o melhor construtor nativo de Salesbots (Chatbots) e automação de caixa de entrada do mercado.</p>
                                     </div>
                                     
-                                    <div class="bg-black/50 border border-white/10 p-6 rounded-2xl">
-                                        <h4 class="font-black text-white text-lg mb-2">HubSpot CRM</h4>
-                                        <p class="text-xs text-gray-400 mb-4 h-16">Para operações corporativas <strong>B2B complexas</strong>. Venda focada em E-mail, reuniões e Account-Based Marketing (ABM). O WhatsApp não é tão nativo.</p>
+                                    <div class="bg-black/50 border border-white/10 p-5 rounded-2xl relative overflow-hidden group hover:border-orange-500/30 transition-colors">
+                                        <h4 class="font-black text-white text-base mb-1">HubSpot CRM</h4>
+                                        <p class="text-[11px] font-bold text-orange-500 mb-3 uppercase tracking-wider">Enterprise / Inbound</p>
+                                        <p class="text-xs text-gray-400 leading-relaxed">Potência para operações corporativas e <strong>B2B complexas de ciclo longo</strong>. Centrado em e-mails, agendamento de reuniões, histórico profundo de interação e Account-Based Marketing (ABM). Integrações de WhatsApp costumam ser terceirizadas ou caras.</p>
                                     </div>
 
-                                    <div class="bg-black/50 border border-white/10 p-6 rounded-2xl">
-                                        <h4 class="font-black text-white text-lg mb-2">RD Station CRM</h4>
-                                        <p class="text-xs text-gray-400 mb-4 h-16">Para empresas que <strong>já usam RD Marketing</strong> e querem tudo no mesmo ecossistema nacional. Processo visual simples, bom custo-benefício B2B.</p>
+                                    <div class="bg-black/50 border border-white/10 p-5 rounded-2xl relative overflow-hidden group hover:border-blue-400/30 transition-colors">
+                                        <h4 class="font-black text-white text-base mb-1">RD Station CRM</h4>
+                                        <p class="text-[11px] font-bold text-blue-400 mb-3 uppercase tracking-wider">Simplicidade Nacional</p>
+                                        <p class="text-xs text-gray-400 leading-relaxed">Ideal para clientes que <strong>já possuem o RD Marketing</strong> e buscam fluidez em um ecossistema unificado. Excelente custo-benefício B2B, interface ultra intuitiva para times com baixa fluência digital, mas carece de automações comerciais complexas.</p>
+                                    </div>
+
+                                    <div class="bg-black/50 border border-white/10 p-5 rounded-2xl relative overflow-hidden group hover:border-green-600/30 transition-colors">
+                                        <h4 class="font-black text-white text-base mb-1">Pipedrive</h4>
+                                        <p class="text-[11px] font-bold text-green-600 mb-3 uppercase tracking-wider">Activity-Based Selling</p>
+                                        <p class="text-xs text-gray-400 leading-relaxed">O padrão ouro B2B focado em <strong>Gestão de Atividades Diárias</strong>. Obriga o vendedor a sempre ter um "Próximo Passo" agendado (Call, E-mail, Almoço). Pipeline altamente customizável e excelente relatoria de forecast de vendas.</p>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Escopo In/Out -->
                             <div class="p-8 sm:p-16 pt-8 border-t border-white/5 bg-black/40">
-                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-8">Escopo Padrão (In vs Out)</h3>
+                                <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-8">Matriz de Escopo (IN vs OUT)</h3>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <!-- DENTRO -->
-                                    <div>
+                                    <div class="bg-green-900/5 p-6 rounded-xl border border-green-500/10">
                                         <h4 class="text-white font-bold text-sm mb-4 border-b border-green-500/30 pb-2 uppercase tracking-wide flex items-center gap-2">
                                             <i class="fa-solid fa-square-check text-green-500"></i> Dentro do Escopo (Entregáveis)
                                         </h4>
                                         <ul class="space-y-3">
                                             <li class="flex items-start gap-3 text-sm text-gray-300">
-                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Planejamento de CRM detalhado e aprovado pelo cliente.
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1 flex-shrink-0"></i> 
+                                                <span><strong>Mapeamento e Blueprint:</strong> Desenho estratégico visual dos funis, etapas de qualificação e jornada de Handoff (passagem de bastão) entre Marketing e Vendas.</span>
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-300">
-                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Desenho dos funis de vendas que serão necessários de acordo com as dores mapeadas na call de discovery.
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1 flex-shrink-0"></i> 
+                                                <span><strong>Governança de Dados:</strong> Criação de Campos Personalizados obrigatórios, estrutura de Tags de segmentação e motivos de perda parametrizados.</span>
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-300">
-                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Criação de Tags, Campos personalizados e automações de Follow.
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1 flex-shrink-0"></i> 
+                                                <span><strong>Automação de Cadência:</strong> Setup de gatilhos automáticos para Follow-up, criação de tarefas para vendedores e movimentação automática de leads frios por inatividade.</span>
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-300">
-                                                <i class="fa-solid fa-caret-right text-green-500 mt-1"></i> Integrações com plataformas do tipo: Google ADS, Meta, Site e LPs.
+                                                <i class="fa-solid fa-caret-right text-green-500 mt-1 flex-shrink-0"></i> 
+                                                <span><strong>Conectividade Padrão:</strong> Plugar fluxo de entrada de Leads do Meta Ads, Google Ads e formulários de site diretamente no topo do funil do CRM.</span>
                                             </li>
                                         </ul>
                                     </div>
 
                                     <!-- FORA -->
-                                    <div>
+                                    <div class="bg-red-900/5 p-6 rounded-xl border border-red-500/10">
                                         <h4 class="text-white font-bold text-sm mb-4 border-b border-red-500/30 pb-2 uppercase tracking-wide flex items-center gap-2">
-                                            <i class="fa-solid fa-square-xmark text-v4red"></i> Fora do Escopo (Não Fazemos)
+                                            <i class="fa-solid fa-square-xmark text-v4red"></i> Fora do Escopo (Restrições)
                                         </h4>
                                         <ul class="space-y-3">
                                             <li class="flex items-start gap-3 text-sm text-gray-400">
-                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Plataformas que exigem integrações com APIs ou integrações muito complexas.
+                                                <i class="fa-solid fa-ban text-v4red mt-1 flex-shrink-0"></i> 
+                                                <span><strong>Limpeza de Base Legada:</strong> Não fazemos higienização, desduplicação ou formatação de planilhas antigas do cliente para importação. A base deve ser entregue pronta e tratada.</span>
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-400">
-                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Atendimento ao Lead (Não somos operação de vendas).
+                                                <i class="fa-solid fa-ban text-v4red mt-1 flex-shrink-0"></i> 
+                                                <span><strong>BPO de Vendas:</strong> Não somos a operação de atendimento. Nossa equipe não entra em contato com leads, não qualifica contatos e não responde no WhatsApp do cliente.</span>
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-400">
-                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Disparo de carrinho abandonado de E-commerce.
+                                                <i class="fa-solid fa-ban text-v4red mt-1 flex-shrink-0"></i> 
+                                                <span><strong>Copywriting Avançado:</strong> Não redigimos os textos persuasivos (copy) para e-mail marketing corporativo. Parametrizamos o envio, mas a copy é responsabilidade do cliente ou do squad de marketing.</span>
                                             </li>
                                             <li class="flex items-start gap-3 text-sm text-gray-400">
-                                                <i class="fa-solid fa-ban text-v4red mt-1"></i> Mudança ou refação de funil PÓS aprovação do Blueprint. (Custa extra).
+                                                <i class="fa-solid fa-ban text-v4red mt-1 flex-shrink-0"></i> 
+                                                <span><strong>Mudança Pós-Aprovação:</strong> Refações da estrutura de funil ou troca de software solicitadas APÓS a aprovação formal do Blueprint gerarão paralisação, repriorização de fila e possível cobrança adicional.</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -470,73 +500,65 @@
                             <!-- FAQ e Riscos (ALINHAMENTOS E GARGALOS) -->
                             <div class="p-8 sm:p-16 pt-8 border-t border-white/5 bg-[#050505]">
                                 <h3 class="text-white font-bold font-sans text-xl uppercase tracking-tight mb-6 flex items-center gap-3">
-                                    <i class="fa-solid fa-fire-flame-curved text-yellow-500"></i> FAQ & Mapeamento de Gargalos
+                                    <i class="fa-solid fa-fire-flame-curved text-yellow-500"></i> FAQ Operacional & Gestão de Risco
                                 </h3>
-                                <p class="text-gray-400 text-sm mb-8">Base de conhecimento das principais dúvidas, problemas técnicos e gargalos operacionais mapeados historicamente nos projetos.</p>
+                                <p class="text-gray-400 text-sm mb-8">Repositório de conhecimento mapeado historicamente. Utilize estas respostas como argumento de autoridade perante objeções do cliente ou problemas técnicos frequentes na operação diária.</p>
 
                                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                                    <!-- Categoria 1: Governança -->
-                                    <div class="bg-[#111] border border-white/10 p-6 rounded-xl flex flex-col gap-4">
-                                        <h4 class="font-bold text-white text-base border-b border-white/10 pb-2"><i class="fa-solid fa-database text-purple-500 mr-2"></i> Governança e Qualidade de Dados</h4>
+                                    <!-- Categoria 1: Governança e LGPD -->
+                                    <div class="bg-[#111] border border-white/10 p-6 rounded-xl flex flex-col gap-5 hover:bg-[#151515] transition-colors">
+                                        <h4 class="font-bold text-white text-base border-b border-white/10 pb-2"><i class="fa-solid fa-database text-purple-500 mr-2"></i> Higiene de Dados & LGPD</h4>
                                         
                                         <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Equipe resiste ao CRM e prefere planilhas. Por quê?</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed">Geralmente causado por burocracia (ex: HubSpot com mais de 1.100 campos criados ou dados críticos em "texto livre"). Isso gera dados sujos e falta de visibilidade para a diretoria. A solução é simplificar o processo: usar campos obrigatórios mínimos e em formato de lista (dropdown).</p>
+                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Como lidar com Leads Duplicados poluindo o Funil?</h5>
+                                            <p class="text-xs text-gray-400 leading-relaxed">Sistemas como Kommo e RD possuem regras de chave-única (Geralmente Email ou Telefone). Se o cliente tentar importar planilhas ou o lead preencher o formulário 2x, o sistema deve fundir o cadastro (Merge) em vez de criar cards duplos. O alerta aqui é para vendedores que inserem contatos manualmente sem buscar antes no banco de dados.</p>
                                         </div>
                                         <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Como resolver conflitos de acesso e redistribuição?</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed">É terminantemente proibido o uso de "senhas gerais". Cada vendedor deve ter acesso individual com permissões rígidas para visualizar apenas seus leads atribuídos, evitando o "roubo" de carteira e permitindo redistribuição correta sistêmica.</p>
+                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Políticas de Opt-in, Opt-out e LGPD no WhatsApp</h5>
+                                            <p class="text-xs text-gray-400 leading-relaxed">No disparo de cadências ativas (Outbound), o primeiro contato DEVE conter uma via de saída clara para o cliente. Usar a API oficial do Meta blinda o número contra denúncias, pois se o lead der "opt-out", a API bloqueia reenvios futuros automaticamente, garantindo conformidade com a LGPD e evitando banimentos.</p>
                                         </div>
                                     </div>
 
                                     <!-- Categoria 2: Trackeamento -->
-                                    <div class="bg-[#111] border border-white/10 p-6 rounded-xl flex flex-col gap-4">
-                                        <h4 class="font-bold text-white text-base border-b border-white/10 pb-2"><i class="fa-solid fa-route text-blue-500 mr-2"></i> Trackeamento e Integrações</h4>
+                                    <div class="bg-[#111] border border-white/10 p-6 rounded-xl flex flex-col gap-5 hover:bg-[#151515] transition-colors">
+                                        <h4 class="font-bold text-white text-base border-b border-white/10 pb-2"><i class="fa-solid fa-route text-blue-500 mr-2"></i> Trackeamento de Origem e Atribuição</h4>
                                         
                                         <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Por que perdemos as UTMs (origem do lead)?</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed">A perda ocorre fortemente quando o lead passa por iframes ou plataformas externas de agendamento antes do CRM, caindo como "Tráfego Direto". É necessário repassar as UTMs via campos ocultos na URL ou scripts nativos.</p>
+                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Por que estamos perdendo a captura de UTMs?</h5>
+                                            <p class="text-xs text-gray-400 leading-relaxed">A quebra de rastreio de origem (Saber de qual campanha do Google/Meta o lead veio) ocorre severamente quando usamos iframes no site, passagens por Typeform/Calendly antes do CRM, ou formulários mal configurados sem campos ocultos ("hidden fields"). UTMs precisam ser passadas via URL pura ou LocalStorage/Cookies próprios (First-Party Data).</p>
                                         </div>
                                         <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Handoff Manual vs Automático</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed">A Passagem de Bastão (Handoff) entre Geração de Demanda e Vendas NUNCA deve ser manual. O Handoff manual quebra o histórico do lead e cega a operação sobre o ROI (Retorno) das campanhas de marketing.</p>
-                                        </div>
-                                        <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">API Oficial vs WhatsApp Lite (QR Code)</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed">API Oficial tem custos em dólar por conversa iniciada, mas blinda contra banimento. O Lite (QR Code) é grátis mas tem <strong>ALTO RISCO DE BANIMENTO</strong> pelo Meta, perdendo o número definitivamente.</p>
+                                            <h5 class="text-sm font-bold text-gray-200 mb-1">A Armadilha do "Handoff" (Passagem) Manual</h5>
+                                            <p class="text-xs text-gray-400 leading-relaxed">Se o marketing gera um lead em uma ferramenta e "exporta uma planilha na sexta-feira para o comercial subir no CRM", a inteligência comercial morre. O Handoff deve ser instantâneo e automatizado via API/Webhook. Handoff manual destrói a percepção de ROI real das campanhas.</p>
                                         </div>
                                     </div>
 
-                                    <!-- Categoria 3: Funil e Plataformas -->
-                                    <div class="bg-[#111] border border-white/10 p-6 rounded-xl flex flex-col gap-4">
-                                        <h4 class="font-bold text-white text-base border-b border-white/10 pb-2"><i class="fa-solid fa-filter text-green-500 mr-2"></i> Funil, MQL/SQL e Ecossistemas</h4>
+                                    <!-- Categoria 3: Change Management -->
+                                    <div class="bg-[#111] border border-white/10 p-6 rounded-xl flex flex-col gap-5 hover:bg-[#151515] transition-colors">
+                                        <h4 class="font-bold text-white text-base border-b border-white/10 pb-2"><i class="fa-solid fa-users-gear text-green-500 mr-2"></i> Adoção e Change Management</h4>
                                         
                                         <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Como mensurar MQL e SQL corretamente?</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed"><strong>MQL</strong> (Marketing) é o lead que atendeu aos filtros da campanha. <strong>SQL</strong> (Sales) é o lead qualificado ativamente por vendas (Ex: framework BANT - Orçamento, Autoridade, Necessidade e Prazo). O funil precisa de etapas claras de divisão.</p>
+                                            <h5 class="text-sm font-bold text-gray-200 mb-1">"Meu time comercial odeia o CRM e não preenche nada."</h5>
+                                            <p class="text-xs text-gray-400 leading-relaxed">O problema clássico de *Change Management*. O CRM não pode ser percebido como uma ferramenta de "vigilância do chefe", mas sim de "facilitação da comissão". A solução técnica é: Simplificar drásticamente. Ter no máximo 3 ou 4 campos obrigatórios em listas suspensas (dropdowns) para mudar de etapa, e eliminar campos de texto livre longos.</p>
                                         </div>
                                         <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">RD Conversas não sincroniza com RD CRM?</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed">Geralmente ocorre quando as contas estão em "Business Units" (BUs) separadas ou se os preenchimentos obrigatórios da equipe comercial estão falhando, travando a integração.</p>
-                                        </div>
-                                        <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Limitações do Kommo CRM</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed">O Kommo é focado em Vendas/WhatsApp. Ele não possui <i>Lead Scoring</i> avançado ou automações de e-mail marketing pesadas. Para necessidade forte de CRM Marketing, ele deve atuar em conjunto com outras ferramentas.</p>
+                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Roubo de Carteira e Visibilidade de Acesso</h5>
+                                            <p class="text-xs text-gray-400 leading-relaxed">Vendedores NÃO devem acessar a conta master ou ter privilégios administrativos. É imperativo configurar a "Visibilidade Restrita" desde o Dia 1. Cada vendedor enxerga APENAS os leads e pipelines dos quais é o proprietário designado. Isso permite que gestores façam redistribuição e previne exportações maliciosas da base.</p>
                                         </div>
                                     </div>
 
-                                    <!-- Categoria 4: IA e Automações -->
-                                    <div class="bg-[#111] border border-white/10 p-6 rounded-xl flex flex-col gap-4">
-                                        <h4 class="font-bold text-white text-base border-b border-white/10 pb-2"><i class="fa-solid fa-robot text-orange-500 mr-2"></i> IA Conversacional e Automações</h4>
+                                    <!-- Categoria 4: IA e Automações Defensivas -->
+                                    <div class="bg-[#111] border border-white/10 p-6 rounded-xl flex flex-col gap-5 hover:bg-[#151515] transition-colors">
+                                        <h4 class="font-bold text-white text-base border-b border-white/10 pb-2"><i class="fa-solid fa-robot text-orange-500 mr-2"></i> IA e Automações Defensivas</h4>
                                         
                                         <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">A IA está "alucinando" (inventando regras)?</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed">Inconsistências (ex: dizer que a loja aceita vale-alimentação ou citar concorrentes) indicam falha na lógica de restrição do prompt. Já falhas técnicas (bot interferindo com humanos ou mandando msgs duplicadas) indicam desincronização de IDs no WhatsApp.</p>
+                                            <h5 class="text-sm font-bold text-gray-200 mb-1">O Salesbot está "alucinando" respostas erradas.</h5>
+                                            <p class="text-xs text-gray-400 leading-relaxed">Quando a IA conectada via prompt ao CRM começa a inventar regras (ex: criar promoções que não existem), significa que as 'System Instructions' estão muito permissivas. A IA precisa ter um escopo trancado ("Se não souber, diga que irá transferir para um humano"). Problemas de duplicidade de bots no WhatsApp indicam conflito de provedores WABA concorrentes.</p>
                                         </div>
                                         <div>
-                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Como aplicar SLAs automáticos no funil?</h5>
-                                            <p class="text-xs text-gray-400 leading-relaxed">Recomendamos sempre configurar automações defensivas de Follow-up: Ex: Enviar mensagem de reengajamento após 48h sem resposta do lead, ou mover automaticamente para "Perda" leads que fiquem mais de 30 dias na mesma etapa, para manter o funil limpo.</p>
+                                            <h5 class="text-sm font-bold text-gray-200 mb-1">Como proteger o funil com SLAs Automáticos?</h5>
+                                            <p class="text-xs text-gray-400 leading-relaxed">Recomendamos firmemente a implementação de "Limpeza Automática" (Rotina Defensiva). Exemplo prático: Se um lead na etapa 'Proposta Enviada' ficar intocado pelo vendedor por mais de 10 dias, uma automação o marca como "Perdido - Sem Interação". Isso força a disciplina comercial e mantém as taxas de conversão matemáticas precisas.</p>
                                         </div>
                                     </div>
                                     
@@ -568,16 +590,16 @@
                             </h4>
                             <ul class="list-none space-y-3 text-sm text-gray-400">
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-calendar text-green-500 mt-1"></i>
+                                    <i class="fa-solid fa-calendar text-green-500 mt-1 flex-shrink-0"></i>
                                     <span><strong class="text-gray-200">Cronograma Fixo:</strong> Explicar que a implementação dura exatas 3 semanas (Planejamento > Configuração > Entrega).</span>
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-clock text-yellow-500 mt-1"></i>
+                                    <i class="fa-solid fa-clock text-yellow-500 mt-1 flex-shrink-0"></i>
                                     <span><strong class="text-gray-200">A Regra das 24 Horas:</strong> Deixar explícito que se o cliente demorar mais de 24h para aprovar uma solicitação (ex: Blueprint), o prazo total será estendido proporcionalmente. Não é atraso nosso, é repriorização de pauta.</span>
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-ban text-red-500 mt-1"></i>
-                                    <span><strong class="text-gray-200">Fora do Escopo:</strong> Explicar o que a V4 NÃO fará (vender pelo cliente, etc).</span>
+                                    <i class="fa-solid fa-ban text-red-500 mt-1 flex-shrink-0"></i>
+                                    <span><strong class="text-gray-200">Fora do Escopo:</strong> Explicar o que a V4 NÃO fará (vender pelo cliente, organizar bases antigas).</span>
                                 </li>
                             </ul>
                         </div>
@@ -592,14 +614,14 @@
                     id: 2,
                     timeline: "Semana 1",
                     title: "[Call] Discovery Técnico",
-                    shortDesc: "Acessos e Mapeamento.",
+                    shortDesc: "Acessos e Mapeamento profundo.",
                     fullDesc: `
-                        <strong class="text-white block mb-2">Mapeamento da Operação</strong>
-                        Realizar a Call para entender o momento atual do cliente e coletar acessos (Meta BM, credenciais).
+                        <strong class="text-white block mb-2">Mapeamento Técnico da Operação</strong>
+                        Realizar a Call para entender o fluxo atual de leads do cliente, como eles qualificam as oportunidades hoje, quais são os motivos reais de perda e coletar os acessos primários (Meta Business Manager, Senhas de site).
                         
                         <div class="mt-6 bg-blue-900/10 border border-blue-500/30 p-4 rounded-xl">
                             <h4 class="text-blue-400 font-bold flex items-center gap-2 text-sm uppercase tracking-wide mb-2"><i class="fa-solid fa-handshake"></i> Handover Squad Saber</h4>
-                            <p class="text-gray-300 text-sm">Se o cliente veio do "Saber", exija do account o handover completo (eles já mapeiam funil de vendas, cliente oculto, etc). Use esses dados para não fazer o cliente repetir tudo do zero. Foque essa call apenas nos acessos técnicos e confirmações.</p>
+                            <p class="text-gray-300 text-sm leading-relaxed">Se o projeto for oriundo do ecossistema "Saber", cobre do account um handover estruturado. Utilize as análises de cliente oculto já realizadas para chegar na call com hipóteses prontas, focando o tempo em confirmações técnicas em vez de fazer o cliente repetir toda a história da empresa.</p>
                         </div>
                     `,
                     icon: "fa-solid fa-magnifying-glass",
@@ -610,36 +632,38 @@
                     id: 3,
                     timeline: "Semana 1",
                     title: "[Doc] Planejamento / Blueprint",
-                    shortDesc: "Aprovação do documento de base.",
+                    shortDesc: "Aprovação inegociável do documento visual.",
                     fullDesc: `
-                        <strong class="text-white block mb-4 border-b border-white/10 pb-2">O Documento Sagrado do CRM</strong>
-                        A configuração do CRM NÃO COMEÇA sem este documento estar 100% aprovado. Construa a apresentação contendo:
+                        <strong class="text-white block mb-4 border-b border-white/10 pb-2">O Documento Sagrado (Master Blueprint)</strong>
+                        A configuração técnica do CRM sob nenhuma hipótese começará sem este documento estar 100% diagramado e aprovado formalmente. A apresentação deve conter:
                         <br><br>
                         <ul class="list-disc pl-5 space-y-2 text-sm text-gray-300">
-                            <li>Etapas do Funil (com descritivos p/ vendedores não se perderem).</li>
-                            <li>Lista exata de Campos e Tags.</li>
-                            <li>Desenho de Automações e Gatilhos (Trackeamento de leads).</li>
-                            <li>Modelos de Mensagem Padrão.</li>
-                            <li>Lista de Usuários.</li>
+                            <li>Etapas visuais do Funil (com SLAs de tempo em cada fase).</li>
+                            <li>Dicionário de Campos Customizados e Tags a serem criados.</li>
+                            <li>Fluxograma lógico das Automações e Gatilhos (ex: Lead ganho -> Envia email -> Cria tarefa).</li>
+                            <li>Definição das "Reason for Loss" (Motivos de Perda precisos).</li>
+                            <li>Matriz de Permissões de Usuários.</li>
                         </ul>
                     `,
                     icon: "fa-solid fa-file-pdf",
                     isBlocker: true,
                     alertTitle: "Trava de Escopo!",
-                    alertText: "O QUE FOR APROVADO AQUI, SERÁ CONSTRUÍDO. Mudanças de escopo solicitadas após a aprovação pausarão o projeto e os prazos serão recalculados. Não crie funis antes do 'OK' no documento.",
+                    alertText: "O QUE FOR APROVADO AQUI, SERÁ CONSTRUÍDO E PONTO. Mudanças de lógica ou novos funis solicitados após esta aprovação paralisarão a implementação e os prazos (SLA) serão recalculados. O time de execução exige clareza.",
                     sla: "Semana 1 - Entregar até o Dia 5"
                 },
                 {
                     id: 4,
                     timeline: "Semana 2",
                     title: "[Ação] Contratação da Plataforma",
-                    shortDesc: "Criação do trial e licenças.",
+                    shortDesc: "Criação de trial, instâncias e faturamento.",
                     fullDesc: `
                         <strong class="text-white block mb-2">Liberação de Licenças</strong>
-                        Após a aprovação do Planejamento, iniciar o trial gratuito da ferramenta escolhida no Discovery para iniciarmos a montagem técnica.
+                        Com o Blueprint carimbado, inicie o Trial da ferramenta de CRM oficial para garantir a infraestrutura da montagem.
                         <br><br>
-                        Enviar solicitação formal para a Stec Digital/Henrique para faturamento das licenças. 
-                        <strong class="text-v4red">Regra:</strong> Cobrar diariamente caso passe do SLA de 1 dia útil. O cliente será avisado de que a contratação já ocorreu e deve pagar posteriormente.
+                        Gere a solicitação de faturamento das licenças correspondentes.
+                        <div class="mt-4 border-l-2 border-v4red pl-3 text-sm text-gray-300">
+                            <strong class="text-v4red">Regra Operacional:</strong> Cobre diariamente caso a aprovação financeira atrase além do SLA de 1 dia útil. Informe ao cliente que o ambiente de teste já foi iniciado para não estourarmos o prazo.
+                        </div>
                     `,
                     icon: "fa-solid fa-credit-card",
                     isBlocker: false,
@@ -649,16 +673,16 @@
                     id: 5,
                     timeline: "Semana 2",
                     title: "[Setup] Configuração Unificada",
-                    shortDesc: "A Grande Construção.",
+                    shortDesc: "Hands-on na plataforma (A grande construção).",
                     fullDesc: `
-                        <strong class="text-white uppercase tracking-wider text-sm block mb-4 border-b border-white/10 pb-2">Tarefa Centralizada no Ekyte</strong>
-                        Para evitar desorganização no Ekyte com 10 tarefas picadas, unificamos tudo aqui. Construa tudo o que foi aprovado no Planejamento de uma só vez:
+                        <strong class="text-white uppercase tracking-wider text-sm block mb-4 border-b border-white/10 pb-2">Tarefa Centralizada de Execução (Ekyte)</strong>
+                        Para eliminar micro-tarefas espalhadas e desordem, o Squad TER assume este epicentro de execução. Reflita exatamente o que está no Blueprint para o sistema:
                         <br><br>
                         <ul class="list-disc pl-5 space-y-2 text-sm text-gray-300">
-                            <li>Construir pipeline e colunas.</li>
-                            <li>Cadastrar Campos Customizados e Tags.</li>
-                            <li>Montar as Automações, fluxos e Salesbots.</li>
-                            <li>Inserir os atalhos de mensagens aprovados.</li>
+                            <li>Parametrização completa do Pipeline, Funis e Colunas de venda.</li>
+                            <li>Injeção dos Campos Personalizados (Priorizar Dropdowns/Listas) e Tags.</li>
+                            <li>Programação dos Workflows, Cadências de E-mail, Salesbots e Alertas de Inatividade.</li>
+                            <li>Configuração de templates rápidos e atalhos de mensagem de WhatsApp.</li>
                         </ul>
                     `,
                     icon: "fa-solid fa-sliders",
@@ -669,10 +693,15 @@
                     id: 6,
                     timeline: "Semana 2",
                     title: "[Ação] Conexão de Fontes",
-                    shortDesc: "Integrações WhatsApp e Redes.",
+                    shortDesc: "Conectar Webhooks, WhatsApp e APIs.",
                     fullDesc: `
-                        Ocorre em paralelo à Configuração Unificada.
-                        Conectar e verificar o status da WABA API, conectar as caixas de DM do Instagram e Messenger, e plugar webhooks de entrada de Landing Pages.
+                        <strong class="text-white block mb-2">Engenharia de Entradas</strong>
+                        Executado em paralelo à Configuração Unificada.
+                        Dedicado exclusivamente a garantir o fluxo dos dados externos para o CRM:
+                        <br><br>
+                        - Conexão e aprovação dos números na WABA (WhatsApp API).<br>
+                        - Integração direta com Caixas do Meta (IG Direct / FB Messenger).<br>
+                        - Estabelecer e testar Webhooks/Zaps ligando Landing Pages, Elementor, Typeforms ao funil raiz.
                     `,
                     icon: "fa-solid fa-link",
                     isBlocker: false,
@@ -682,10 +711,14 @@
                     id: 7,
                     timeline: "Semana 3",
                     title: "[QA] Testes de Validação",
-                    shortDesc: "Estressar a plataforma internamente.",
+                    shortDesc: "Estressar o sistema (Garantia de Qualidade).",
                     fullDesc: `
-                        <strong class="text-white block mb-2">Garantia de Qualidade</strong>
-                        Antes de chamar o cliente para o Treinamento, valide. Conecte seu número de teste e percorra o funil de ponta a ponta. Dispare todas as automações e veja se os alertas estão batendo corretamente. O cliente não deve ser o "beta tester" da implementação.
+                        <strong class="text-white block mb-2">Protocolo de Quality Assurance (QA)</strong>
+                        NUNCA libere a plataforma para o treinamento sem estressá-la internamente antes. O cliente não é nosso testador Beta.
+                        <br><br>
+                        - Insira seu próprio número/e-mail no formulário do site e verifique se o card é criado corretamente no pipeline com as UTMs.<br>
+                        - Mova o card manualmente pelas etapas para forçar o disparo de todos os gatilhos e e-mails automatizados.<br>
+                        - Simule perdas e vitórias (Closed Won) para ver se os dashboards geram o reflexo estatístico correto.
                     `,
                     icon: "fa-solid fa-bug",
                     isBlocker: false,
@@ -695,13 +728,14 @@
                     id: 8,
                     timeline: "Semana 3",
                     title: "[Call] Treinamento da Ferramenta",
-                    shortDesc: "Treinamento de sistema, não de vendas.",
+                    shortDesc: "Capacitação Sistêmica com Usuários.",
                     fullDesc: `
-                        Reunião de entrega e onboarding com os usuários/vendedores. 
+                        <strong class="text-white block mb-2">Onboarding e Habilitação</strong>
+                        Sessão ao vivo de entrega do ambiente de produção e capacitação dos usuários finais (gestores e vendedores).
                         
-                        <div class="mt-6 bg-red-900/10 border border-v4red/30 p-4 rounded-xl">
-                            <strong class="text-v4red flex items-center gap-2 mb-2"><i class="fa-solid fa-triangle-exclamation"></i> ALINHAMENTO IMPORTANTE:</strong>
-                            <p class="text-sm text-gray-300">"Cliente, este é um treinamento sistêmico sobre onde clicar, como mover o card e como a plataforma funciona. A sua parte comercial de como a vendedora deve falar ou o que significa cada etapa, nós já validamos no nosso Documento de Planejamento aprovado."</p>
+                        <div class="mt-6 bg-red-900/10 border border-v4red/30 p-5 rounded-xl shadow-sm">
+                            <strong class="text-v4red flex items-center gap-2 mb-2"><i class="fa-solid fa-triangle-exclamation"></i> ALINHAMENTO IMPRESCINDÍVEL:</strong>
+                            <p class="text-sm text-gray-300 italic">"Time, esta call é focada em usabilidade do sistema: onde clicar, como criar filtros, como encontrar seu lead e como arrastar cards. As regras de negócio (o que o vendedor deve falar ou argumentar em cada etapa) já foram balizadas no Planejamento Estratégico com a diretoria."</p>
                         </div>
                     `,
                     icon: "fa-solid fa-chalkboard-user",
@@ -712,14 +746,15 @@
                     id: 9,
                     timeline: "Semana 3",
                     title: "[Gate] NPS e Oficialização",
-                    shortDesc: "Trava final antes da baixa no Ekyte.",
+                    shortDesc: "Cerimônia de encerramento do Setup.",
                     fullDesc: `
-                        Envio do link da pesquisa NPS avaliando o trabalho do Suporte/Implementação. A plataforma e as integrações finais em produção só serão validadas como "Entregues" formalmente após a resposta da pesquisa.
+                        <strong class="text-white block mb-2">Sinal Verde de Produção</strong>
+                        Envio do formulário de pesquisa NPS (Net Promoter Score) avaliando a excelência do ciclo de Implementação. Apenas com esta avaliação preenchida o projeto transita de "Setup Ativo" para "Manutenção e Recorrência".
                     `,
                     icon: "fa-solid fa-lock",
                     isBlocker: true,
-                    alertTitle: "Protocolo de Retenção",
-                    alertText: "A entrega definitiva depende da nota enviada no NPS. Não dê baixa no Ekyte e não inicie a fase de 'Manutenção Recorrente' antes disso.",
+                    alertTitle: "Protocolo Rigoroso de Retenção",
+                    alertText: "A entrega definitiva está vinculada à resposta do NPS. Não conclua/baixe o projeto no Ekyte e não inicie a esteira de acompanhamento mensal antes da nota ser registrada.",
                     sla: "Semana 3 - Executar no Dia 15"
                 }
             ];
@@ -737,22 +772,22 @@
                             <div class="bg-[#111] border border-white/5 p-5 rounded-xl">
                                 <span class="raci-badge raci-r mb-2 block">R</span>
                                 <h4 class="text-white font-bold text-sm mb-1">Responsible (Executa)</h4>
-                                <p class="text-xs text-gray-400">O executor da tarefa. Quem suja as mãos e faz acontecer.</p>
+                                <p class="text-xs text-gray-400">O executor da tarefa. Quem suja as mãos, programa e faz acontecer de fato.</p>
                             </div>
                             <div class="bg-[#111] border border-white/5 p-5 rounded-xl">
                                 <span class="raci-badge raci-a mb-2 block">A</span>
                                 <h4 class="text-white font-bold text-sm mb-1">Accountable (Aprova)</h4>
-                                <p class="text-xs text-gray-400">Dono da bola. Quem aprova as entregas e responde pelo sucesso.</p>
+                                <p class="text-xs text-gray-400">O decisor final. Quem aprova o avanço da entrega e responde pelo sucesso do marco.</p>
                             </div>
                             <div class="bg-[#111] border border-white/5 p-5 rounded-xl">
                                 <span class="raci-badge raci-c mb-2 block">C</span>
                                 <h4 class="text-white font-bold text-sm mb-1">Consulted (Consultado)</h4>
-                                <p class="text-xs text-gray-400">Especialista que fornece insumos essenciais antes ou durante a execução.</p>
+                                <p class="text-xs text-gray-400">O especialista que detém contexto. Fornece insumos, acessos ou dados vitais para que o Executor (R) trabalhe.</p>
                             </div>
                             <div class="bg-[#111] border border-white/5 p-5 rounded-xl">
                                 <span class="raci-badge raci-i mb-2 block">I</span>
                                 <h4 class="text-white font-bold text-sm mb-1">Informed (Informado)</h4>
-                                <p class="text-xs text-gray-400">Precisa saber que a etapa terminou para poder iniciar outra (ou gerenciar), mas não executa.</p>
+                                <p class="text-xs text-gray-400">É avisado quando a tarefa é concluída para sincronia do projeto, mas não opera nem aprova.</p>
                             </div>
                         </div>
                     `,
@@ -767,16 +802,18 @@
                     fullDesc: `
                         <div class="p-4 sm:p-8">
                             <h2 class="text-2xl font-sans font-black text-white uppercase tracking-tight mb-2">Atribuições: Ciclo Completo do Projeto</h2>
-                            <p class="text-gray-400 text-sm mb-6 max-w-2xl">Esta matriz mapeia as obrigações e aprovações de cada tarefa do Ekyte, eliminando ruídos entre os squads. O TER executa a implementação; o Comercial vende e fornece insumos; o Gestor aprova a qualidade.</p>
+                            <p class="text-gray-400 text-sm mb-6 max-w-2xl">Esta matriz mapeia as obrigações e aprovações de cada tarefa do Ekyte, blindando o processo contra ruídos entre as áreas. Você (Especialista CRM) centraliza a arquitetura e execução; Vendas, Operação e Account lideram as origens de monetização e relacionamento; e o Gestor afiança a qualidade técnica.</p>
                             
                             <div class="overflow-hidden rounded-xl border border-white/10 shadow-2xl overflow-x-auto">
-                                <table class="w-full text-sm text-left border-collapse min-w-[800px]">
+                                <table class="w-full text-sm text-left border-collapse min-w-[1000px]">
                                     <thead class="bg-[#1a1a1a] text-[11px] text-gray-300 uppercase tracking-widest">
                                         <tr>
-                                            <th class="px-5 py-4 border-b border-r border-white/5 font-bold w-2/5">Etapa Ekyte / Tarefa</th>
-                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight">Operação / Account <br><span class="text-[9px] font-normal text-gray-500">(Comercial)</span></th>
+                                            <th class="px-5 py-4 border-b border-r border-white/5 font-bold w-1/4">Etapa Ekyte / Tarefa</th>
+                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight">Vendas <br><span class="text-[9px] font-normal text-gray-500">(Comum)</span></th>
+                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight">Operação <br><span class="text-[9px] font-normal text-gray-500">(Monetização)</span></th>
+                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight">Account <br><span class="text-[9px] font-normal text-gray-500">(Monetização)</span></th>
+                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight bg-v4red/10 text-white">Especialista CRM <br><span class="text-[9px] font-normal text-v4red">(Você - Squad TER)</span></th>
                                             <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight bg-white/5">Pedro <br><span class="text-[9px] font-normal text-gray-500">(Gestor TER)</span></th>
-                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight bg-v4red/10 text-white">Squad TER <br><span class="text-[9px] font-normal text-v4red">(Especialista)</span></th>
                                             <th class="px-3 py-4 border-b border-white/5 text-center">Cliente</th>
                                         </tr>
                                     </thead>
@@ -784,136 +821,158 @@
                                         
                                         <!-- GRUPO: PRÉ-PROJETO -->
                                         <tr class="bg-black">
-                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-gray-500 uppercase tracking-widest">Fase 0: Pré-Projeto</td>
+                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-gray-500 uppercase tracking-widest">Fase 0: Pré-Projeto</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
                                                 <span class="font-medium text-gray-200">Venda Original e Escopo Comercial</span><br>
-                                                <span class="text-[10px] text-gray-500">Vender apenas o que está no guia.</span>
+                                                <span class="text-[10px] text-gray-500">Garantir venda alinhada com o Guia do Produto.</span>
                                             </td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
                                             <td class="px-3 py-4 text-center">-</td>
                                         </tr>
 
                                         <!-- GRUPO: SEMANA 1 -->
                                         <tr class="bg-black">
-                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 1: Planejamento (SLA: 5 Dias)</td>
+                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 1: Planejamento Lógico (SLA: 5 Dias)</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
                                                 <span class="font-medium text-white border-l-2 border-v4red pl-2">1. [Call] Growth Class</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Alinhamento da regra de 24h e cronograma.</span>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Alinhamento inquebrável da regra de 24h e ciclo.</span>
                                             </td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
                                             <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
                                                 <span class="font-medium text-white border-l-2 border-v4red pl-2">2. [Call] Discovery Técnico</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Mapear Dores, Funil e coletar Handover do Saber.</span>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Auditoria profunda de processos e acessos.</span>
                                             </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
                                             <td class="px-3 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">3. [Doc] Blueprint de CRM</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Montar DOC de aprovação visual das automações.</span>
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">3. [Doc] Blueprint Estratégico</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Documentação arquitetural de automações.</span>
                                             </td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
                                             <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
                                         </tr>
 
                                         <!-- GRUPO: SEMANA 2 -->
                                         <tr class="bg-black">
-                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 2: Setup e Conexões (SLA: 5 Dias)</td>
+                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 2: Engenharia e Conexões (SLA: 5 Dias)</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">4. [Ação] Setup & Conexões (Ekyte)</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Criar funis, tags, conectar WABA, Site, Meta.</span>
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">4/5/6. Deploy Sistêmico (Ekyte)</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Plataforma, Funis, Tags, Meta APIs e Zaps.</span>
                                             </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
                                             <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
                                         </tr>
 
                                         <!-- GRUPO: SEMANA 3 -->
                                         <tr class="bg-black">
-                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 3: Entrega e QA (SLA: 5 Dias)</td>
+                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 3: Lançamento e Avaliação (SLA: 5 Dias)</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">5. [QA] Testes de Estresse</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Passar em todo funil simulando o lead.</span>
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">7. [QA] Quality Assurance</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Estresse técnico dos caminhos do Lead.</span>
                                             </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
                                             <td class="px-3 py-4 text-center">-</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">6. [Call] Treinamento (Plataforma)</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Onboarding técnico do sistema com vendedores.</span>
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">8. [Call] Onboarding da Plataforma</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Habilitação técnica do time comercial.</span>
                                             </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
                                             <td class="px-3 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">7. [Trava] Gate NPS de Entrega</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Finaliza o processo de setup inicial.</span>
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">9. [Trava] Gate NPS de Oficialização</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Auditoria de satisfação para passagem de bastão.</span>
                                             </td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
                                             <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
                                         </tr>
 
                                         <!-- GRUPO: MANUTENÇÃO & EXTRAS -->
                                         <tr class="bg-black">
-                                            <td colspan="5" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-blue-500 uppercase tracking-widest">Pós-Projeto: Recorrência e Ajustes</td>
+                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-blue-500 uppercase tracking-widest">Pós-Setup: Manutenção Orgânica</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">CRM Report Mensal</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Apresentar Health Score, Funil e plano de ação.</span>
+                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">CRM Health Report</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Apresentação mensal de gargalos e taxa de uso.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">Suporte Técnico de Rotina</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Corrigir falhas de conexão ou dúvidas pontuais.</span>
-                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
                                             <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                             <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-v4red border-l-2 border-v4red pl-2">Nova Refação de Funil / Escopo</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Novas regras cobradas via Orçamento Adicional.</span>
+                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">Suporte Técnico N1/N2</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Manutenção de conexões e dúvidas de plataforma.</span>
+                                            </td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
+                                        </tr>
+                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                                            <td class="px-5 py-4 border-r border-white/5">
+                                                <span class="font-medium text-v4red border-l-2 border-v4red pl-2">Aditivos de Escopo (Refações)</span><br>
+                                                <span class="text-[10px] text-gray-500 pl-2.5">Reconfigurações massivas oriundas de mudança.</span>
                                             </td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
                                             <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
                                             <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
                                         </tr>
 
