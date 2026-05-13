@@ -1010,368 +1010,504 @@
             document.getElementById('funnel-lost-percent').innerText = `${lostP}% de perda`;
         }
 
-        // ─── GERAÇÃO DO ONE PAGE REPORT (REFATORADO PARA BATER 100% COM O KOMMO) ───
         function gerarOnePageReport() {
-            const cid = document.getElementById('client-selector').value;
-            const dataInicio = document.getElementById('date-start').value || "Início";
-            const dataFim = document.getElementById('date-end').value || "Hoje";
-            const periodoStr = dataInicio !== "Início" ? `${dataInicio.split('-').reverse().join('/')} até ${dataFim.split('-').reverse().join('/')}` : "Todo Período";
-
-            if (!dadosGlobais || dadosGlobais.length === 0) {
-                alert("Sem dados para gerar relatório. Atualize os dados primeiro.");
-                return;
+    // ─── 1. CAPTURA DOS FILTROS ATUAIS DO DASHBOARD ───
+    const cid = document.getElementById('client-selector').value;
+    const dataInicioRaw = document.getElementById('date-start').value;
+    const dataFimRaw = document.getElementById('date-end').value;
+    const recorrenciaFiltro = document.getElementById('recorrencia-filter').value;
+ 
+    // Formata período de forma robusta (com fallback "Todo Período")
+    let periodoStr;
+    if (dataInicioRaw && dataFimRaw) {
+        periodoStr = `${dataInicioRaw.split('-').reverse().join('/')} até ${dataFimRaw.split('-').reverse().join('/')}`;
+    } else if (dataInicioRaw) {
+        periodoStr = `A partir de ${dataInicioRaw.split('-').reverse().join('/')}`;
+    } else if (dataFimRaw) {
+        periodoStr = `Até ${dataFimRaw.split('-').reverse().join('/')}`;
+    } else {
+        periodoStr = "Todo o Período";
+    }
+ 
+    // ─── 2. VALIDAÇÃO DE DADOS ───
+    if (!dadosGlobais || dadosGlobais.length === 0) {
+        alert("⚠️ Sem dados para gerar o relatório.\n\nClique em 'Atualizar Dados' primeiro.");
+        return;
+    }
+ 
+    // ─── 3. IDENTIFICAÇÃO DO CLIENTE ───
+    // Quando "todos", agregamos métricas (mas o funil ainda precisa ser de UM cliente)
+    const isVisaoGlobal = cid === "todos";
+    const dadosFiltrados = (typeof getDadosFiltrados === 'function') ? getDadosFiltrados() : dadosGlobais;
+ 
+    let cliente;
+    if (isVisaoGlobal) {
+        // Para visão global, usamos o primeiro cliente como referência de funil
+        // mas exibimos métricas agregadas onde aplicável
+        cliente = dadosFiltrados[0];
+    } else {
+        cliente = dadosGlobais.find(c => c.id == cid);
+    }
+ 
+    if (!cliente) {
+        alert("⚠️ Cliente não encontrado nos dados carregados.");
+        return;
+    }
+ 
+    // ─── 4. CAPTURA DO FUNIL EXATO SELECIONADO NA TELA ───
+    const selPid = document.getElementById('pipeline-selector').value;
+    const pipe = (cliente.pipelines && cliente.pipelines.length > 0)
+        ? (cliente.pipelines.find(p => p.id == selPid) || cliente.pipelines[0])
+        : null;
+ 
+    if (!pipe) {
+        alert("⚠️ Nenhum funil disponível para gerar o relatório.\n\nSelecione um cliente com pipelines configurados.");
+        return;
+    }
+ 
+    // Debug — útil para validar acurácia (remover em produção se desejar)
+    console.log('[Relatório] Cliente:', cliente.name);
+    console.log('[Relatório] Funil:', pipe.name, '(ID:', pipe.id, ')');
+    console.log('[Relatório] Período:', periodoStr);
+    console.log('[Relatório] Dados completos do funil:', pipe);
+ 
+    const nomeOperacao = isVisaoGlobal ? "Visão Global" : cliente.name;
+    const nomeFunil = pipe.name || "Funil de Vendas";
+ 
+    // ═════════════════════════════════════════════════════════
+    // ─── 5. EXTRAÇÃO DE MÉTRICAS DO FUNIL (FONTE DA VERDADE) ───
+    // ═════════════════════════════════════════════════════════
+    // TUDO daqui pra baixo vem do `pipe`, NÃO do `cliente`.
+    // Isso garante que o relatório reflita exatamente o funil
+    // selecionado, no período aplicado.
+ 
+    const vendas = pipe.results?.won || 0;
+    const perdas = pipe.results?.lost || 0;
+ 
+    // ─── RECEITA: prioriza dado do funil, com fallbacks seguros ───
+    let receita = 0;
+    if (typeof pipe.wonRevenue === 'number') {
+        // Caso ideal: backend expõe receita por funil
+        receita = pipe.wonRevenue;
+    } else if (pipe.monthlyStats && pipe.monthlyStats.length > 0 && typeof pipe.monthlyStats[0].revenue === 'number') {
+        // Fallback: soma das receitas mensais do funil
+        receita = pipe.monthlyStats.reduce((acc, m) => acc + (m.revenue || 0), 0);
+    } else if (!isVisaoGlobal && cliente.pipelines && cliente.pipelines.length === 1) {
+        // Fallback: cliente tem apenas 1 funil → wonRevenue do cliente é desse funil
+        receita = cliente.wonRevenue || 0;
+    } else {
+        // Sem dado por funil disponível → exibe 0 com aviso no console
+        console.warn('[Relatório] ⚠️ Receita por funil não disponível no backend. Exibindo R$ 0.');
+        console.warn('[Relatório] Sugestão: expor `wonRevenue` dentro de cada pipeline na API.');
+        receita = 0;
+    }
+ 
+    // ─── LEADS TOTAIS: Lógica oficial do Kommo ───
+    // Total = Soma das etapas ATIVAS + Ganhos + Perdas
+    let somaEtapas = 0;
+    if (pipe.stages && pipe.stages.length > 0) {
+        somaEtapas = pipe.stages.reduce((acc, s) => acc + (s.count || 0), 0);
+    }
+    const leadsTotais = somaEtapas + vendas + perdas;
+ 
+    // ─── TAXAS DE CONVERSÃO E PERDA ───
+    const totalDecididos = vendas + perdas;
+    const taxaConversao = totalDecididos > 0 ? ((vendas / totalDecididos) * 100).toFixed(1) : '0.0';
+    const taxaPerda = totalDecididos > 0 ? ((perdas / totalDecididos) * 100).toFixed(1) : '0.0';
+ 
+    // ─── MÉTRICAS OPERACIONAIS (priorizam funil, fallback cliente) ───
+    const ciclo = (typeof pipe.avgSalesCycle === 'number')
+        ? pipe.avgSalesCycle
+        : (cliente.avgSalesCycle || 0);
+ 
+    const estagnados = (typeof pipe.stagnantLeads === 'number')
+        ? pipe.stagnantLeads
+        : (cliente.stagnantLeads || 0);
+ 
+    const usuariosAtivos = cliente.usersTotal || 0; // Usuários são por conta, não por funil
+ 
+    // ═════════════════════════════════════════════════════════
+    // ─── 6. GRÁFICO MENSAL (APENAS DO FUNIL SELECIONADO) ───
+    // ═════════════════════════════════════════════════════════
+    let chartHTML = '<p class="text-gray-500 text-sm p-8 text-center">Sem dados mensais para exibir o gráfico.</p>';
+ 
+    if (pipe.monthlyStats && pipe.monthlyStats.length > 0) {
+        // Merge defensivo (caso venham duplicatas por chave)
+        const merged = {};
+        pipe.monthlyStats.forEach(m => {
+            if (!merged[m.key]) {
+                merged[m.key] = { label: m.label, leads: 0, won: 0, lost: 0 };
             }
-
-            // 1. Identifica o cliente (Se for 'todos', usa o primeiro para referência de funil)
-            const cliente = cid === "todos" ? dadosGlobais[0] : dadosGlobais.find(c => c.id == cid);
-            if (!cliente) return;
-
-            // 2. CAPTURA O FUNIL EXATO SELECIONADO NA TELA
-            const selPid = document.getElementById('pipeline-selector').value;
-            const pipe = cliente.pipelines ? (cliente.pipelines.find(p => p.id == selPid) || cliente.pipelines[0]) : null;
-
-            if (!pipe) {
-                alert("Nenhum funil disponível para gerar o relatório.");
-                return;
-            }
-
-            const nomeOperacao = cid === "todos" ? "Visão Global" : cliente.name;
-            const nomeFunil = pipe.name || "Funil de Vendas";
-
-            // 3. EXTRAI AS MÉTRICAS ESTRITAMENTE DESTE FUNIL (Paridade com o CRM)
-            const vendas = pipe.results?.won || 0;
-            const perdas = pipe.results?.lost || 0;
-            const receita = cliente.wonRevenue || 0; // Receita das vendas deste período
-            
-            // Lógica Kommo: Total de leads = (Soma das etapas ativas) + Ganho + Perda
-            let somaEtapas = 0;
-            if (pipe.stages && pipe.stages.length > 0) {
-                somaEtapas = pipe.stages.reduce((acc, s) => acc + s.count, 0);
-            }
-            const leadsTotais = somaEtapas + vendas + perdas;
-
-            const totalDecididos = vendas + perdas;
-            const taxaConversao = totalDecididos > 0 ? ((vendas / totalDecididos) * 100).toFixed(1) : 0;
-            const taxaPerda = totalDecididos > 0 ? ((perdas / totalDecididos) * 100).toFixed(1) : 0;
-
-            const ciclo = cliente.avgSalesCycle || 0;
-            const estagnados = cliente.stagnantLeads || 0;
-            const usuariosAtivos = cliente.usersTotal || 0;
-
-            // ─── GRÁFICO MENSAL (APENAS DO FUNIL) ───
-            let chartHTML = '<p class="text-gray-500 text-sm p-8">Sem dados mensais para exibir o gráfico.</p>';
-            if (pipe.monthlyStats && pipe.monthlyStats.length > 0) {
-                const merged = {};
-                pipe.monthlyStats.forEach(m => {
-                    if (!merged[m.key]) merged[m.key] = { label: m.label, leads: 0, won: 0, lost: 0 };
-                    merged[m.key].leads += m.leads;
-                    merged[m.key].won += m.won;
-                    merged[m.key].lost += m.lost;
-                });
-                const months = Object.keys(merged).sort().slice(-4);
-                let maxVal = 1;
-                months.forEach(k => { maxVal = Math.max(maxVal, merged[k].leads, merged[k].won, merged[k].lost); });
-                
-                let bars = months.map(k => {
-                    let m = merged[k];
-                    let hL = Math.max(5, (m.leads / maxVal) * 100);
-                    let hW = Math.max(5, (m.won / maxVal) * 100);
-                    let hLo = Math.max(5, (m.lost / maxVal) * 100);
-                    return `
-                    <div class="flex flex-col items-center flex-1">
-                        <div class="flex items-end gap-2 w-full justify-center h-48 border-b border-gray-800 pb-2 relative">
-                            <div class="w-8 bg-blue-500 rounded-t flex flex-col justify-end group relative" style="height: ${hL}%"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono font-bold text-gray-300">${m.leads}</span></div>
-                            <div class="w-8 bg-green-500 rounded-t flex flex-col justify-end relative" style="height: ${hW}%"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono font-bold text-gray-300">${m.won}</span></div>
-                            <div class="w-8 bg-red-500 rounded-t flex flex-col justify-end relative" style="height: ${hLo}%"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono font-bold text-gray-300">${m.lost}</span></div>
+            merged[m.key].leads += (m.leads || 0);
+            merged[m.key].won += (m.won || 0);
+            merged[m.key].lost += (m.lost || 0);
+        });
+ 
+        const months = Object.keys(merged).sort().slice(-4); // Últimos 4 meses
+ 
+        if (months.length > 0) {
+            let maxVal = 1;
+            months.forEach(k => {
+                maxVal = Math.max(maxVal, merged[k].leads, merged[k].won, merged[k].lost);
+            });
+ 
+            const bars = months.map(k => {
+                const m = merged[k];
+                const hL = Math.max(5, (m.leads / maxVal) * 100);
+                const hW = m.won > 0 ? Math.max(5, (m.won / maxVal) * 100) : 0;
+                const hLo = m.lost > 0 ? Math.max(5, (m.lost / maxVal) * 100) : 0;
+ 
+                return `
+                <div class="flex flex-col items-center flex-1">
+                    <div class="flex items-end gap-2 w-full justify-center h-48 border-b border-gray-800 pb-2 relative">
+                        <div class="w-8 bg-blue-500 rounded-t flex flex-col justify-end relative" style="height: ${hL}%">
+                            <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono font-bold text-gray-300">${m.leads}</span>
                         </div>
-                        <span class="text-xs text-gray-500 mt-3 font-medium">${m.label || k}</span>
-                    </div>`;
-                }).join('');
-                
-                chartHTML = `
-                <div class="flex items-end gap-8 w-full max-w-2xl mx-auto mt-4 px-6">${bars}</div>
-                <div class="flex gap-6 mt-8 border-t border-gray-800 pt-4">
-                    <div class="flex items-center gap-2 text-xs text-gray-400"><span class="w-3 h-3 bg-blue-500 rounded-sm"></span> Leads Gerados</div>
-                    <div class="flex items-center gap-2 text-xs text-gray-400"><span class="w-3 h-3 bg-green-500 rounded-sm"></span> Vendas</div>
-                    <div class="flex items-center gap-2 text-xs text-gray-400"><span class="w-3 h-3 bg-red-500 rounded-sm"></span> Perdas</div>
+                        ${m.won > 0 ? `
+                        <div class="w-8 bg-green-500 rounded-t flex flex-col justify-end relative" style="height: ${hW}%">
+                            <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono font-bold text-gray-300">${m.won}</span>
+                        </div>` : ''}
+                        ${m.lost > 0 ? `
+                        <div class="w-8 bg-red-500 rounded-t flex flex-col justify-end relative" style="height: ${hLo}%">
+                            <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono font-bold text-gray-300">${m.lost}</span>
+                        </div>` : ''}
+                    </div>
+                    <span class="text-xs text-gray-500 mt-3 font-medium">${m.label || k}</span>
                 </div>`;
-            }
-
-            // ─── INTELIGÊNCIA DA NOTA E STATUS ───
-            let nota = 5;
-            let scoreBg = 'bg-green-500';
-            let statusText = 'Saudável — Operação Estável';
-            let statusDot = 'bg-green-500';
-
-            if (taxaConversao >= 30 && ciclo <= 15) {
-                nota = Math.min(10, 7 + (taxaConversao > 40 ? 1 : 0) + (estagnados < 50 ? 1 : 0) + (ciclo < 5 ? 1 : 0));
-                statusText = 'Saudável — Alta Performance';
-            } else if (taxaPerda > 60 || ciclo > 45) {
-                nota = Math.max(1, 4 - (taxaPerda > 80 ? 1 : 0) - (estagnados > 200 ? 1 : 0));
-                scoreBg = 'bg-red-500';
-                statusText = 'Risco Alto — Revisão Urgente';
-                statusDot = 'bg-red-500';
-            } else {
-                nota = 6;
-                scoreBg = 'bg-yellow-500 text-black';
-                statusText = 'Atenção — Oportunidade de Otimização';
-                statusDot = 'bg-yellow-500';
-            }
-
-            // ─── FUNIL HORIZONTAL ───
-            let funnelHTML = '<p class="text-gray-500 text-sm">Dados de funil indisponíveis.</p>';
-            if (pipe.stages && pipe.stages.length > 0) {
-                let maxFunnelVal = Math.max(vendas, perdas);
-                pipe.stages.forEach(s => maxFunnelVal = Math.max(maxFunnelVal, s.count));
-                if (maxFunnelVal === 0) maxFunnelVal = 1;
-
-                let rows = pipe.stages.map(s => {
-                    let w = (s.count / maxFunnelVal) * 100;
-                    let color = s.name.toLowerCase().includes('não respondeu') ? 'bg-red-500' : 'bg-[#b6892b]';
-                    return `
-                    <div class="flex items-center gap-4 mb-4">
-                        <span class="w-32 text-xs font-bold text-gray-300 text-right tracking-wide truncate" title="${s.name}">${s.name}</span>
-                        <div class="flex-1 bg-[#1a1a1a] h-6 rounded flex items-center p-0.5">
-                            <div class="${color} h-full rounded" style="width: ${w}%"></div>
-                        </div>
-                        <span class="text-sm font-mono font-bold text-white w-10 text-right">${s.count}</span>
-                    </div>`;
-                }).join('');
-
-                let wWon = (vendas / maxFunnelVal) * 100;
-                let wLost = (perdas / maxFunnelVal) * 100;
-                rows += `
-                    <div class="flex items-center gap-4 mb-4 mt-6">
-                        <span class="w-32 text-xs font-bold text-gray-300 text-right tracking-wide">Vendas Realizadas</span>
-                        <div class="flex-1 bg-[#1a1a1a] h-6 rounded flex items-center p-0.5">
-                            <div class="bg-green-500 h-full rounded" style="width: ${wWon}%"></div>
-                        </div>
-                        <span class="text-sm font-mono font-bold text-green-500 w-10 text-right">${vendas}</span>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <span class="w-32 text-xs font-bold text-gray-300 text-right tracking-wide">Negócios Perdidos</span>
-                        <div class="flex-1 bg-[#1a1a1a] h-6 rounded flex items-center p-0.5">
-                            <div class="bg-red-500 h-full rounded" style="width: ${wLost}%"></div>
-                        </div>
-                        <span class="text-sm font-mono font-bold text-red-500 w-10 text-right">${perdas}</span>
-                    </div>`;
-                funnelHTML = rows;
-            }
-
-            // ─── MOTIVOS DE PERDA ───
-            let motivosPerdaHTML = '';
-            let usaMotivoGenerico = false;
-            if (pipe.lossReasons && pipe.lossReasons.length > 0) {
-                const lossData = [...pipe.lossReasons].sort((a,b) => b.count - a.count);
-                const totalPerdasVal = lossData.reduce((acc, curr) => acc + curr.count, 0);
-                
-                motivosPerdaHTML = lossData.map((motivo, index) => {
-                    const pct = totalPerdasVal > 0 ? ((motivo.count / totalPerdasVal) * 100).toFixed(1) : 0;
-                    if (motivo.name.toLowerCase().includes("sem motivo")) usaMotivoGenerico = true;
-                    return `
-                    <div class="mb-5">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-4">
-                                <span class="bg-red-500/20 text-red-500 text-xs font-bold w-6 h-6 flex items-center justify-center rounded">${index + 1}</span>
-                                <span class="text-white text-sm font-bold tracking-wide">${motivo.name}</span>
-                            </div>
-                            <div class="flex items-center gap-4 text-sm font-mono">
-                                <span class="text-red-500 font-bold">${motivo.count}</span>
-                                <span class="text-gray-500">${pct}%</span>
-                            </div>
-                        </div>
-                        <div class="w-full bg-[#1a1a1a] h-1.5 rounded-full overflow-hidden">
-                            <div class="bg-red-500 h-full rounded-full" style="width: ${pct}%"></div>
-                        </div>
-                    </div>`;
-                }).join('');
-            }
-
-            // ─── VITÓRIAS E OPORTUNIDADES DINÂMICAS ───
-            let vitoriasHTML = `
-                <div class="bg-[#0f1411] border border-green-500/20 rounded-xl p-5 mb-4 border-l-4 border-l-green-500">
-                    <h4 class="font-bold text-sm text-white mb-2">Ciclo de Vendas Consolidado: <span class="text-green-500">${ciclo} dias</span></h4>
-                    <p class="text-xs text-gray-400 leading-relaxed">Média de tempo desde a entrada do lead até o fechamento para a operação selecionada.</p>
-                </div>`;
-            
-            if(taxaConversao >= 20) {
-                vitoriasHTML += `
-                <div class="bg-[#0f1411] border border-green-500/20 rounded-xl p-5 mb-4 border-l-4 border-l-green-500">
-                    <h4 class="font-bold text-sm text-white mb-2">Conversão Sólida: <span class="text-green-500">${taxaConversao}%</span></h4>
-                    <p class="text-xs text-gray-400 leading-relaxed">A operação consegue converter uma excelente parcela das oportunidades geradas.</p>
-                </div>`;
-            }
-
-            let oportunidadesHTML = `
-                <div class="bg-[#1a0f0f] border border-red-500/20 rounded-xl p-5 mb-4 border-l-4 border-l-red-500">
-                    <h4 class="font-bold text-sm text-white mb-2">Taxa de Perda: <span class="text-red-500">${taxaPerda}%</span></h4>
-                    <p class="text-xs text-gray-400 leading-relaxed mb-3">Atenção ao volume de negócios perdidos. É preciso revisar os critérios de avanço de etapa.</p>
-                </div>`;
-            
-            if(estagnados > 0) {
-                oportunidadesHTML += `
-                <div class="bg-[#1a0f0f] border border-red-500/20 rounded-xl p-5 mb-4 border-l-4 border-l-red-500">
-                    <h4 class="font-bold text-sm text-white mb-2">Leads Estagnados: <span class="text-red-500">${estagnados} leads</span></h4>
-                    <p class="text-xs text-gray-400 leading-relaxed mb-3">Estes leads representam uma parcela do funil que está parada consumindo energia.</p>
-                </div>`;
-            }
-
-            // ─── PLANO DE AÇÃO EXECUTIVO ───
-            let planoAcaoHTML = '';
-            if (usaMotivoGenerico) {
-                planoAcaoHTML += `
-                <div class="bg-[#14140b] border border-yellow-500/20 rounded-xl p-6 mb-4 border-l-4 border-l-yellow-500">
-                    <span class="bg-yellow-500 text-black text-[10px] px-2 py-1 rounded uppercase tracking-widest font-bold mb-3 inline-block">Importante</span>
-                    <h4 class="text-lg font-bold text-white mb-3">Reduzir Uso de Motivos Genéricos</h4>
-                    <p class="text-sm text-gray-400 mb-5 leading-relaxed">Treinar a equipe para classificar perdas nos motivos específicos disponíveis no CRM.</p>
-                </div>`;
-            }
-            if (estagnados > 0) {
-                planoAcaoHTML += `
-                <div class="bg-[#0f1712] border border-green-500/20 rounded-xl p-6 mb-4 border-l-4 border-l-green-500">
-                    <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded uppercase tracking-widest font-bold mb-3 inline-block">Melhoria</span>
-                    <h4 class="text-lg font-bold text-white mb-3">Limpar e Reativar Leads Estagnados</h4>
-                    <p class="text-sm text-gray-400 mb-5 leading-relaxed">Criar fluxo de reativação para os ${estagnados} leads inativos ou definir SLA para descarte.</p>
-                </div>`;
-            }
-
-            // ─── MONTAGEM FINAL DO HTML ───
-            const htmlContent = `
-            <!DOCTYPE html>
-            <html lang="pt-BR">
-            <head>
-                <meta charset="UTF-8">
-                <title>Relatório V4 Company - ${nomeOperacao}</title>
-                <script src="https://cdn.tailwindcss.com"><\/script>
-                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-                <style>
-                    body { font-family: 'Outfit', sans-serif; background-color: #080808; color: #ffffff; }
-                    .font-mono { font-family: 'JetBrains Mono', monospace; }
-                    .card { background-color: #111111; border: 1px solid #1f1f1f; border-radius: 12px; }
-                    .card-header { border-bottom: 1px solid #1f1f1f; padding-bottom: 16px; margin-bottom: 24px; }
-                </style>
-            </head>
-            <body class="p-10 max-w-[1200px] mx-auto selection:bg-red-500/30">
-                
-                <header class="flex items-center gap-6 mb-12 pb-6 border-b border-[#1f1f1f]">
-                    <h1 class="text-2xl font-black text-red-600 tracking-tight">V4 COMPANY</h1>
-                    <span class="border border-gray-800 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-full">Operação: ${nomeOperacao}</span>
-                    <span class="border border-gray-800 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-full">Funil: ${nomeFunil}</span>
-                    <span class="border border-gray-800 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-full">${periodoStr}</span>
-                </header>
-
-                <h2 class="text-4xl font-bold mb-10 tracking-tight">Relatório de Saúde CRM</h2>
-
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="card p-8">
-                        <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[0.15em] mb-2">Total de Leads</p>
-                        <p class="text-5xl font-bold font-mono text-white mb-2">${leadsTotais.toLocaleString('pt-BR')}</p>
-                        <p class="text-sm text-gray-500 font-medium">Cadastrados no Funil Selecionado</p>
-                    </div>
-                    <div class="card p-8">
-                        <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[0.15em] mb-2">Vendas Realizadas</p>
-                        <p class="text-5xl font-bold font-mono text-green-400 mb-2">${vendas.toLocaleString('pt-BR')}</p>
-                        <p class="text-sm text-gray-500 font-medium">${taxaConversao}% de conversão</p>
-                    </div>
-                    <div class="card p-8">
-                        <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[0.15em] mb-2">Negócios Perdidos</p>
-                        <p class="text-5xl font-bold font-mono text-red-500 mb-2">${perdas.toLocaleString('pt-BR')}</p>
-                        <p class="text-sm text-gray-500 font-medium">${taxaPerda}% de perda</p>
-                    </div>
-                    <div class="card p-8">
-                        <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[0.15em] mb-2">Receita Gerada</p>
-                        <p class="text-5xl font-bold font-mono text-green-400 mb-2">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(receita)}</p>
-                        <p class="text-sm text-gray-500 font-medium">Ciclo médio de ${ciclo} dias</p>
-                    </div>
-                </div>
-
-                <div class="card p-8 mb-10 bg-[#111111]">
-                    <div class="flex justify-between items-start mb-6">
-                        <h3 class="text-2xl font-bold">Avaliação de Saúde do CRM</h3>
-                        <div class="${scoreBg} text-white px-5 py-2 rounded-lg font-bold font-mono text-xl">${nota}/10</div>
-                    </div>
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="w-2.5 h-2.5 rounded-full ${statusDot}"></span>
-                        <span class="text-base font-semibold ${statusDot.replace('bg-', 'text-')}">${statusText}</span>
-                    </div>
-                    <p class="text-gray-300 text-base mb-4 leading-relaxed">
-                        <strong class="text-white">Objetivo:</strong> Monitorar a eficiência do funil de vendas, identificar gargalos operacionais e maximizar a conversão de leads em clientes.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 gap-6 mb-10">
-                    <div class="card p-8">
-                        <div class="card-header border-l-4 border-l-red-500 pl-4 border-b-0 mb-8"><h3 class="text-xl font-bold">Leads & Vendas por Mês</h3></div>
-                        ${chartHTML}
-                    </div>
-                    <div class="card p-8">
-                        <div class="card-header border-l-4 border-l-red-500 pl-4 border-b-0 mb-8"><h3 class="text-xl font-bold">Funil de Vendas</h3></div>
-                        <div class="max-w-3xl mx-auto py-4">
-                            ${funnelHTML}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 mb-10 mt-16">
-                    <h3 class="text-2xl font-bold mb-6 flex items-center gap-3"><span class="w-2.5 h-2.5 bg-green-500 rounded-full"></span> Vitórias do Período</h3>
-                    <div class="grid gap-4 mb-10">
-                        ${vitoriasHTML}
-                    </div>
-
-                    <h3 class="text-2xl font-bold mb-6 flex items-center gap-3"><span class="w-2.5 h-2.5 bg-gray-500 rounded-full"></span> Oportunidades</h3>
-                    <div class="grid gap-4">
-                        ${oportunidadesHTML}
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-10 mb-10 mt-16">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-8 border-l-4 border-l-red-500 pl-4">Motivos de Perda</h3>
-                        <div class="pr-4">
-                            ${motivosPerdaHTML || '<p class="text-gray-500 text-sm">Nenhum dado registrado.</p>'}
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-bold mb-8">Leitura Estratégica</h3>
-                        <div class="text-gray-400 text-[15px] leading-relaxed mb-10 space-y-4">
-                            <p>A operação <strong>${nomeOperacao}</strong> acumulou ${leadsTotais} leads no funil "${nomeFunil}" no período analisado, gerando ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(receita)} em receita com ${vendas} vendas realizadas.</p>
-                            <p>Atualmente, o funil mostra ${estagnados} leads estagnados e conta com o apoio de ${usuariosAtivos} usuários ativos registrados no sistema.</p>
-                        </div>
-                        
-                        <h3 class="text-2xl font-bold mb-8">Plano de Ação</h3>
-                        ${planoAcaoHTML || '<p class="text-gray-500 text-sm">Mantenha a higiene do CRM em dia para evitar acúmulo de tarefas e perdas não mapeadas.</p>'}
-                    </div>
-                </div>
-
-                <h3 class="text-2xl font-bold mb-6 mt-16">Métricas Detalhadas</h3>
-                <div class="grid grid-cols-2 gap-4 mb-16">
-                    <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Taxa de Conversão</p><p class="text-3xl font-bold text-white">${taxaConversao}%</p></div>
-                    <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Taxa de Perda</p><p class="text-3xl font-bold text-white">${taxaPerda}%</p></div>
-                    <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Ciclo Médio</p><p class="text-3xl font-bold text-white">${ciclo}d</p></div>
-                    <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Leads Estagnados</p><p class="text-3xl font-bold text-white">${estagnados}</p></div>
-                    <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Receita Total</p><p class="text-3xl font-bold text-white">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(receita)}</p></div>
-                    <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Usuários Ativos</p><p class="text-3xl font-bold text-white">${usuariosAtivos}</p></div>
-                </div>
-
-                <div class="text-center border-t border-gray-900 pt-10 pb-8">
-                    <p class="text-sm text-gray-600 font-medium">Desenvolvido por V4 Ferraz Piai&Co. — Dados extraídos via API Kommo CRM</p>
-                </div>
-            </body>
-            </html>
-            `;
-
-            // ─── DOWNLOAD ───
-            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `V4_Report_${nomeOperacao.replace(/\s+/g, '_')}_${dataInicio.replace(/-/g,'')}.html`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+            }).join('');
+ 
+            chartHTML = `
+            <div class="flex items-end gap-8 w-full max-w-2xl mx-auto mt-4 px-6">${bars}</div>
+            <div class="flex gap-6 mt-8 border-t border-gray-800 pt-4 justify-center">
+                <div class="flex items-center gap-2 text-xs text-gray-400"><span class="w-3 h-3 bg-blue-500 rounded-sm"></span> Leads Gerados</div>
+                <div class="flex items-center gap-2 text-xs text-gray-400"><span class="w-3 h-3 bg-green-500 rounded-sm"></span> Vendas</div>
+                <div class="flex items-center gap-2 text-xs text-gray-400"><span class="w-3 h-3 bg-red-500 rounded-sm"></span> Perdas</div>
+            </div>`;
         }
-
+    }
+ 
+    // ═════════════════════════════════════════════════════════
+    // ─── 7. SCORE DE SAÚDE (BASEADO EM MÉTRICAS DO FUNIL) ───
+    // ═════════════════════════════════════════════════════════
+    let nota = 5;
+    let scoreBg = 'bg-green-500';
+    let statusText = 'Saudável — Operação Estável';
+    let statusDot = 'bg-green-500';
+ 
+    const taxaConvNum = parseFloat(taxaConversao);
+    const taxaPerdaNum = parseFloat(taxaPerda);
+ 
+    if (taxaConvNum >= 30 && ciclo <= 15 && ciclo > 0) {
+        nota = Math.min(10, 7 + (taxaConvNum > 40 ? 1 : 0) + (estagnados < 50 ? 1 : 0) + (ciclo < 5 ? 1 : 0));
+        statusText = 'Saudável — Alta Performance';
+    } else if (taxaPerdaNum > 60 || ciclo > 45) {
+        nota = Math.max(1, 4 - (taxaPerdaNum > 80 ? 1 : 0) - (estagnados > 200 ? 1 : 0));
+        scoreBg = 'bg-red-500';
+        statusText = 'Risco Alto — Revisão Urgente';
+        statusDot = 'bg-red-500';
+    } else {
+        nota = 6;
+        scoreBg = 'bg-yellow-500 text-black';
+        statusText = 'Atenção — Oportunidade de Otimização';
+        statusDot = 'bg-yellow-500';
+    }
+ 
+    // ═════════════════════════════════════════════════════════
+    // ─── 8. FUNIL HORIZONTAL ───
+    // ═════════════════════════════════════════════════════════
+    let funnelHTML = '<p class="text-gray-500 text-sm">Dados de funil indisponíveis.</p>';
+ 
+    if (pipe.stages && pipe.stages.length > 0) {
+        let maxFunnelVal = Math.max(vendas, perdas, 1);
+        pipe.stages.forEach(s => { maxFunnelVal = Math.max(maxFunnelVal, s.count || 0); });
+ 
+        let rows = pipe.stages.map(s => {
+            const count = s.count || 0;
+            const w = (count / maxFunnelVal) * 100;
+            const color = s.name.toLowerCase().includes('não respondeu') ? 'bg-red-500' : 'bg-[#b6892b]';
+            return `
+            <div class="flex items-center gap-4 mb-4">
+                <span class="w-32 text-xs font-bold text-gray-300 text-right tracking-wide truncate" title="${s.name}">${s.name}</span>
+                <div class="flex-1 bg-[#1a1a1a] h-6 rounded flex items-center p-0.5">
+                    <div class="${color} h-full rounded" style="width: ${w}%"></div>
+                </div>
+                <span class="text-sm font-mono font-bold text-white w-10 text-right">${count}</span>
+            </div>`;
+        }).join('');
+ 
+        const wWon = (vendas / maxFunnelVal) * 100;
+        const wLost = (perdas / maxFunnelVal) * 100;
+        rows += `
+            <div class="flex items-center gap-4 mb-4 mt-6">
+                <span class="w-32 text-xs font-bold text-gray-300 text-right tracking-wide">Vendas Realizadas</span>
+                <div class="flex-1 bg-[#1a1a1a] h-6 rounded flex items-center p-0.5">
+                    <div class="bg-green-500 h-full rounded" style="width: ${wWon}%"></div>
+                </div>
+                <span class="text-sm font-mono font-bold text-green-500 w-10 text-right">${vendas}</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="w-32 text-xs font-bold text-gray-300 text-right tracking-wide">Negócios Perdidos</span>
+                <div class="flex-1 bg-[#1a1a1a] h-6 rounded flex items-center p-0.5">
+                    <div class="bg-red-500 h-full rounded" style="width: ${wLost}%"></div>
+                </div>
+                <span class="text-sm font-mono font-bold text-red-500 w-10 text-right">${perdas}</span>
+            </div>`;
+        funnelHTML = rows;
+    }
+ 
+    // ═════════════════════════════════════════════════════════
+    // ─── 9. MOTIVOS DE PERDA (DO FUNIL SELECIONADO) ───
+    // ═════════════════════════════════════════════════════════
+    let motivosPerdaHTML = '';
+    let usaMotivoGenerico = false;
+ 
+    if (pipe.lossReasons && pipe.lossReasons.length > 0) {
+        const lossData = [...pipe.lossReasons].sort((a, b) => (b.count || 0) - (a.count || 0));
+        const totalPerdasVal = lossData.reduce((acc, curr) => acc + (curr.count || 0), 0);
+ 
+        motivosPerdaHTML = lossData.map((motivo, index) => {
+            const count = motivo.count || 0;
+            const pct = totalPerdasVal > 0 ? ((count / totalPerdasVal) * 100).toFixed(1) : '0.0';
+            if (motivo.name && motivo.name.toLowerCase().includes("sem motivo")) {
+                usaMotivoGenerico = true;
+            }
+            return `
+            <div class="mb-5">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-4">
+                        <span class="bg-red-500/20 text-red-500 text-xs font-bold w-6 h-6 flex items-center justify-center rounded">${index + 1}</span>
+                        <span class="text-white text-sm font-bold tracking-wide">${motivo.name}</span>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm font-mono">
+                        <span class="text-red-500 font-bold">${count}</span>
+                        <span class="text-gray-500">${pct}%</span>
+                    </div>
+                </div>
+                <div class="w-full bg-[#1a1a1a] h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-red-500 h-full rounded-full" style="width: ${pct}%"></div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+ 
+    // ═════════════════════════════════════════════════════════
+    // ─── 10. VITÓRIAS E OPORTUNIDADES DINÂMICAS ───
+    // ═════════════════════════════════════════════════════════
+    let vitoriasHTML = `
+        <div class="bg-[#0f1411] border border-green-500/20 rounded-xl p-5 mb-4 border-l-4 border-l-green-500">
+            <h4 class="font-bold text-sm text-white mb-2">Ciclo de Vendas: <span class="text-green-500">${ciclo} dias</span></h4>
+            <p class="text-xs text-gray-400 leading-relaxed">Média de tempo desde a entrada do lead até o fechamento no funil "${nomeFunil}".</p>
+        </div>`;
+ 
+    if (taxaConvNum >= 20) {
+        vitoriasHTML += `
+        <div class="bg-[#0f1411] border border-green-500/20 rounded-xl p-5 mb-4 border-l-4 border-l-green-500">
+            <h4 class="font-bold text-sm text-white mb-2">Conversão Sólida: <span class="text-green-500">${taxaConversao}%</span></h4>
+            <p class="text-xs text-gray-400 leading-relaxed">A operação consegue converter uma excelente parcela das oportunidades geradas.</p>
+        </div>`;
+    }
+ 
+    if (receita > 0) {
+        vitoriasHTML += `
+        <div class="bg-[#0f1411] border border-green-500/20 rounded-xl p-5 mb-4 border-l-4 border-l-green-500">
+            <h4 class="font-bold text-sm text-white mb-2">Receita Gerada: <span class="text-green-500">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(receita)}</span></h4>
+            <p class="text-xs text-gray-400 leading-relaxed">Receita acumulada no funil "${nomeFunil}" durante o período selecionado.</p>
+        </div>`;
+    }
+ 
+    let oportunidadesHTML = `
+        <div class="bg-[#1a0f0f] border border-red-500/20 rounded-xl p-5 mb-4 border-l-4 border-l-red-500">
+            <h4 class="font-bold text-sm text-white mb-2">Taxa de Perda: <span class="text-red-500">${taxaPerda}%</span></h4>
+            <p class="text-xs text-gray-400 leading-relaxed mb-3">Atenção ao volume de negócios perdidos. É preciso revisar os critérios de avanço de etapa.</p>
+        </div>`;
+ 
+    if (estagnados > 0) {
+        oportunidadesHTML += `
+        <div class="bg-[#1a0f0f] border border-red-500/20 rounded-xl p-5 mb-4 border-l-4 border-l-red-500">
+            <h4 class="font-bold text-sm text-white mb-2">Leads Estagnados: <span class="text-red-500">${estagnados} leads</span></h4>
+            <p class="text-xs text-gray-400 leading-relaxed mb-3">Estes leads representam uma parcela do funil parada consumindo energia da operação.</p>
+        </div>`;
+    }
+ 
+    // ═════════════════════════════════════════════════════════
+    // ─── 11. PLANO DE AÇÃO EXECUTIVO ───
+    // ═════════════════════════════════════════════════════════
+    let planoAcaoHTML = '';
+    if (usaMotivoGenerico) {
+        planoAcaoHTML += `
+        <div class="bg-[#14140b] border border-yellow-500/20 rounded-xl p-6 mb-4 border-l-4 border-l-yellow-500">
+            <span class="bg-yellow-500 text-black text-[10px] px-2 py-1 rounded uppercase tracking-widest font-bold mb-3 inline-block">Importante</span>
+            <h4 class="text-lg font-bold text-white mb-3">Reduzir Uso de Motivos Genéricos</h4>
+            <p class="text-sm text-gray-400 mb-5 leading-relaxed">Treinar a equipe para classificar perdas nos motivos específicos disponíveis no CRM.</p>
+        </div>`;
+    }
+    if (estagnados > 0) {
+        planoAcaoHTML += `
+        <div class="bg-[#0f1712] border border-green-500/20 rounded-xl p-6 mb-4 border-l-4 border-l-green-500">
+            <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded uppercase tracking-widest font-bold mb-3 inline-block">Melhoria</span>
+            <h4 class="text-lg font-bold text-white mb-3">Limpar e Reativar Leads Estagnados</h4>
+            <p class="text-sm text-gray-400 mb-5 leading-relaxed">Criar fluxo de reativação para os ${estagnados} leads inativos ou definir SLA para descarte.</p>
+        </div>`;
+    }
+ 
+    // ═════════════════════════════════════════════════════════
+    // ─── 12. MONTAGEM FINAL DO HTML ───
+    // ═════════════════════════════════════════════════════════
+    const dataGeracao = new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+    const recorrenciaLabel = recorrenciaFiltro === 'sim' ? 'Recorrentes' : (recorrenciaFiltro === 'nao' ? 'Avulsos' : 'Todos');
+ 
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Relatório V4 - ${nomeOperacao} - ${nomeFunil}</title>
+        <script src="https://cdn.tailwindcss.com"><\/script>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            body { font-family: 'Outfit', sans-serif; background-color: #080808; color: #ffffff; }
+            .font-mono { font-family: 'JetBrains Mono', monospace; }
+            .card { background-color: #111111; border: 1px solid #1f1f1f; border-radius: 12px; }
+            .card-header { border-bottom: 1px solid #1f1f1f; padding-bottom: 16px; margin-bottom: 24px; }
+            @media print { body { background: white !important; color: black !important; } }
+        </style>
+    </head>
+    <body class="p-10 max-w-[1200px] mx-auto selection:bg-red-500/30">
+ 
+        <header class="flex items-center gap-3 mb-12 pb-6 border-b border-[#1f1f1f] flex-wrap">
+            <h1 class="text-2xl font-black text-red-600 tracking-tight mr-3">V4 COMPANY</h1>
+            <span class="border border-gray-800 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-full">Operação: ${nomeOperacao}</span>
+            <span class="border border-gray-800 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-full">Funil: ${nomeFunil}</span>
+            <span class="border border-gray-800 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-full">Período: ${periodoStr}</span>
+            <span class="border border-gray-800 text-gray-400 text-xs font-medium px-4 py-1.5 rounded-full">Filtro: ${recorrenciaLabel}</span>
+        </header>
+ 
+        <h2 class="text-4xl font-bold mb-2 tracking-tight">Relatório de Saúde CRM</h2>
+        <p class="text-sm text-gray-500 mb-10">Gerado em ${dataGeracao}</p>
+ 
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="card p-8">
+                <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[0.15em] mb-2">Total de Leads</p>
+                <p class="text-5xl font-bold font-mono text-white mb-2">${leadsTotais.toLocaleString('pt-BR')}</p>
+                <p class="text-sm text-gray-500 font-medium">No funil selecionado</p>
+            </div>
+            <div class="card p-8">
+                <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[0.15em] mb-2">Vendas Realizadas</p>
+                <p class="text-5xl font-bold font-mono text-green-400 mb-2">${vendas.toLocaleString('pt-BR')}</p>
+                <p class="text-sm text-gray-500 font-medium">${taxaConversao}% de conversão</p>
+            </div>
+            <div class="card p-8">
+                <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[0.15em] mb-2">Negócios Perdidos</p>
+                <p class="text-5xl font-bold font-mono text-red-500 mb-2">${perdas.toLocaleString('pt-BR')}</p>
+                <p class="text-sm text-gray-500 font-medium">${taxaPerda}% de perda</p>
+            </div>
+            <div class="card p-8">
+                <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[0.15em] mb-2">Receita Gerada</p>
+                <p class="text-5xl font-bold font-mono text-green-400 mb-2">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(receita)}</p>
+                <p class="text-sm text-gray-500 font-medium">Ciclo médio de ${ciclo} dias</p>
+            </div>
+        </div>
+ 
+        <div class="card p-8 mb-10 bg-[#111111]">
+            <div class="flex justify-between items-start mb-6">
+                <h3 class="text-2xl font-bold">Avaliação de Saúde do CRM</h3>
+                <div class="${scoreBg} text-white px-5 py-2 rounded-lg font-bold font-mono text-xl">${nota}/10</div>
+            </div>
+            <div class="flex items-center gap-3 mb-6">
+                <span class="w-2.5 h-2.5 rounded-full ${statusDot}"></span>
+                <span class="text-base font-semibold ${statusDot.replace('bg-', 'text-')}">${statusText}</span>
+            </div>
+            <p class="text-gray-300 text-base mb-4 leading-relaxed">
+                <strong class="text-white">Objetivo:</strong> Monitorar a eficiência do funil de vendas, identificar gargalos operacionais e maximizar a conversão de leads em clientes.
+            </p>
+        </div>
+ 
+        <div class="grid grid-cols-1 gap-6 mb-10">
+            <div class="card p-8">
+                <div class="card-header border-l-4 border-l-red-500 pl-4 border-b-0 mb-8"><h3 class="text-xl font-bold">Leads & Vendas por Mês</h3></div>
+                ${chartHTML}
+            </div>
+            <div class="card p-8">
+                <div class="card-header border-l-4 border-l-red-500 pl-4 border-b-0 mb-8"><h3 class="text-xl font-bold">Funil de Vendas — ${nomeFunil}</h3></div>
+                <div class="max-w-3xl mx-auto py-4">
+                    ${funnelHTML}
+                </div>
+            </div>
+        </div>
+ 
+        <div class="grid grid-cols-1 mb-10 mt-16">
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-3"><span class="w-2.5 h-2.5 bg-green-500 rounded-full"></span> Vitórias do Período</h3>
+            <div class="grid gap-4 mb-10">
+                ${vitoriasHTML}
+            </div>
+ 
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-3"><span class="w-2.5 h-2.5 bg-gray-500 rounded-full"></span> Oportunidades</h3>
+            <div class="grid gap-4">
+                ${oportunidadesHTML}
+            </div>
+        </div>
+ 
+        <div class="grid grid-cols-2 gap-10 mb-10 mt-16">
+            <div>
+                <h3 class="text-2xl font-bold mb-8 border-l-4 border-l-red-500 pl-4">Motivos de Perda</h3>
+                <div class="pr-4">
+                    ${motivosPerdaHTML || '<p class="text-gray-500 text-sm">Nenhum motivo registrado neste funil/período.</p>'}
+                </div>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold mb-8">Leitura Estratégica</h3>
+                <div class="text-gray-400 text-[15px] leading-relaxed mb-10 space-y-4">
+                    <p>A operação <strong>${nomeOperacao}</strong> acumulou <strong>${leadsTotais}</strong> leads no funil "${nomeFunil}" durante o período <strong>${periodoStr}</strong>, gerando ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(receita)} em receita com ${vendas} vendas realizadas.</p>
+                    <p>Atualmente, o funil mostra <strong>${estagnados}</strong> leads estagnados e a conta conta com <strong>${usuariosAtivos}</strong> usuários ativos registrados no sistema Kommo.</p>
+                </div>
+ 
+                <h3 class="text-2xl font-bold mb-8">Plano de Ação</h3>
+                ${planoAcaoHTML || '<p class="text-gray-500 text-sm">Mantenha a higiene do CRM em dia para evitar acúmulo de tarefas e perdas não mapeadas.</p>'}
+            </div>
+        </div>
+ 
+        <h3 class="text-2xl font-bold mb-6 mt-16">Métricas Detalhadas</h3>
+        <div class="grid grid-cols-2 gap-4 mb-16">
+            <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Taxa de Conversão</p><p class="text-3xl font-bold text-white">${taxaConversao}%</p></div>
+            <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Taxa de Perda</p><p class="text-3xl font-bold text-white">${taxaPerda}%</p></div>
+            <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Ciclo Médio</p><p class="text-3xl font-bold text-white">${ciclo}d</p></div>
+            <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Leads Estagnados</p><p class="text-3xl font-bold text-white">${estagnados}</p></div>
+            <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Receita do Funil</p><p class="text-3xl font-bold text-white">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(receita)}</p></div>
+            <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Usuários Ativos</p><p class="text-3xl font-bold text-white">${usuariosAtivos}</p></div>
+        </div>
+ 
+        <div class="text-center border-t border-gray-900 pt-10 pb-8">
+            <p class="text-sm text-gray-600 font-medium">Desenvolvido por V4 Ferraz Piai & Co. — Dados extraídos via API Kommo CRM</p>
+            <p class="text-xs text-gray-700 mt-2">Funil: ${nomeFunil} • Período: ${periodoStr} • Gerado: ${dataGeracao}</p>
+        </div>
+    </body>
+    </html>
+    `;
+ 
+    // ─── 13. DOWNLOAD DO ARQUIVO ───
+    try {
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+ 
+        // Nome do arquivo descritivo: Cliente_Funil_Periodo.html
+        const safeOp = nomeOperacao.replace(/[^\w]+/g, '_');
+        const safeFunil = nomeFunil.replace(/[^\w]+/g, '_').substring(0, 30);
+        const dataLabel = dataInicioRaw ? dataInicioRaw.replace(/-/g, '') : 'TodoPeriodo';
+ 
+        link.href = url;
+        link.download = `V4_Report_${safeOp}_${safeFunil}_${dataLabel}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+ 
+        console.log('[Relatório] ✅ Download iniciado:', link.download);
+    } catch (err) {
+        console.error('[Relatório] ❌ Erro no download:', err);
+        alert('Erro ao gerar o arquivo. Verifique o console (F12) para detalhes.');
+    }
+}
         // ─── API FETCH ───
         async function buscarDadosDaApi(dataInicioStr = '', dataFimStr = '') {
             try {
