@@ -213,16 +213,18 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
     let monthlyStats = {}, lossReasonCounts = {};
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // 🔧 PATCH 1: Detecção de status GLOBAL usando `status.type`
-    // (1 = ganho, 2 = perda) em vez de adivinhar pelo nome
+    // 🔧 PATCH 1: Detecção de status GLOBAL BLINDADA
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     let globalWonStatusIds = new Set();
     let globalLostStatusIds = new Set();
 
     pipelinesDaConta.forEach(p => {
         p._embedded.statuses.forEach(s => {
-            if (s.type === 1) globalWonStatusIds.add(s.id);
-            else if (s.type === 2) globalLostStatusIds.add(s.id);
+            const isWon = s.type == 1 || s.id === 142 || /ganho|sucesso|won|success/i.test(s.name);
+            const isLost = s.type == 2 || s.id === 143 || /perdid|loss/i.test(s.name);
+            
+            if (isWon) globalWonStatusIds.add(s.id);
+            else if (isLost) globalLostStatusIds.add(s.id);
         });
     });
 
@@ -232,14 +234,10 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
         if (!monthlyStats[mkCreated]) monthlyStats[mkCreated] = { leads: 0, won: 0, lost: 0 };
         monthlyStats[mkCreated].leads++;
 
-        const closedTs = lead.closed_at || lead.updated_at;
-        const dClosed = new Date(closedTs * 1000);
-        const mkClosed = `${dClosed.getFullYear()}-${String(dClosed.getMonth() + 1).padStart(2, '0')}`;
-        if (!monthlyStats[mkClosed]) monthlyStats[mkClosed] = { leads: 0, won: 0, lost: 0 };
-
-        if (globalWonStatusIds.has(lead.status_id)) monthlyStats[mkClosed].won++;
+        // Lógica de Safra: Ganhos e perdas incrementados no mês de CRIAÇÃO do lead
+        if (globalWonStatusIds.has(lead.status_id)) monthlyStats[mkCreated].won++;
         if (globalLostStatusIds.has(lead.status_id)) {
-            monthlyStats[mkClosed].lost++;
+            monthlyStats[mkCreated].lost++;
             const rid = lead.loss_reason_id;
             if (rid && lossReasonsMap[rid]) lossReasonCounts[lossReasonsMap[rid]] = (lossReasonCounts[lossReasonsMap[rid]] || 0) + 1;
             else if (rid) lossReasonCounts['Motivo não identificado'] = (lossReasonCounts['Motivo não identificado'] || 0) + 1;
@@ -252,19 +250,19 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
         const statusList = pipeline._embedded.statuses;
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 🔧 PATCH 2: Detecção de status POR PIPELINE usando `status.type`
-        // Cada pipeline tem seus PRÓPRIOS IDs de ganho/perda no Kommo.
-        // Os IDs 142/143 hardcoded NÃO funcionam em pipelines customizados.
+        // 🔧 PATCH 2: Detecção de status POR PIPELINE BLINDADA
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         let wonStatusIds = [], lostStatusIds = [], exemptStatusIds = [];
 
         statusList.forEach(s => {
-            if (s.type === 1) {
+            const isWon = s.type == 1 || s.id === 142 || /ganho|sucesso|won|success/i.test(s.name);
+            const isLost = s.type == 2 || s.id === 143 || /perdid|loss/i.test(s.name);
+
+            if (isWon) {
                 wonStatusIds.push(s.id);
-            } else if (s.type === 2) {
+            } else if (isLost) {
                 lostStatusIds.push(s.id);
             } else {
-                // Etapas isentas continuam por nome (status normais sem decay)
                 const n = s.name.toLowerCase();
                 if (n.includes('não respondeu') || n.includes('nao respondeu')
                     || n.includes('follow up') || n.includes('follow-up')) {
@@ -278,7 +276,7 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
         statusList.forEach(s => { statsPorStatus[s.id] = { count: 0, totalDays: 0, name: s.name }; });
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 🔧 PATCH 3: Receita e ciclo médio POR PIPELINE (eram só globais)
+        // 🔧 PATCH 3: Receita e ciclo médio POR PIPELINE (Safra)
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         let pipelineMonthly = {}, pipelineLossReasons = {};
         let pipelineWonRevenue = 0;
@@ -297,9 +295,6 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             pipelineMonthly[mkCreated].leads++;
 
             const closedTs = lead.closed_at || lead.updated_at;
-            const dClosed = new Date(closedTs * 1000);
-            const mkClosed = `${dClosed.getFullYear()}-${String(dClosed.getMonth() + 1).padStart(2, '0')}`;
-            if (!pipelineMonthly[mkClosed]) pipelineMonthly[mkClosed] = { leads: 0, won: 0, lost: 0 };
 
             if (!closedStatuses.includes(lead.status_id)) {
                 pipelineRevenue += price;
@@ -312,17 +307,17 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             } else {
                 if (wonStatusIds.includes(lead.status_id)) {
                     totalWonRevenue += price;
-                    pipelineWonRevenue += price;          // 🔧 PATCH 3
+                    pipelineWonRevenue += price;
                     wonLeadsForCycle++;
                     const cycle = (closedTs - lead.created_at) / 86400;
                     if (cycle > 0) {
                         totalSalesCycleDays += cycle;
-                        pipelineSalesCycleDays += cycle;  // 🔧 PATCH 3
-                        pipelineWonForCycle++;            // 🔧 PATCH 3
+                        pipelineSalesCycleDays += cycle;
+                        pipelineWonForCycle++;
                     }
-                    pipelineMonthly[mkClosed].won++;
+                    pipelineMonthly[mkCreated].won++;
                 } else if (lostStatusIds.includes(lead.status_id)) {
-                    pipelineMonthly[mkClosed].lost++;
+                    pipelineMonthly[mkCreated].lost++;
                     const rid = lead.loss_reason_id;
                     if (rid && lossReasonsMap[rid]) pipelineLossReasons[lossReasonsMap[rid]] = (pipelineLossReasons[lossReasonsMap[rid]] || 0) + 1;
                     else if (rid) pipelineLossReasons['Motivo não identificado'] = (pipelineLossReasons['Motivo não identificado'] || 0) + 1;
@@ -349,7 +344,6 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             .map(([name, count]) => ({ name, count, percent: pipelineTotalLost > 0 ? parseFloat(((count / pipelineTotalLost) * 100).toFixed(2)) : 0 }))
             .sort((a, b) => b.count - a.count);
 
-        // 🔧 PATCH 3: Ciclo médio do pipeline
         const pipelineAvgCycle = pipelineWonForCycle > 0
             ? parseFloat((pipelineSalesCycleDays / pipelineWonForCycle).toFixed(1))
             : 0;
@@ -362,8 +356,8 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             results: { won: wonCount, lost: lostCount },
             monthlyStats: pipelineMonthlyArray,
             lossReasons: pipelineLossArray,
-            wonRevenue: pipelineWonRevenue,        // 🔧 PATCH 3 — receita do funil
-            avgSalesCycle: pipelineAvgCycle        // 🔧 PATCH 3 — ciclo do funil
+            wonRevenue: pipelineWonRevenue,
+            avgSalesCycle: pipelineAvgCycle
         });
     });
 
