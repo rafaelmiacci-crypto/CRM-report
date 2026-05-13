@@ -13,8 +13,6 @@ const DIAS_DATA_DECAY = 30;
 
 // ═══════════════════════════════════════════════════════════════
 // CONFIGURAÇÃO DINÂMICA DE CLIENTES
-// Basta adicionar CLIENTEN_NOME, CLIENTEN_SUBDOMINIO, CLIENTEN_TOKEN
-// e CLIENTEN_VENCIMENTO no .env — o servidor detecta automaticamente.
 // ═══════════════════════════════════════════════════════════════
 
 function carregarClientes() {
@@ -41,7 +39,7 @@ const clientes = carregarClientes();
 const MESES_PT = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 
 // ═══════════════════════════════════════════════════════════════
-// RATE LIMITER — respeita o limite de 7 req/s por conta Kommo
+// RATE LIMITER
 // ═══════════════════════════════════════════════════════════════
 
 class KommoRateLimiter {
@@ -120,7 +118,7 @@ async function kommoGet(subdominio, token, urlPath) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// CACHE INTERNO DE DADOS MENORES
+// CACHE INTERNO
 // ═══════════════════════════════════════════════════════════════
 
 const cache = {};
@@ -133,7 +131,7 @@ function getCached(key) {
 function setCache(key, data) { cache[key] = { data, timestamp: Date.now() }; }
 
 // ═══════════════════════════════════════════════════════════════
-// LÓGICA PESADA — BUSCAR DADOS DO CLIENTE NA API
+// LÓGICA PRINCIPAL — BUSCAR DADOS DO CLIENTE
 // ═══════════════════════════════════════════════════════════════
 
 async function buscarDadosCliente(cliente, dataInicio, dataFim) {
@@ -141,7 +139,7 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
     const sub = cliente.subdominio;
     const token = cliente.token;
 
-    // 1. Pipelines (cache)
+    // 1. Pipelines
     const ckP = `pipelines_${sub}`;
     let pipelinesDaConta = getCached(ckP);
     if (!pipelinesDaConta) {
@@ -150,7 +148,7 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
         setCache(ckP, pipelinesDaConta);
     }
 
-    // 2. Loss Reasons (cache)
+    // 2. Loss Reasons
     const ckLR = `loss_reasons_${sub}`;
     let lossReasonsMap = getCached(ckLR);
     if (!lossReasonsMap) {
@@ -164,7 +162,7 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
         setCache(ckLR, lossReasonsMap);
     }
 
-    // 3. Leads (paginação)
+    // 3. Leads
     let ldf = '';
     if (dataInicio && dataFim) ldf = `&filter[created_at][from]=${dataInicio}&filter[created_at][to]=${dataFim}`;
     else if (dataInicio) ldf = `&filter[created_at][from]=${dataInicio}`;
@@ -191,7 +189,7 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
         tarefasAtrasadasCount = r.data?._embedded?.tasks?.length || 0;
     } catch (err) { }
 
-    // 5. Usuários (cache)
+    // 5. Usuários
     const ckU = `users_${sub}`;
     let usersData = getCached(ckU);
     if (!usersData) {
@@ -214,14 +212,17 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
     let totalWonRevenue = 0, totalSalesCycleDays = 0, wonLeadsForCycle = 0, pipelineRevenue = 0;
     let monthlyStats = {}, lossReasonCounts = {};
 
-    let globalWonStatusIds = new Set([142]);
-    let globalLostStatusIds = new Set([143]);
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🔧 PATCH 1: Detecção de status GLOBAL usando `status.type`
+    // (1 = ganho, 2 = perda) em vez de adivinhar pelo nome
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    let globalWonStatusIds = new Set();
+    let globalLostStatusIds = new Set();
 
     pipelinesDaConta.forEach(p => {
         p._embedded.statuses.forEach(s => {
-            const n = s.name.toLowerCase();
-            if (s.id == 142 || n.includes('ganho') || n.includes('sucesso') || n.includes('success')) globalWonStatusIds.add(s.id);
-            else if (s.id == 143 || n.includes('perdid') || n.includes('lost')) globalLostStatusIds.add(s.id);
+            if (s.type === 1) globalWonStatusIds.add(s.id);
+            else if (s.type === 2) globalLostStatusIds.add(s.id);
         });
     });
 
@@ -249,20 +250,40 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
     pipelinesDaConta.forEach(pipeline => {
         let wonCount = 0, lostCount = 0, stages = [], totalLeadsNestePipeline = 0;
         const statusList = pipeline._embedded.statuses;
-        let wonStatusIds = [142], lostStatusIds = [143], exemptStatusIds = [];
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 🔧 PATCH 2: Detecção de status POR PIPELINE usando `status.type`
+        // Cada pipeline tem seus PRÓPRIOS IDs de ganho/perda no Kommo.
+        // Os IDs 142/143 hardcoded NÃO funcionam em pipelines customizados.
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        let wonStatusIds = [], lostStatusIds = [], exemptStatusIds = [];
 
         statusList.forEach(s => {
-            const n = s.name.toLowerCase();
-            if (s.id == 142 || n.includes('ganho') || n.includes('sucesso') || n.includes('success')) { if (!wonStatusIds.includes(s.id)) wonStatusIds.push(s.id); }
-            else if (s.id == 143 || n.includes('perdid') || n.includes('lost')) { if (!lostStatusIds.includes(s.id)) lostStatusIds.push(s.id); }
-            else if (n.includes('não respondeu') || n.includes('nao respondeu') || n.includes('follow up') || n.includes('follow-up')) { if (!exemptStatusIds.includes(s.id)) exemptStatusIds.push(s.id); }
+            if (s.type === 1) {
+                wonStatusIds.push(s.id);
+            } else if (s.type === 2) {
+                lostStatusIds.push(s.id);
+            } else {
+                // Etapas isentas continuam por nome (status normais sem decay)
+                const n = s.name.toLowerCase();
+                if (n.includes('não respondeu') || n.includes('nao respondeu')
+                    || n.includes('follow up') || n.includes('follow-up')) {
+                    exemptStatusIds.push(s.id);
+                }
+            }
         });
 
         const closedStatuses = [...wonStatusIds, ...lostStatusIds];
         const statsPorStatus = {};
         statusList.forEach(s => { statsPorStatus[s.id] = { count: 0, totalDays: 0, name: s.name }; });
 
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 🔧 PATCH 3: Receita e ciclo médio POR PIPELINE (eram só globais)
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         let pipelineMonthly = {}, pipelineLossReasons = {};
+        let pipelineWonRevenue = 0;
+        let pipelineSalesCycleDays = 0;
+        let pipelineWonForCycle = 0;
 
         allLeads.forEach(lead => {
             if (lead.pipeline_id !== pipeline.id) return;
@@ -291,9 +312,14 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             } else {
                 if (wonStatusIds.includes(lead.status_id)) {
                     totalWonRevenue += price;
+                    pipelineWonRevenue += price;          // 🔧 PATCH 3
                     wonLeadsForCycle++;
                     const cycle = (closedTs - lead.created_at) / 86400;
-                    if (cycle > 0) totalSalesCycleDays += cycle;
+                    if (cycle > 0) {
+                        totalSalesCycleDays += cycle;
+                        pipelineSalesCycleDays += cycle;  // 🔧 PATCH 3
+                        pipelineWonForCycle++;            // 🔧 PATCH 3
+                    }
                     pipelineMonthly[mkClosed].won++;
                 } else if (lostStatusIds.includes(lead.status_id)) {
                     pipelineMonthly[mkClosed].lost++;
@@ -317,13 +343,28 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             const [year, month] = key.split('-');
             return { key, label: `${MESES_PT[parseInt(month) - 1]}/${year.slice(2)}`, ...pipelineMonthly[key] };
         });
-        
+
         const pipelineTotalLost = Object.values(pipelineLossReasons).reduce((a, b) => a + b, 0);
         const pipelineLossArray = Object.entries(pipelineLossReasons)
             .map(([name, count]) => ({ name, count, percent: pipelineTotalLost > 0 ? parseFloat(((count / pipelineTotalLost) * 100).toFixed(2)) : 0 }))
             .sort((a, b) => b.count - a.count);
 
-        pipelinesData.push({ id: pipeline.id, name: pipeline.name, totalLeadsEntrants: totalLeadsNestePipeline, stages, results: { won: wonCount, lost: lostCount }, monthlyStats: pipelineMonthlyArray, lossReasons: pipelineLossArray });
+        // 🔧 PATCH 3: Ciclo médio do pipeline
+        const pipelineAvgCycle = pipelineWonForCycle > 0
+            ? parseFloat((pipelineSalesCycleDays / pipelineWonForCycle).toFixed(1))
+            : 0;
+
+        pipelinesData.push({
+            id: pipeline.id,
+            name: pipeline.name,
+            totalLeadsEntrants: totalLeadsNestePipeline,
+            stages,
+            results: { won: wonCount, lost: lostCount },
+            monthlyStats: pipelineMonthlyArray,
+            lossReasons: pipelineLossArray,
+            wonRevenue: pipelineWonRevenue,        // 🔧 PATCH 3 — receita do funil
+            avgSalesCycle: pipelineAvgCycle        // 🔧 PATCH 3 — ciclo do funil
+        });
     });
 
     const avgSalesCycle = wonLeadsForCycle > 0 ? (totalSalesCycleDays / wonLeadsForCycle) : 0;
@@ -361,11 +402,11 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// 🔥 SISTEMA SWR (STALE-WHILE-REVALIDATE) COM BACKGROUND SYNC
+// SWR CACHE
 // ═══════════════════════════════════════════════════════════════
 
 const dashboardCache = {};
-const SWR_TTL = 5 * 60 * 1000; // 5 minutos de validade dos dados
+const SWR_TTL = 5 * 60 * 1000;
 
 async function getDashboardDataSWR(cliente, dataInicio, dataFim) {
     const cacheKey = `dash_${cliente.id}_${dataInicio || 'all'}_${dataFim || 'all'}`;
@@ -374,38 +415,29 @@ async function getDashboardDataSWR(cliente, dataInicio, dataFim) {
 
     const fetchAndUpdate = async () => {
         if (dashboardCache[cacheKey] && dashboardCache[cacheKey].isFetching) return;
-        
         if (!dashboardCache[cacheKey]) dashboardCache[cacheKey] = { isFetching: true };
         else dashboardCache[cacheKey].isFetching = true;
-
         try {
             const freshData = await buscarDadosCliente(cliente, dataInicio, dataFim);
-            dashboardCache[cacheKey] = {
-                data: freshData,
-                timestamp: Date.now(),
-                isFetching: false
-            };
+            dashboardCache[cacheKey] = { data: freshData, timestamp: Date.now(), isFetching: false };
         } catch (error) {
             console.error(`Erro no background fetch para ${cliente.nome}:`, error.message);
             if (dashboardCache[cacheKey]) dashboardCache[cacheKey].isFetching = false;
         }
     };
 
-    // CENÁRIO 1: O cache não existe (Primeiro acesso)
     if (!cached || !cached.data) {
         console.log(`[SWR] ❌ Primeiro acesso de ${cliente.nome}. Aguardando API...`);
         await fetchAndUpdate();
         return dashboardCache[cacheKey].data;
     }
 
-    // CENÁRIO 2: O dado existe, mas está VENCIDO (> 5 minutos).
     if (now - cached.timestamp > SWR_TTL) {
         console.log(`[SWR] 🔄 Dados vencidos para ${cliente.nome}. Entregando cache e atualizando no fundo...`);
-        fetchAndUpdate(); // Atualiza em segundo plano sem bloquear a resposta
-        return cached.data; 
+        fetchAndUpdate();
+        return cached.data;
     }
 
-    // CENÁRIO 3: O dado existe e está FRESCO (< 5 minutos).
     console.log(`[SWR] ⚡ Dados frescos entregues instantaneamente para ${cliente.nome}.`);
     return cached.data;
 }
@@ -426,16 +458,13 @@ app.get('/api/dados-dashboard', async (req, res) => {
         if (found) lista = [found];
     }
     let resultados = [];
-    
     for (let cliente of lista) {
-        try { 
-            // Agora a requisição usa o motor de cache rápido (SWR)
+        try {
             const dados = await getDashboardDataSWR(cliente, dataInicio, dataFim);
             if (dados) resultados.push(dados);
         }
         catch (e) { console.error(`❌ ${cliente.nome}: ${e.response?.status || e.message}`); }
     }
-    
     res.json(resultados);
 });
 
@@ -446,19 +475,19 @@ app.get('/api/health', (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// PRÉ-AQUECIMENTO DO CACHE
+// PRÉ-AQUECIMENTO
 // ═══════════════════════════════════════════════════════════════
 
 async function preWarmCache() {
-    console.log("\n🔥 Iniciando o Pré-Aquecimento SWR (Os próximos acessos serão instantâneos)...");
+    console.log("\n🔥 Iniciando o Pré-Aquecimento SWR...");
     for (let cliente of clientes) {
         await getDashboardDataSWR(cliente, '', '');
     }
-    console.log("🚀 Todos os clientes em cache! Dashboard pronto para alta velocidade.\n");
+    console.log("🚀 Todos os clientes em cache!\n");
 }
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`✅ Porta ${PORT} | ${clientes.length} clientes | Rate limiting ativo`);
-    preWarmCache(); // Aciona o carregamento dos dados quando o servidor inicia
+    preWarmCache();
 });
