@@ -886,272 +886,256 @@
             document.getElementById('funnel-lost-percent').innerText = `${lostP}% de perda`;
         }
 
-        // ─── GERAÇÃO DO ONE PAGE REPORT IDÊNTICO ÀS IMAGENS DA V4 ───
-        function gerarOnePageReport() {
-            const cid = document.getElementById('client-selector').value;
-            
-            let cliente = cid === "todos" ? dadosGlobais[0] : dadosGlobais.find(c => c.id === parseInt(cid));
-            
-            if (!cliente) {
-                alert("Por favor, selecione um cliente ou atualize os dados primeiro.");
-                return;
-            }
+        // ─── GERAÇÃO DO ONE PAGE REPORT COM 100% DE ACURÁCIA ───
+function gerarOnePageReport() {
+    // 1. Pegar os dados já filtrados (Recorrência + Cliente)
+    const dados = getDadosFiltrados();
+    const cid = document.getElementById('client-selector').value;
+    const isTodos = cid === 'todos';
 
-            const dataInicio = document.getElementById('date-start').value || "Início";
-            const dataFim = document.getElementById('date-end').value || "Hoje";
-            const periodoStr = dataInicio !== "Início" ? `${dataInicio} até ${dataFim}` : "Todo Período";
+    if (!dados || dados.length === 0) {
+        alert("Nenhum dado disponível para gerar o relatório com os filtros atuais.");
+        return;
+    }
 
-            // Cálculos
-            const leadsTotais = cliente.leadsLast30Days || 0;
-            const vendas = cliente.pipelines?.[0]?.results?.won || 0;
-            const perdas = cliente.pipelines?.[0]?.results?.lost || 0;
-            const receita = cliente.wonRevenue || 0;
-            const totalDecididos = vendas + perdas;
-            const taxaConversao = totalDecididos > 0 ? (vendas / totalDecididos * 100).toFixed(1) : 0;
-            const taxaPerda = totalDecididos > 0 ? (perdas / totalDecididos * 100).toFixed(1) : 0;
-            const ciclo = cliente.avgSalesCycle || 0;
-            const estagnados = cliente.stagnantLeads || 0;
+    const nomeOperacao = isTodos ? "Consolidado (Todos os Clientes)" : dados[0].name;
+    const dataInicio = document.getElementById('date-start').value || "Início";
+    const dataFim = document.getElementById('date-end').value || "Hoje";
+    const periodoStr = dataInicio !== "Início" ? `${dataInicio} até ${dataFim}` : "Todo o Período";
 
-            // Inteligência da Nota (Score)
-            let nota = 5;
-            let badgeColor = 'bg-green-500 text-white';
-            let statusText = 'Saudável — Recorrente';
-            let statusDot = 'bg-green-500';
+    // 2. Agregação Geral de Métricas
+    const leadsTotais = dados.reduce((acc, c) => acc + (c.leadsLast30Days || 0), 0);
+    const receita = dados.reduce((acc, c) => acc + (c.wonRevenue || 0), 0);
+    const cicloSoma = dados.reduce((acc, c) => acc + (c.avgSalesCycle || 0), 0);
+    const ciclo = dados.length > 0 ? parseFloat((cicloSoma / dados.length).toFixed(1)) : 0;
+    const estagnados = dados.reduce((acc, c) => acc + (c.stagnantLeads || 0), 0);
 
-            if (taxaConversao >= 30 && ciclo <= 15) {
-                nota = Math.min(10, 7 + (taxaConversao > 40 ? 1 : 0));
-                badgeColor = 'bg-green-500 text-white';
-                statusText = 'Saudável — Recorrente';
-                statusDot = 'bg-green-500';
-            } else if (taxaPerda > 60 || ciclo > 45) {
-                nota = Math.max(1, 4 - (taxaPerda > 80 ? 1 : 0));
-                badgeColor = 'bg-red-500 text-white';
-                statusText = 'Risco Alto — Revisão Urgente';
-                statusDot = 'bg-red-500';
-            } else {
-                nota = 6;
-                badgeColor = 'bg-yellow-500 text-black';
-                statusText = 'Atenção — Oportunidade de Otimização';
-                statusDot = 'bg-yellow-500';
-            }
+    // 3. Agregação do Funil Selecionado (Exatamente o que está na tela)
+    const pd = getSelectedPipeline();
+    const vendas = pd ? pd.results.won : 0;
+    const perdas = pd ? pd.results.lost : 0;
+    const totalDecididos = vendas + perdas;
+    const taxaConversao = totalDecididos > 0 ? ((vendas / totalDecididos) * 100).toFixed(1) : 0;
+    const taxaPerda = totalDecididos > 0 ? ((perdas / totalDecididos) * 100).toFixed(1) : 0;
 
-            // Geração Inteligente da Leitura Estratégica
-            let leituraEstrategica = `<p class="text-gray-400 text-sm leading-relaxed mb-4">A operação da ${cliente.name} acumulou ${leadsTotais} leads no CRM no período, gerando ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(receita)} em receita com ${vendas} vendas realizadas e um ciclo de fechamento de ${ciclo} dias.</p>`;
-            
-            if (taxaPerda >= 50) {
-                leituraEstrategica += `<p class="text-gray-400 text-sm leading-relaxed mb-4">Apesar do volume de oportunidades geradas, a taxa de perda de ${taxaPerda}% é o principal ponto de atenção no funil atual, sugerindo problemas no momento de follow-up ou leads fora de perfil preenchendo a base de aquisição.</p>`;
-            } else {
-                leituraEstrategica += `<p class="text-gray-400 text-sm leading-relaxed mb-4">A operação está sustentando uma excelente taxa de conversão de ${taxaConversao}%. O foco central agora deve ser escalar as campanhas de marketing de entrada mantendo essa mesma eficiência qualitativa.</p>`;
-            }
+    // 4. Lógica de Saúde (Score)
+    let nota = 5;
+    let badgeColor = 'bg-yellow-500 text-black';
+    let statusText = 'Atenção — Oportunidade de Otimização';
+    let statusDot = 'bg-yellow-500';
 
-            if (estagnados > 0) {
-                leituraEstrategica += `<p class="text-gray-400 text-sm leading-relaxed">O funil também aponta para ${estagnados} leads estagnados. Esse bolso de oportunidades precisa de ação de cadência ativa ou descarte definitivo para manter a higiene do CRM.</p>`;
-            }
+    if (taxaConversao >= 30 && ciclo <= 15) {
+        nota = Math.min(10, 7 + (taxaConversao > 40 ? 1 : 0));
+        badgeColor = 'bg-green-500 text-white';
+        statusText = 'Saudável — Alta Performance';
+        statusDot = 'bg-green-500';
+    } else if (taxaPerda > 60 || ciclo > 45 || estagnados > 15) {
+        nota = Math.max(1, 4 - (taxaPerda > 80 ? 1 : 0));
+        badgeColor = 'bg-red-500 text-white';
+        statusText = 'Risco Alto — Revisão Urgente';
+        statusDot = 'bg-red-500';
+    } else {
+        nota = 6;
+    }
 
-            // Motivos de perda em HTML com Barras de Progresso Vermelhas (Idêntico a Imagem)
-            let motivosPerdaHTML = '';
-            let planoAcaoHTML = '';
-            let usaMotivoGenerico = false;
+    // 5. Textos Dinâmicos e Leitura Estratégica
+    let leituraEstrategica = `<p class="text-gray-400 text-sm leading-relaxed mb-4">A operação registrou <strong>${leadsTotais} leads</strong> no CRM no período filtrado, gerando <strong>${formatCurrency(receita)}</strong> em receita com ${vendas} vendas e um ciclo médio de fechamento de ${ciclo} dias.</p>`;
+    
+    if (taxaPerda >= 50) {
+        leituraEstrategica += `<p class="text-gray-400 text-sm leading-relaxed mb-4">Apesar do volume, a taxa de perda de <strong>${taxaPerda}%</strong> é o principal ponto de atenção, sugerindo necessidade de ajustes em follow-up ou qualificação dos leads de entrada.</p>`;
+    } else if (taxaConversao > 0) {
+        leituraEstrategica += `<p class="text-gray-400 text-sm leading-relaxed mb-4">A operação sustenta uma taxa de conversão de <strong>${taxaConversao}%</strong>. O foco deve ser manter a eficiência e escalar campanhas de aquisição.</p>`;
+    }
 
-            if (cliente.pipelines?.[0]?.lossReasons && cliente.pipelines[0].lossReasons.length > 0) {
-                const lossData = [...cliente.pipelines[0].lossReasons].sort((a,b) => b.count - a.count);
-                const totalPerdasVal = lossData.reduce((acc, curr) => acc + curr.count, 0);
-                
-                motivosPerdaHTML = lossData.map((motivo, index) => {
-                    const pct = totalPerdasVal > 0 ? ((motivo.count / totalPerdasVal) * 100).toFixed(1) : 0;
-                    if (motivo.name.toLowerCase().includes("sem motivo") && pct > 15) usaMotivoGenerico = true;
-                    
-                    return `
-                    <div class="mb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="bg-red-500/20 text-red-500 text-xs font-bold w-6 h-6 flex items-center justify-center rounded">${index + 1}</span>
-                                <span class="text-gray-200 text-sm font-medium">${motivo.name}</span>
-                            </div>
-                            <div class="flex items-center gap-4 text-sm font-mono">
-                                <span class="text-red-500 font-bold">${motivo.count}</span>
-                                <span class="text-gray-500">${pct}%</span>
-                            </div>
-                        </div>
-                        <div class="w-full bg-[#1e1e1e] h-1.5 rounded-full overflow-hidden">
-                            <div class="bg-red-500 h-full rounded-full" style="width: ${pct}%"></div>
-                        </div>
-                    </div>
-                    `;
-                }).join('');
-
-                // Montar o Plano de Ação Dinâmico
-                if (usaMotivoGenerico) {
-                    planoAcaoHTML += `
-                    <div class="border border-yellow-500/30 bg-[#1a1505] rounded-xl p-6 mb-4 border-l-4 border-l-yellow-500">
-                        <span class="bg-yellow-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Importante</span>
-                        <h4 class="text-lg font-bold text-white mb-2">Reduzir Uso do Motivo Genérico "Sem Motivo Registrado"</h4>
-                        <p class="text-gray-400 text-sm mb-4">Treinar a equipe para classificar perdas nos motivos específicos disponíveis no CRM. Avaliar se as categorias atuais cobrem todos os cenários reais e auditar semanalmente.</p>
-                        <div class="bg-black/40 border border-yellow-500/20 p-3 rounded-lg">
-                            <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Resultado Esperado</p>
-                            <p class="text-yellow-500 text-sm font-medium">Reduzir "Sem motivo registrado" para menos de 10%, viabilizando análises precisas no funil.</p>
-                        </div>
-                    </div>`;
-                }
-
-                if (estagnados > 0) {
-                    planoAcaoHTML += `
-                    <div class="border border-green-500/30 bg-[#0a1a10] rounded-xl p-6 mb-4 border-l-4 border-l-green-500">
-                        <span class="bg-green-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Melhoria</span>
-                        <h4 class="text-lg font-bold text-white mb-2">Limpar e Reativar Leads Estagnados</h4>
-                        <p class="text-gray-400 text-sm mb-4">Criar fluxo de reativação para os ${estagnados} leads sem interação. Definir SLA para descarte automático e cadência de tentativas de contato antes da perda.</p>
-                        <div class="bg-black/40 border border-green-500/20 p-3 rounded-lg">
-                            <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Resultado Esperado</p>
-                            <p class="text-green-500 text-sm font-medium">Recuperar pelo menos 10% dos leads estagnados e higienizar o CRM.</p>
-                        </div>
-                    </div>`;
-                }
-            }
-
-            // Fallback caso não haja plano de ação gerado
-            if(planoAcaoHTML === '') {
-                planoAcaoHTML = `
-                <div class="border border-blue-500/30 bg-[#0a121a] rounded-xl p-6 mb-4 border-l-4 border-l-blue-500">
-                    <span class="bg-blue-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Tração</span>
-                    <h4 class="text-lg font-bold text-white mb-2">Escalar Geração de Leads</h4>
-                    <p class="text-gray-400 text-sm mb-4">A operação encontra-se estável e sem gargalos críticos aparentes no preenchimento de CRM. Injetar volume topo de funil.</p>
-                </div>`;
-            }
-
-            const htmlContent = `
-            <!DOCTYPE html>
-            <html lang="pt-BR">
-            <head>
-                <meta charset="UTF-8">
-                <title>Relatório de Saúde CRM - V4 Company</title>
-                <script src="https://cdn.tailwindcss.com"><\/script>
-                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-                <style>
-                    body { font-family: 'Outfit', sans-serif; background-color: #0d0d0d; color: #ffffff; }
-                    .font-mono { font-family: 'JetBrains Mono', monospace; }
-                    .card { background-color: #141414; border: 1px solid #262626; border-radius: 12px; }
-                </style>
-            </head>
-            <body class="p-8 max-w-5xl mx-auto">
-                
-                <header class="flex items-center justify-between mb-8 pb-4 border-b border-gray-800">
-                    <div class="flex items-center gap-4">
-                        <h1 class="text-2xl font-black text-red-600 tracking-tighter">V4 COMPANY</h1>
-                        <span class="border border-gray-700 bg-[#1a1a1a] text-gray-300 text-xs px-3 py-1 rounded-full">Operação: ${cliente.name}</span>
-                        <span class="border border-gray-700 bg-[#1a1a1a] text-gray-300 text-xs px-3 py-1 rounded-full">${periodoStr}</span>
-                    </div>
-                </header>
-
-                <h2 class="text-3xl font-bold mb-8">Relatório de Saúde CRM</h2>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="card p-6">
-                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Total de Leads</p>
-                        <p class="text-3xl font-bold font-mono text-white">${leadsTotais}</p>
-                        <p class="text-xs text-gray-500 mt-2">Cadastrados no CRM</p>
-                    </div>
-                    <div class="card p-6">
-                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Vendas Realizadas</p>
-                        <p class="text-3xl font-bold font-mono text-green-500">${vendas}</p>
-                        <p class="text-xs text-gray-500 mt-2">${taxaConversao}% de conversão</p>
-                    </div>
-                    <div class="card p-6">
-                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Negócios Perdidos</p>
-                        <p class="text-3xl font-bold font-mono text-red-500">${perdas}</p>
-                        <p class="text-xs text-gray-500 mt-2">${taxaPerda}% de perda</p>
-                    </div>
-                    <div class="card p-6">
-                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Receita Gerada</p>
-                        <p class="text-3xl font-bold font-mono text-green-500">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(receita)}</p>
-                        <p class="text-xs text-gray-500 mt-2">Ciclo médio de ${ciclo} dias</p>
-                    </div>
-                </div>
-
-                <div class="card p-8 mb-10">
-                    <div class="flex justify-between items-start mb-6">
-                        <h3 class="text-xl font-bold">Avaliação de Saúde do CRM</h3>
-                        <div class="${badgeColor} px-4 py-2 rounded-lg font-bold font-mono text-xl">${nota}/10</div>
-                    </div>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="w-2.5 h-2.5 rounded-full ${statusDot}"></span>
-                        <span class="text-sm font-semibold text-green-400">${statusText}</span>
-                    </div>
-                    <p class="text-gray-300 text-sm mb-4">
-                        <strong>Objetivo:</strong> Monitorar a eficiência do funil de vendas, identificar gargalos operacionais e maximizar a conversão de leads da ${cliente.name}.
-                    </p>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        A operação apresenta um volume de geração de leads de ${leadsTotais} registros e ciclo de vendas avaliado em (${ciclo}d). A taxa de conversão atual é de ${taxaConversao}%. É crucial acompanhar o volume de ${estagnados} leads estagnados para otimizar os esforços do time.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 mb-10">
-                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-2 h-2 bg-green-500 rounded-full"></span> Vitórias do Período</h3>
-                    <div class="card p-6 border border-green-500/20 mb-6">
-                        <h4 class="font-bold text-sm text-white mb-1">Ciclo de Vendas Consolidado: <span class="text-green-500">${ciclo} dias</span></h4>
-                        <p class="text-xs text-gray-400">O ciclo médio de fechamento aponta para um processo de decisão comercial e operação bem ajustados.</p>
-                    </div>
-
-                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-2 h-2 bg-red-500 rounded-full"></span> Oportunidades</h3>
-                    <div class="card p-6 border border-red-500/20 mb-6">
-                        <h4 class="font-bold text-sm text-white mb-1">Taxa de Perda Crítica: <span class="text-red-500">${taxaPerda}%</span></h4>
-                        <p class="text-xs text-gray-400 mb-2">Um volume representativo de negócios resulta em perda. O absoluto de ${perdas} perdas demanda atenção na qualificação.</p>
-                    </div>
-                    ${estagnados > 0 ? `
-                    <div class="card p-6 border border-yellow-500/20">
-                        <h4 class="font-bold text-sm text-white mb-1">Leads Sem Resposta: <span class="text-yellow-500">${estagnados} leads</span></h4>
-                        <p class="text-xs text-gray-400">Existem oportunidades paradas que precisam ser reativadas ou descartadas para manter as métricas de CRM reais.</p>
-                    </div>` : ''}
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-8 mb-10">
-                    <div>
-                        <h3 class="text-xl font-bold mb-4">Leitura Estratégica</h3>
-                        <div class="mb-8">
-                            ${leituraEstrategica}
-                        </div>
-                        
-                        <h3 class="text-xl font-bold mb-4">Plano de Ação Executivo</h3>
-                        <div class="card p-6 border-red-500/30 border-l-4 border-l-red-500 mb-6">
-                            <p class="text-sm text-gray-300">
-                                <strong>Diagnóstico:</strong> A operação possui velocidade, mas a eficiência global é afetada pela taxa de perda e gestão da base de contatos inativos. A conversão pode ser elevada com disciplina de categorização e fluxos de follow-up.
-                            </p>
-                        </div>
-                        ${planoAcaoHTML}
-                    </div>
-
-                    <div class="card p-8 h-fit">
-                        <h3 class="text-xl font-bold mb-6 border-l-2 border-red-500 pl-3">Motivos de Perda</h3>
-                        <div class="pr-2">
-                            ${motivosPerdaHTML || '<p class="text-gray-500 text-sm">Sem motivos de perda listados para este filtro.</p>'}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card p-8 flex justify-between items-center bg-[#0a0a0a] border-gray-800">
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase font-bold mb-1">Métrica Chave</p>
-                        <p class="text-2xl font-bold text-white">${taxaConversao}% Conversão</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xs text-gray-500 uppercase font-bold mb-1">Desenvolvido via API CRM</p>
-                        <p class="text-sm text-gray-400">V4 Company Customer Success</p>
-                    </div>
-                </div>
-            </body>
-            </html>
-            `;
-
-            // Exportação do Arquivo HTML
-            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `V4_OnePageReport_${cliente.name.replace(/\s+/g, '_')}.html`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+    // 6. Construir HTML do Funil Dinâmico
+    let funilHTML = '';
+    if (pd && pd.stages) {
+        let acum = pd.results.won;
+        const etapas = [];
+        for (let i = pd.stages.length - 1; i >= 0; i--) {
+            acum += pd.stages[i].count;
+            etapas.unshift({ ...pd.stages[i], passaram: acum });
         }
+        funilHTML = etapas.map(s => `
+            <div class="flex justify-between items-center bg-[#1a1a1a] p-4 rounded-lg mb-2 border border-gray-800">
+                <div>
+                    <span class="text-gray-300 text-xs font-bold uppercase tracking-wider">${s.name}</span>
+                    <span class="text-gray-500 text-xs block mt-1">Tempo Médio: ${s.avgDays} dias</span>
+                </div>
+                <span class="text-white font-mono font-bold text-xl">${s.count}</span>
+            </div>
+        `).join('');
+    } else {
+        funilHTML = '<p class="text-gray-500 text-sm">Dados de funil indisponíveis.</p>';
+    }
+
+    // 7. Construir HTML dos Motivos de Perda Consolidado
+    const mergedLoss = {};
+    dados.forEach(c => {
+        if (!c.lossReasons) return;
+        c.lossReasons.forEach(lr => { mergedLoss[lr.name] = (mergedLoss[lr.name] || 0) + lr.count; });
+    });
+    const lossData = Object.entries(mergedLoss).map(([name, count]) => ({name, count})).sort((a,b) => b.count - a.count);
+    const totalPerdasVal = lossData.reduce((acc, curr) => acc + curr.count, 0);
+
+    let motivosPerdaHTML = '';
+    let planoAcaoHTML = '';
+    let usaMotivoGenerico = false;
+
+    if (lossData.length > 0) {
+        motivosPerdaHTML = lossData.map((motivo, index) => {
+            const pct = totalPerdasVal > 0 ? ((motivo.count / totalPerdasVal) * 100).toFixed(1) : 0;
+            if (motivo.name.toLowerCase().includes("sem motivo") && pct > 15) usaMotivoGenerico = true;
+            return `
+            <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-3">
+                        <span class="bg-red-500/20 text-red-500 text-xs font-bold w-6 h-6 flex items-center justify-center rounded">${index + 1}</span>
+                        <span class="text-gray-200 text-sm font-medium truncate max-w-[200px]">${motivo.name}</span>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm font-mono">
+                        <span class="text-red-500 font-bold">${motivo.count}</span>
+                        <span class="text-gray-500">${pct}%</span>
+                    </div>
+                </div>
+                <div class="w-full bg-[#1e1e1e] h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-red-500 h-full rounded-full" style="width: ${pct}%"></div>
+                </div>
+            </div>`;
+        }).join('');
+    } else {
+        motivosPerdaHTML = '<p class="text-gray-500 text-sm">Sem motivos de perda registrados.</p>';
+    }
+
+    // 8. Construir Plano de Ação Dinâmico
+    if (usaMotivoGenerico) {
+        planoAcaoHTML += `
+        <div class="border border-yellow-500/30 bg-[#1a1505] rounded-xl p-6 mb-4 border-l-4 border-l-yellow-500">
+            <span class="bg-yellow-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Importante</span>
+            <h4 class="text-lg font-bold text-white mb-2">Reduzir Uso do Motivo Genérico</h4>
+            <p class="text-gray-400 text-sm mb-4">Muitos negócios estão sendo perdidos sem clareza do motivo real. É necessário treinar a equipe para classificar as perdas corretamente no CRM.</p>
+        </div>`;
+    }
+    if (estagnados > 0) {
+        planoAcaoHTML += `
+        <div class="border border-green-500/30 bg-[#0a1a10] rounded-xl p-6 mb-4 border-l-4 border-l-green-500">
+            <span class="bg-green-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Melhoria</span>
+            <h4 class="text-lg font-bold text-white mb-2">Higienizar Base Estagnada</h4>
+            <p class="text-gray-400 text-sm">Existem ${estagnados} leads sem interação recente. Criar um fluxo de reativação ou descartá-los para manter as métricas precisas.</p>
+        </div>`;
+    }
+    if(planoAcaoHTML === '') {
+        planoAcaoHTML = `
+        <div class="border border-blue-500/30 bg-[#0a121a] rounded-xl p-6 mb-4 border-l-4 border-l-blue-500">
+            <span class="bg-blue-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Tração</span>
+            <h4 class="text-lg font-bold text-white mb-2">Escalar Operação</h4>
+            <p class="text-gray-400 text-sm">A operação não apresenta gargalos críticos no CRM. Momento ideal para escalar o volume de geração de demanda (Topo de Funil).</p>
+        </div>`;
+    }
+
+    // 9. Montar HTML Final (Template)
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>OnePage Report - ${nomeOperacao}</title>
+        <script src="https://cdn.tailwindcss.com"><\/script>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            body { font-family: 'Outfit', sans-serif; background-color: #0d0d0d; color: #ffffff; }
+            .font-mono { font-family: 'JetBrains Mono', monospace; }
+            .card { background-color: #141414; border: 1px solid #262626; border-radius: 12px; }
+        </style>
+    </head>
+    <body class="p-8 max-w-5xl mx-auto">
+        <header class="flex items-center justify-between mb-8 pb-4 border-b border-gray-800">
+            <div class="flex items-center gap-4">
+                <h1 class="text-2xl font-black text-red-600 tracking-tighter">V4 COMPANY</h1>
+                <span class="border border-gray-700 bg-[#1a1a1a] text-gray-300 text-xs px-3 py-1 rounded-full">Operação: ${nomeOperacao}</span>
+                <span class="border border-gray-700 bg-[#1a1a1a] text-gray-300 text-xs px-3 py-1 rounded-full">${periodoStr}</span>
+            </div>
+        </header>
+
+        <h2 class="text-3xl font-bold mb-8">Relatório de Saúde CRM</h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="card p-6">
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Total de Leads</p>
+                <p class="text-3xl font-bold font-mono text-white">${leadsTotais}</p>
+                <p class="text-xs text-gray-500 mt-2">Visão Geral</p>
+            </div>
+            <div class="card p-6">
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Vendas (Ganho)</p>
+                <p class="text-3xl font-bold font-mono text-green-500">${vendas}</p>
+                <p class="text-xs text-gray-500 mt-2">${taxaConversao}% de conversão</p>
+            </div>
+            <div class="card p-6">
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Perdas (Lost)</p>
+                <p class="text-3xl font-bold font-mono text-red-500">${perdas}</p>
+                <p class="text-xs text-gray-500 mt-2">${taxaPerda}% de perda</p>
+            </div>
+            <div class="card p-6">
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Receita Gerada</p>
+                <p class="text-3xl font-bold font-mono text-green-500">${formatCurrency(receita)}</p>
+                <p class="text-xs text-gray-500 mt-2">Ciclo de ${ciclo} dias</p>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-10">
+            <div>
+                <h3 class="text-xl font-bold mb-4 border-l-2 border-red-500 pl-3">Arquitetura do Funil</h3>
+                <div class="card p-6 mb-6 bg-[#0a0a0a]">
+                    ${funilHTML}
+                </div>
+            </div>
+            <div class="card p-8 h-fit">
+                <h3 class="text-xl font-bold mb-6 border-l-2 border-red-500 pl-3">Principais Motivos de Perda</h3>
+                <div class="pr-2">
+                    ${motivosPerdaHTML}
+                </div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-10">
+            <div>
+                <h3 class="text-xl font-bold mb-4">Leitura Estratégica</h3>
+                <div class="mb-8">${leituraEstrategica}</div>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-4">Plano de Ação Executivo</h3>
+                ${planoAcaoHTML}
+            </div>
+        </div>
+
+        <div class="card p-8 flex justify-between items-center bg-[#0a0a0a] border-gray-800">
+            <div>
+                <p class="text-xs text-gray-500 uppercase font-bold mb-1">Saúde Operacional</p>
+                <div class="flex items-center gap-3 mt-2">
+                    <span class="w-3 h-3 rounded-full ${statusDot}"></span>
+                    <span class="text-lg font-semibold text-white">${statusText}</span>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="${badgeColor} px-4 py-2 rounded-lg font-bold font-mono text-xl inline-block mb-2">Score: ${nota}/10</div>
+                <p class="text-xs text-gray-500 uppercase font-bold mt-1">Gerado via API Kommo</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+
+    // 10. Forçar Download
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Report_${nomeOperacao.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.html`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
 
         // ─── API FETCH ───
         async function buscarDadosDaApi(dataInicioStr = '', dataFimStr = '') {
