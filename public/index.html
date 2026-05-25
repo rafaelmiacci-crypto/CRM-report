@@ -588,6 +588,18 @@ Hub Operacional</span>
                 </div>
             </div>
 
+                        <div class="analytics-row analytics-row-full">
+                <div class="analytics-panel">
+                    <div class="analytics-panel-header">
+                        <h2>Performance por Vendedor (Closers)</h2>
+                        <span class="panel-badge" id="closers-client-badge">todos</span>
+                    </div>
+                    <div class="loss-scroll-wrapper" id="closers-container" style="max-height: 400px; overflow-y: auto;">
+                        <p class="no-data-msg">Carregando dados dos vendedores...</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="billing-section">
                 <div class="funnel-header" style="margin-bottom: 20px;"><h2>Status das Licenças Kommo CRM</h2></div>
                 <div class="billing-grid" id="billing-container"></div>
@@ -970,6 +982,65 @@ Hub Operacional</span>
             document.getElementById('conversion-client-badge').innerText = clientesReais[0]?.name || 'todos';
         }
 
+        // ─── CLOSER PERFORMANCE ───
+        function renderClosers(clientesReais) {
+            const container = document.getElementById('closers-container');
+            container.innerHTML = '';
+            const merged = {};
+            
+            clientesReais.forEach(c => {
+                if (!c.closers) return;
+                c.closers.forEach(u => {
+                    if (!merged[u.name]) merged[u.name] = { leads: 0, won: 0, lost: 0, stagnant: 0 };
+                    merged[u.name].leads += (u.leads || 0);
+                    merged[u.name].won += (u.won || 0);
+                    merged[u.name].lost += (u.lost || 0);
+                    merged[u.name].stagnant += (u.stagnant || 0);
+                });
+            });
+
+            const entries = Object.entries(merged).sort((a, b) => b[1].won - a[1].won);
+            if (entries.length === 0) { container.innerHTML = '<p class="no-data-msg">Nenhum vendedor registrado neste funil</p>'; return; }
+
+            let html = '<div class="loss-list">';
+            html += `
+                <div class="loss-item" style="border-bottom: 2px solid var(--border-light); padding-bottom: 8px;">
+                    <div class="loss-item-header" style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0;">
+                        <div style="flex: 2; min-width: 140px;">Vendedor</div>
+                        <div style="flex: 1; text-align: center;">Leads</div>
+                        <div style="flex: 1; text-align: center; color: var(--green);">Ganhos</div>
+                        <div style="flex: 1; text-align: center; color: var(--primary);">Perdas</div>
+                        <div style="flex: 1; text-align: center; color: var(--blue);">Conversão</div>
+                        <div style="flex: 1; text-align: right; color: var(--amber);">Estagnados</div>
+                    </div>
+                </div>`;
+
+            entries.forEach(([name, d]) => {
+                const total = d.won + d.lost;
+                const convRate = total > 0 ? ((d.won / total) * 100).toFixed(1) : '0.0';
+                const lossRate = total > 0 ? (d.lost / total) * 100 : 0;
+                
+                // Regra de alerta: Se perdeu mais de 70% ou tem 10+ parados
+                const alertLoss = (lossRate >= 70 && d.lost > 5) ? 'color: var(--primary); font-weight: 800;' : 'color: var(--text-main);';
+                const alertStag = d.stagnant >= 10 ? 'color: var(--primary); font-weight: 800;' : 'color: var(--text-main);';
+
+                html += `
+                <div class="loss-item">
+                    <div class="loss-item-header" style="align-items: center; margin-bottom: 0;">
+                        <div style="flex: 2; min-width: 140px; font-weight: 500; color: var(--text-main);">${name}</div>
+                        <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px;">${d.leads}</div>
+                        <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--green);">${d.won}</div>
+                        <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; ${alertLoss}">${d.lost}</div>
+                        <div style="flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--blue);">${convRate}%</div>
+                        <div style="flex: 1; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 13px; ${alertStag}">${d.stagnant}</div>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+            document.getElementById('closers-client-badge').innerText = clientesReais[0]?.name || 'todos';
+        }
+
         // ─── FUNNEL ───
         function getSelectedPipeline() {
             const cid = document.getElementById('client-selector').value;
@@ -981,10 +1052,11 @@ Hub Operacional</span>
 
         function atualizarGraficosPorPipeline(pd) {
             if (!pd) return;
-            const pipelineData = [{ monthlyStats: pd.monthlyStats || [], lossReasons: pd.lossReasons || [], name: pd.name }];
+            const pipelineData = [{ monthlyStats: pd.monthlyStats || [], lossReasons: pd.lossReasons || [], closers: pd.closers || [], name: pd.name }];
             renderMonthlyChart(pipelineData);
             renderLossReasons(pipelineData);
             renderConversionChart(pipelineData);
+            renderClosers(pipelineData);
         }
 
         function atualizarPipelinesDoClienteSelecionado() {
@@ -1378,6 +1450,42 @@ Hub Operacional</span>
             <p class="text-sm text-gray-400 mb-5 leading-relaxed">Criar fluxo de reativação para os ${estagnados} leads inativos ou definir SLA para descarte.</p>
         </div>`;
     }
+
+    // ─── 11.5 PERFORMANCE POR VENDEDOR (CLOSERS) NO PDF ───
+    let closersHTML = '<p class="text-gray-500 text-sm">Dados de vendedores indisponíveis neste funil.</p>';
+    if (pipe.closers && pipe.closers.length > 0) {
+        const closersData = [...pipe.closers].sort((a, b) => (b.won || 0) - (a.won || 0));
+        closersHTML = `
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-gray-800 text-gray-400 text-[10px] uppercase tracking-widest">
+                    <th class="py-3 font-bold">Vendedor</th>
+                    <th class="py-3 text-center font-bold">Leads</th>
+                    <th class="py-3 text-center font-bold text-green-500">Ganhos</th>
+                    <th class="py-3 text-center font-bold text-red-500">Perdidos</th>
+                    <th class="py-3 text-center font-bold text-blue-400">Conversão</th>
+                    <th class="py-3 text-right font-bold text-yellow-500">Estagnados</th>
+                </tr>
+            </thead>
+            <tbody>`;
+        closersData.forEach(user => {
+            const t = (user.won || 0) + (user.lost || 0);
+            const cRate = t > 0 ? (((user.won || 0) / t) * 100).toFixed(1) : '0.0';
+            const lRate = t > 0 ? (((user.lost || 0) / t) * 100) : 0;
+            const warnStag = (user.stagnant || 0) >= 10 ? 'text-red-500 font-bold' : 'text-gray-300';
+            const warnLoss = (lRate >= 70 && (user.lost || 0) > 5) ? 'text-red-500 font-bold' : 'text-gray-300';
+            closersHTML += `
+                <tr class="border-b border-gray-900/50 hover:bg-[#1a1a1a] transition-colors">
+                    <td class="py-4 text-sm font-medium text-white">${user.name}</td>
+                    <td class="py-4 text-center font-mono text-sm text-gray-400">${user.leads || 0}</td>
+                    <td class="py-4 text-center font-mono text-sm text-green-400">${user.won || 0}</td>
+                    <td class="py-4 text-center font-mono text-sm ${warnLoss}">${user.lost || 0}</td>
+                    <td class="py-4 text-center font-mono text-sm text-blue-400">${cRate}%</td>
+                    <td class="py-4 text-right font-mono text-sm ${warnStag}">${user.stagnant || 0}</td>
+                </tr>`;
+        });
+        closersHTML += `</tbody></table>`;
+    }
  
     // ═════════════════════════════════════════════════════════
     // ─── 12. MONTAGEM FINAL DO HTML ───
@@ -1494,7 +1602,14 @@ Hub Operacional</span>
                 ${planoAcaoHTML || '<p class="text-gray-500 text-sm">Mantenha a higiene do CRM em dia para evitar acúmulo de tarefas e perdas não mapeadas.</p>'}
             </div>
         </div>
- 
+
+                <div class="mt-16 mb-10">
+            <h3 class="text-2xl font-bold mb-8 border-l-4 border-l-red-500 pl-4">Performance do Time Comercial</h3>
+            <div class="card p-8 bg-[#111111]">
+                ${closersHTML}
+            </div>
+        </div>
+
         <h3 class="text-2xl font-bold mb-6 mt-16">Métricas Detalhadas</h3>
         <div class="grid grid-cols-4 gap-4 mb-16">
             <div class="card p-6 flex flex-col justify-center"><p class="text-xs text-gray-500 mb-2">Taxa de Conversão</p><p class="text-3xl font-bold text-white">${taxaConversao}%</p></div>
