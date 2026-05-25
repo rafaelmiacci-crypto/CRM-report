@@ -193,18 +193,19 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
     const ckU = `users_${sub}`;
     let usersData = getCached(ckU);
     if (!usersData) {
-        let totalUsers = 0, adminUsers = 0;
+        let totalUsers = 0, adminUsers = 0, usersMap = {};
         try {
             const r = await kommoGet(sub, token, '/api/v4/users');
             const users = r.data?._embedded?.users || [];
+            users.forEach(u => { usersMap[u.id] = u.name; }); // Guarda o nome do usuário
             const active = users.filter(u => u.rights?.is_active !== false);
             totalUsers = active.length;
             adminUsers = active.filter(u => u.rights?.is_admin === true).length;
         } catch (err) { }
-        usersData = { totalUsers, adminUsers };
+        usersData = { totalUsers, adminUsers, usersMap };
         setCache(ckU, usersData);
     }
-    const { totalUsers, adminUsers } = usersData;
+    const { totalUsers, adminUsers, usersMap } = usersData;
 
     // ── 6. Processar ──
     let pipelinesData = [];
@@ -280,14 +281,24 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         let pipelineMonthly = {}, pipelineLossReasons = {};
         let pipelineWonRevenue = 0;
+        let pipelineLostRevenue = 0; // Para calcular o Ticket Médio Perdido
         let pipelineSalesCycleDays = 0;
         let pipelineWonForCycle = 0;
+        let pipelineClosers = {}; // Para calcular a Performance por Vendedor
 
         allLeads.forEach(lead => {
             if (lead.pipeline_id !== pipeline.id) return;
             totalLeadsNestePipeline++;
+            
             const diasSemAtt = (hoje - lead.updated_at) / 86400;
             const price = Number(lead.price) || 0;
+            const respId = lead.responsible_user_id;
+
+            // Inicia o contador deste vendedor se não existir
+            if (respId && !pipelineClosers[respId]) {
+                pipelineClosers[respId] = { name: usersMap[respId] || `Usuário ID: ${respId}`, leads: 0, won: 0, lost: 0, stagnant: 0 };
+            }
+            if (respId) pipelineClosers[respId].leads++; // Soma 1 lead para o vendedor
 
             const dCreated = new Date(lead.created_at * 1000);
             const mkCreated = `${dCreated.getFullYear()}-${String(dCreated.getMonth() + 1).padStart(2, '0')}`;
@@ -299,7 +310,10 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             if (!closedStatuses.includes(lead.status_id)) {
                 pipelineRevenue += price;
                 if (!exemptStatusIds.includes(lead.status_id)) {
-                    if (diasSemAtt >= DIAS_ESTAGNADO) totalStagnantLeadsConta++;
+                    if (diasSemAtt >= DIAS_ESTAGNADO) {
+                        totalStagnantLeadsConta++;
+                        if (respId) pipelineClosers[respId].stagnant++; // Lead parado do vendedor
+                    }
                     const semTarefa = !lead.closest_task_at || lead.closest_task_at < hoje;
                     if (diasSemAtt >= DIAS_DATA_DECAY && semTarefa) totalDataDecayConta++;
                 }
@@ -309,6 +323,7 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
                     totalWonRevenue += price;
                     pipelineWonRevenue += price;
                     wonLeadsForCycle++;
+                    if (respId) pipelineClosers[respId].won++; // Venda pro vendedor
                     const cycle = (closedTs - lead.created_at) / 86400;
                     if (cycle > 0) {
                         totalSalesCycleDays += cycle;
@@ -317,7 +332,9 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
                     }
                     pipelineMonthly[mkCreated].won++;
                 } else if (lostStatusIds.includes(lead.status_id)) {
+                    pipelineLostRevenue += price; // Adiciona o Dinheiro na Mesa
                     pipelineMonthly[mkCreated].lost++;
+                    if (respId) pipelineClosers[respId].lost++; // Perda pro vendedor
                     const rid = lead.loss_reason_id;
                     if (rid && lossReasonsMap[rid]) pipelineLossReasons[lossReasonsMap[rid]] = (pipelineLossReasons[lossReasonsMap[rid]] || 0) + 1;
                     else if (rid) pipelineLossReasons['Motivo não identificado'] = (pipelineLossReasons['Motivo não identificado'] || 0) + 1;
@@ -348,6 +365,8 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             ? parseFloat((pipelineSalesCycleDays / pipelineWonForCycle).toFixed(1))
             : 0;
 
+        const closersArray = Object.values(pipelineClosers).sort((a, b) => b.won - a.won);
+
         pipelinesData.push({
             id: pipeline.id,
             name: pipeline.name,
@@ -357,7 +376,9 @@ async function buscarDadosCliente(cliente, dataInicio, dataFim) {
             monthlyStats: pipelineMonthlyArray,
             lossReasons: pipelineLossArray,
             wonRevenue: pipelineWonRevenue,
-            avgSalesCycle: pipelineAvgCycle
+            lostRevenue: pipelineLostRevenue,
+            avgSalesCycle: pipelineAvgCycle,
+            closers: closersArray
         });
     });
 
