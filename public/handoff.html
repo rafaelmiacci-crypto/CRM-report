@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handoff Document - V4 Company</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#000000',
+                        mainbg: '#0a0a0a', 
+                        cardbg: '#141414',
+                        cardhover: '#1a1a1a',
+                        v4red: '#dc2626',
+                        v4redhover: '#ef4444'
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar Premium */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; transition: background 0.2s;}
+        ::-webkit-scrollbar-thumb:hover { background: rgba(220,38,38,0.5); }
+
+        /* Fundo Padrão Premium V4 */
+        .bg-pattern {
+            position: absolute; inset: 0; opacity: 0.025;
+            background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 60px 60px; pointer-events: none; z-index: 0;
+        }
+
+        /* EFEITOS DE FUNDO (AMBIENT GLOW) */
+        .glow-effect {
+            position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(220,38,38,0.1) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(80px);
+        }
+        .glow-left { top: -100px; left: -100px; opacity: 0.8; }
+        .glow-right { bottom: 20%; right: -200px; opacity: 0.5; }
+
+        /* Animações UI Nativas */
+        .fade-in-up { animation: fadeUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Efeito glassmorph especial para cards */
+        .glass-card {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="flex flex-col lg:flex-row h-screen w-full overflow-hidden bg-mainbg font-inter text-gray-200 relative">
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden w-full bg-sidebar border-b border-white/5 px-6 py-4 flex justify-between items-center z-40 relative flex-shrink-0 shadow-lg">
+        <img src="https://carreira.inhire.com.br/wp-content/uploads/2024/04/v4company-02-03-1024x279.png" alt="Logo V4 Company" class="h-6 sm:h-8 object-contain drop-shadow-md" onerror="this.src='https://via.placeholder.com/150x50?text=V4+Company'"/>
+        <button id="mobile-menu-btn" class="text-gray-300 hover:text-white text-2xl focus:outline-none transition-colors">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Overlay da Sidebar Mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/70 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+
+    <!-- Sidebar Lateral -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full lg:relative lg:translate-x-0 w-72 bg-sidebar h-full flex flex-col justify-between py-8 flex-shrink-0 z-50 shadow-2xl border-r border-white/5 transition-transform duration-300 ease-in-out">
+        
+        <button id="close-sidebar-btn" class="lg:hidden absolute top-5 right-5 text-gray-400 hover:text-white text-2xl transition-colors focus:outline-none">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="w-full flex flex-col">
+            <div class="w-full flex justify-center px-8 mb-12 mt-2">
+                <div class="w-full flex items-center justify-center transition-transform hover:scale-105 duration-300 cursor-pointer">
+                    <img src="https://carreira.inhire.com.br/wp-content/uploads/2024/04/v4company-02-03-1024x279.png" alt="Logo V4 Company" class="max-w-full h-9 object-contain drop-shadow-md" onerror="this.src='https://via.placeholder.com/150x50?text=V4+Company'"/>
+                </div>
+            </div>
+
+            <nav class="flex flex-col w-full px-6 space-y-2">
+                <a href="#" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
+                    <i class="fa-solid fa-chart-pie text-lg group-hover:text-red-400 transition-colors w-6"></i>
+                    <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Dashboard</span>
+                </a>
+                
+                <a href="#" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
+                    <i class="fa-solid fa-bullhorn text-lg group-hover:text-red-400 transition-colors w-6"></i>
+                    <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Planejamentos</span>
+                </a>
+                
+                <a href="#" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
+                    <i class="fa-solid fa-file-lines text-lg group-hover:text-red-400 transition-colors w-6"></i>
+                    <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Discovery</span>
+                </a>
+
+                <!-- Configurações ATIVO: Handoff CRM -->
+                <a href="#" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-white bg-gradient-to-r from-red-900/40 to-transparent border-l-4 border-v4red shadow-sm transition-all duration-300 focus:outline-none">
+                    <i class="fa-solid fa-file-export text-lg text-v4red w-6"></i>
+                    <span class="font-medium tracking-wide text-sm">Handoff CRM</span>
+                </a>
+
+                <div class="pt-4 mt-2 border-t border-white/5">
+                    <a href="#" class="w-full flex items-center gap-4 px-5 py-3.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 border-l-4 border-transparent transition-all duration-300 group focus:outline-none">
+                        <i class="fa-solid fa-gear text-lg group-hover:text-red-400 transition-colors w-6"></i>
+                        <span class="font-medium tracking-wide text-sm group-hover:translate-x-1 transition-transform">Hub Operacional</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <main class="flex-1 h-full w-full relative overflow-y-auto flex flex-col font-inter z-10 custom-scrollbar">
+        <div class="bg-pattern"></div>
+        <div class="glow-effect glow-left"></div>
+        <div class="glow-effect glow-right"></div>
+
+        <div class="max-w-5xl mx-auto w-full px-4 sm:px-8 pb-16 pt-8 flex flex-col relative z-20 fade-in-up">
+            
+            <!-- Header do Documento -->
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 border-b border-white/5 pb-6">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="bg-green-500/20 text-green-400 border border-green-500/30 px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Projeto Finalizado
+                        </span>
+                        <span class="text-gray-500 text-xs font-mono"><i class="fa-regular fa-calendar mr-1"></i> Data Gate NPS: PREENCHER</span>
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl font-sans font-black text-white uppercase tracking-tight">
+                        PREENCHER <span class="text-v4red font-light">| Handoff Doc</span>
+                    </h1>
+                </div>
+                
+                <div class="flex gap-3 w-full md:w-auto">
+                    <button class="flex-1 md:flex-none justify-center bg-[#111] hover:bg-white/5 border border-white/10 text-gray-300 px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all duration-300">
+                        <i class="fa-solid fa-pen-to-square"></i> Editar
+                    </button>
+                    <button id="copy-btn" class="flex-1 md:flex-none justify-center bg-v4red hover:bg-v4redhover text-white px-5 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all duration-300 shadow-[0_0_15px_rgba(220,38,38,0.3)]">
+                        <i class="fa-solid fa-share-nodes"></i> Copiar P/ Account
+                    </button>
+                </div>
+            </header>
+
+            <!-- Grid de Resumo Executivo -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-center">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Especialista CRM (TER)</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-v4red/20 border border-v4red/30 flex items-center justify-center text-v4red text-xs font-bold">
+                            ?
+                        </div>
+                        <span class="text-white font-medium text-sm">PREENCHER</span>
+                    </div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-center">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Account Responsável</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xs font-bold">
+                            ?
+                        </div>
+                        <span class="text-white font-medium text-sm">PREENCHER</span>
+                    </div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-center">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Plataforma Implementada</p>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-rocket text-orange-500 text-lg"></i>
+                        <span class="text-white font-medium text-sm">PREENCHER</span>
+                    </div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl flex flex-col justify-center">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Nota NPS Recebida</p>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-star text-yellow-500 text-lg"></i>
+                        <span class="text-white font-black text-xl">PREENCHER</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Principal: Estrutura Construída -->
+            <h2 class="text-xl font-sans font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2 mt-4">
+                <i class="fa-solid fa-layer-group text-v4red"></i> 1. Estrutura Construída
+            </h2>
+            
+            <div class="glass-card rounded-2xl overflow-hidden mb-8">
+                <div class="p-6 border-b border-white/5">
+                    <h3 class="text-sm font-bold text-gray-300 uppercase tracking-widest mb-4">Pipeline Padrão de Vendas (B2B)</h3>
+                    
+                    <!-- Simulação Visual do Funil -->
+                    <div class="flex flex-col md:flex-row gap-2 overflow-x-auto no-scrollbar">
+                        <div class="bg-black/50 border border-white/10 rounded-lg p-3 min-w-[160px] flex-1">
+                            <span class="text-[10px] text-gray-500 font-mono block mb-1">SLA: 24h</span>
+                            <span class="text-white font-bold text-sm block">1. Novo Lead</span>
+                        </div>
+                        <div class="hidden md:flex items-center justify-center text-gray-600"><i class="fa-solid fa-chevron-right"></i></div>
+                        
+                        <div class="bg-black/50 border border-white/10 rounded-lg p-3 min-w-[160px] flex-1 border-l-4 border-l-blue-500">
+                            <span class="text-[10px] text-gray-500 font-mono block mb-1">SLA: 48h</span>
+                            <span class="text-white font-bold text-sm block">2. Em Qualificação</span>
+                        </div>
+                        <div class="hidden md:flex items-center justify-center text-gray-600"><i class="fa-solid fa-chevron-right"></i></div>
+                        
+                        <div class="bg-black/50 border border-white/10 rounded-lg p-3 min-w-[160px] flex-1 border-l-4 border-l-yellow-500">
+                            <span class="text-[10px] text-gray-500 font-mono block mb-1">SLA: 72h</span>
+                            <span class="text-white font-bold text-sm block">3. Reunião Agendada</span>
+                        </div>
+                        <div class="hidden md:flex items-center justify-center text-gray-600"><i class="fa-solid fa-chevron-right"></i></div>
+                        
+                        <div class="bg-black/50 border border-white/10 rounded-lg p-3 min-w-[160px] flex-1 border-l-4 border-l-purple-500">
+                            <span class="text-[10px] text-gray-500 font-mono block mb-1">SLA: 5 Dias</span>
+                            <span class="text-white font-bold text-sm block">4. Em Negociação</span>
+                        </div>
+                        <div class="hidden md:flex items-center justify-center text-gray-600"><i class="fa-solid fa-chevron-right"></i></div>
+                        
+                        <div class="bg-black/50 border border-white/10 rounded-lg p-3 min-w-[160px] flex-1 border-l-4 border-l-green-500">
+                            <span class="text-[10px] text-gray-500 font-mono block mb-1">Fechamento</span>
+                            <span class="text-white font-bold text-sm block">5. Ganho / Venda</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/5">
+                    <!-- Gatilhos -->
+                    <div class="p-6">
+                        <h3 class="text-sm font-bold text-gray-300 uppercase tracking-widest mb-4"><i class="fa-solid fa-bolt text-yellow-500 mr-2"></i> Automações Ativas</h3>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3 items-start">
+                                <div class="mt-0.5 w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px] text-gray-400">1</div>
+                                <div>
+                                    <p class="text-sm text-white font-medium">Novo Lead LP <i class="fa-solid fa-arrow-right text-gray-600 mx-1 text-[10px]"></i> Distribuição Round Robin</p>
+                                    <p class="text-xs text-gray-500 mt-0.5">Leads do site são divididos igualmente entre os 3 vendedores.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3 items-start">
+                                <div class="mt-0.5 w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px] text-gray-400">2</div>
+                                <div>
+                                    <p class="text-sm text-white font-medium">Lead sem contato > 3 dias <i class="fa-solid fa-arrow-right text-gray-600 mx-1 text-[10px]"></i> Alerta WhatsApp</p>
+                                    <p class="text-xs text-gray-500 mt-0.5">Gera tarefa prioritária e notifica o gestor no painel.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Integrações -->
+                    <div class="p-6">
+                        <h3 class="text-sm font-bold text-gray-300 uppercase tracking-widest mb-4"><i class="fa-solid fa-network-wired text-blue-500 mr-2"></i> Integrações</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-black/40 border border-white/5 p-3 rounded-xl flex items-center gap-3">
+                                <i class="fa-brands fa-whatsapp text-green-500 text-xl"></i>
+                                <div>
+                                    <span class="text-xs font-bold text-white block">WhatsApp API</span>
+                                    <span class="text-[9px] text-gray-500">Zenvia / WABA</span>
+                                </div>
+                            </div>
+                            <div class="bg-black/40 border border-white/5 p-3 rounded-xl flex items-center gap-3">
+                                <i class="fa-brands fa-meta text-blue-500 text-xl"></i>
+                                <div>
+                                    <span class="text-xs font-bold text-white block">Meta Ads</span>
+                                    <span class="text-[9px] text-gray-500">Lead Forms Nativos</span>
+                                </div>
+                            </div>
+                            <div class="bg-black/40 border border-white/5 p-3 rounded-xl flex items-center gap-3">
+                                <i class="fa-solid fa-globe text-purple-500 text-xl"></i>
+                                <div>
+                                    <span class="text-xs font-bold text-white block">Landing Pages</span>
+                                    <span class="text-[9px] text-gray-500">Via Webhook Pluga</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção: Dicionário Técnico -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h2 class="text-lg font-sans font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-book-open text-v4red"></i> 2. Dicionário (Tags e Perdas)
+                    </h2>
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="mb-6">
+                            <h4 class="text-xs uppercase text-gray-500 font-bold mb-3 border-b border-white/5 pb-2">Reason for Loss (Motivos de Perda)</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-xs text-gray-300">Sem Fit / Perfil</span>
+                                <span class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-xs text-gray-300">Achou Caro (Preço)</span>
+                                <span class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-xs text-gray-300">Fechou c/ Concorrente</span>
+                                <span class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-xs text-gray-300">Não Responde (Ghosting)</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xs uppercase text-gray-500 font-bold mb-3 border-b border-white/5 pb-2">Campos Personalizados Criados</h4>
+                            <ul class="text-sm text-gray-300 space-y-2 font-mono text-[11px]">
+                                <li><span class="text-v4red mr-2">»</span> [Faturamento Mensal] (Lista Suspensa)</li>
+                                <li><span class="text-v4red mr-2">»</span> [Cargo do Decisor] (Texto)</li>
+                                <li><span class="text-v4red mr-2">»</span> [Origem da Campanha / UTM] (Oculto)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção: Links de Acesso -->
+                <div>
+                    <h2 class="text-lg font-sans font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-key text-v4red"></i> 3. Acessos e Links Úteis
+                    </h2>
+                    <div class="glass-card rounded-2xl p-6 flex flex-col gap-3">
+                        <a href="#" class="group flex items-center justify-between bg-black/40 border border-white/5 p-4 rounded-xl hover:border-v4red/50 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-link text-gray-500 group-hover:text-v4red transition-colors"></i>
+                                <div>
+                                    <span class="block text-sm font-bold text-white">Login da Plataforma CRM</span>
+                                    <span class="block text-xs text-blue-400 hover:underline mt-0.5">PREENCHER</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-600"></i>
+                        </a>
+                        
+                        <a href="#" class="group flex items-center justify-between bg-black/40 border border-white/5 p-4 rounded-xl hover:border-v4red/50 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-file-pdf text-gray-500 group-hover:text-v4red transition-colors"></i>
+                                <div>
+                                    <span class="block text-sm font-bold text-white">Documento Master Blueprint</span>
+                                    <span class="block text-xs text-blue-400 hover:underline mt-0.5">PREENCHER</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-600"></i>
+                        </a>
+
+                        <a href="#" class="group flex items-center justify-between bg-black/40 border border-white/5 p-4 rounded-xl hover:border-v4red/50 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-video text-gray-500 group-hover:text-v4red transition-colors"></i>
+                                <div>
+                                    <span class="block text-sm font-bold text-white">Gravação do Treinamento</span>
+                                    <span class="block text-xs text-blue-400 hover:underline mt-0.5">PREENCHER</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-600"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- O PULO DO GATO: Percepção de Treinamento e Alertas -->
+            <div class="mt-4">
+                <h2 class="text-xl font-sans font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-v4red"></i> 4. Alertas p/ Account (O Pulo do Gato)
+                </h2>
+                <div class="bg-gradient-to-r from-red-900/30 to-black/50 border border-v4red/50 rounded-2xl p-6 relative overflow-hidden shadow-[0_0_30px_rgba(220,38,38,0.1)]">
+                    <div class="absolute right-0 top-0 w-32 h-32 bg-v4red/20 blur-[50px]"></div>
+                    
+                    <div class="relative z-10 flex flex-col md:flex-row gap-8">
+                        <div class="md:w-1/2 border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8">
+                            <h4 class="text-v4red font-bold text-sm uppercase tracking-widest mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-users"></i> Comportamento no Treinamento
+                            </h4>
+                            <p class="text-sm text-gray-300 leading-relaxed font-light">
+                                <span class="text-yellow-400">PREENCHER:</span> Descreva como foi o engajamento da diretoria e do time comercial. Anote resistências ou facilidades mapeadas.
+                            </p>
+                        </div>
+                        
+                        <div class="md:w-1/2">
+                            <h4 class="text-v4red font-bold text-sm uppercase tracking-widest mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-bullseye"></i> Recomendação de Acompanhamento
+                            </h4>
+                            <ul class="space-y-3 text-sm text-gray-300 font-light">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-v4red mt-1"></i>
+                                    <span><strong>PREENCHER:</strong> Liste os pontos que o Account precisa cobrar e auditar nas próximas semanas.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Toast de Notificação -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-v4red text-white px-6 py-3 rounded-xl shadow-lg shadow-red-900/50 flex items-center gap-3 z-50 font-bold text-sm">
+        <i class="fa-solid fa-check-circle text-lg"></i>
+        <span>Link do Handoff copiado para a área de transferência!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Lógica do Menu Mobile
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+
+            function toggleSidebar() {
+                const isClosed = sidebar.classList.contains('-translate-x-full');
+                if (isClosed) {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebarOverlay.classList.remove('hidden');
+                    setTimeout(() => sidebarOverlay.classList.add('opacity-100'), 10);
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                    sidebarOverlay.classList.remove('opacity-100');
+                    setTimeout(() => sidebarOverlay.classList.add('hidden'), 300);
+                }
+            }
+
+            mobileMenuBtn?.addEventListener('click', toggleSidebar);
+            closeSidebarBtn?.addEventListener('click', toggleSidebar);
+            sidebarOverlay?.addEventListener('click', toggleSidebar);
+
+            // Funcionalidade do botão de copiar (Simulação de compartilhamento com Account)
+            const copyBtn = document.getElementById('copy-btn');
+            const toast = document.getElementById('toast');
+            let toastTimeout;
+
+            copyBtn.addEventListener('click', () => {
+                // Simula copiar para a área de transferência
+                const dummyLink = "https://hub.v4company.com/handoff/bioside-doc-1294";
+                
+                // Fallback para iframe
+                const textArea = document.createElement("textarea");
+                textArea.value = dummyLink;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                } catch (err) {
+                    console.error('Falha ao copiar', err);
+                }
+                document.body.removeChild(textArea);
+
+                // Mostra notificação
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.add('translate-y-20', 'opacity-0');
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
