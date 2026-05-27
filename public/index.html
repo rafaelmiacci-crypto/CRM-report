@@ -26,7 +26,6 @@
 
     <style>
         :root {
-            /* Paleta V4 (Vinho/Preto/Vermelho) mapeada nas variáveis do seu JS */
             --bg-color: #1a0404;           
             --bg-elevated: #260606;        
             --bg-surface: rgba(255,255,255,0.03); 
@@ -38,7 +37,7 @@
             --text-secondary: #9898a8;
             --text-muted: #7a7a8e;
             
-            --primary: #dc2626;            /* Vermelho da V4 */
+            --primary: #dc2626;
             --primary-soft: rgba(220, 38, 38, 0.10);
             --primary-glow: rgba(220, 38, 38, 0.30);
             --primary-hover: #ef4444;
@@ -70,7 +69,6 @@
         .dashboard-scope { font-family: 'Outfit', sans-serif; color: var(--text-main); }
         .dashboard-scope * { box-sizing: border-box; }
 
-        /* ─── GLOBAL SCROLLBAR ─── */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; transition: background 0.2s; }
@@ -86,7 +84,6 @@
 
         .app-wrapper { max-width: 1520px; margin: 0 auto; padding: 32px 48px 64px; position: relative; z-index: 1; }
 
-        /* ─── HEADER ─── */
         header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
         .header-left { display: flex; align-items: center; gap: 18px; }
         header h1 { font-size: 24px; font-weight: 700; color: var(--text-main); letter-spacing: -0.4px; margin: 0;}
@@ -96,15 +93,13 @@
         .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; animation: pulse 2s infinite; box-shadow: 0 0 8px var(--green-glow); }
         @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52,211,153,0.4); } 50% { opacity: 0.6; box-shadow: 0 0 0 7px rgba(52,211,153,0); } }
 
-        /* ─── TOOLBAR ─── */
         .toolbar { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 16px 22px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 32px; flex-wrap: wrap; gap: 14px; }
         .toolbar-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .toolbar-actions { 
-            display: flex !important; 
-            align-items: center !important; 
-            gap: 12px !important; 
-            flex-shrink: 0 !important; /* Proíbe o CSS de espremer esta div */
-            z-index: 50; /* Garante que fique por cima de tudo */
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            flex-shrink: 0;
         }
         .form-control { padding: 10px 14px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-main); background: var(--bg-surface); outline: none; font-family: 'Outfit', sans-serif; transition: all 0.2s; }
         .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
@@ -120,7 +115,6 @@
         .btn-secondary { background: var(--bg-surface); color: var(--text-secondary); border: 1px solid var(--border-light); }
         .btn-secondary:hover { background: var(--bg-surface-hover); color: var(--text-main); }
 
-        /* ─── SUMMARY CARDS ─── */
         .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 32px; }
         .card { background: var(--card-bg); padding: 26px 28px; border-radius: var(--radius); border: 1px solid var(--border); position: relative; overflow: hidden; transition: all 0.3s; }
         .card:hover { border-color: var(--border-active); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
@@ -137,14 +131,12 @@
         .card:nth-child(4) .value { color: var(--primary); }
         .card .card-sub { margin-top: 10px; font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
 
-        /* ─── TABLE ─── */
         .table-container { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 32px; position: relative; }
         .table-header-bar { padding: 22px 26px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
         .table-header-bar h2 { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; margin: 0; }
         .table-header-bar .record-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); background: var(--bg-surface); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); }
         
         .table-scroll-area { overflow-x: auto; overflow-y: visible; position: relative; }
-        .table-scroll-area::before, .table-scroll-area::after { content: ''; position: sticky; top: 0; bottom: 0; width: 48px; pointer-events: none; z-index: 5; display: block; height: 0; }
         .table-scroll-wrapper { position: relative; }
         .table-scroll-wrapper .scroll-fade-left, .table-scroll-wrapper .scroll-fade-right { position: absolute; top: 0; bottom: 0; width: 48px; pointer-events: none; z-index: 5; transition: opacity 0.3s; }
         .table-scroll-wrapper .scroll-fade-left { left: 0; background: linear-gradient(90deg, var(--card-bg), transparent); opacity: 0; }
@@ -154,7 +146,7 @@
         .scroll-indicator.visible { display: inline-flex; }
         @keyframes fadeInOut { 0% { opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; display: none; } }
 
-        table { width: 100%; border-collapse: collapse; min-width: 1280px; text-indent: initial; border-spacing: 2px; }
+        table { width: 100%; border-collapse: collapse; min-width: 1280px; }
         th { padding: 14px 22px; text-align: left; background: var(--bg-surface); color: var(--text-muted); font-weight: 500; font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.2px; border-bottom: 1px solid var(--border); white-space: nowrap; position: sticky; top: 0; z-index: 3; }
         th:first-child, td:first-child { position: sticky; left: 0; z-index: 4; background: var(--card-bg); }
         th:first-child { background: var(--bg-surface); z-index: 6; }
@@ -193,7 +185,6 @@
         .rec-yes { background: var(--green-soft); color: var(--green); border: 1px solid rgba(52,211,153,0.15); }
         .rec-no { background: var(--primary-soft); color: var(--primary); border: 1px solid rgba(230,57,70,0.15); }
 
-        /* ─── TOOLTIPS ─── */
         .th-tip { position: relative; cursor: help; }
         .th-tip .tip-icon { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--bg-color); border: 1px solid var(--border-light); font-size: 9px; line-height: 14px; text-align: center; color: var(--text-muted); margin-left: 5px; vertical-align: middle; font-style: normal; font-weight: 600; transition: all 0.2s; }
         .th-tip:hover .tip-icon { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
@@ -202,7 +193,6 @@
         .tooltip-arrow { position: fixed; border: 6px solid transparent; border-bottom-color: #1a1a24; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 10000; transform: translateX(-50%); }
         .tooltip-arrow.visible { opacity: 1; }
 
-        /* ─── FUNNEL E ANALYTICS ─── */
         .funnel-section { background: var(--card-bg); padding: 30px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 32px; }
         .funnel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
         .funnel-header h2 { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; margin: 0; }
@@ -213,6 +203,9 @@
         .funnel-stage:hover { border-color: var(--blue); box-shadow: 0 0 24px rgba(96,165,250,0.12); transform: translateY(-3px); }
         .funnel-stage h4 { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.3px; margin-bottom: 12px; font-weight: 500; margin-top: 0; }
         .funnel-stage .count { font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700; color: var(--text-main); }
+        .funnel-stage.tolerant-stage { border-color: rgba(167,139,250,0.2); }
+        .funnel-stage.tolerant-stage h4 { color: var(--purple); }
+        .funnel-stage.tolerant-stage::before { content: 'tolerante'; position: absolute; top: -8px; right: 8px; font-size: 8px; background: var(--purple-soft); color: var(--purple); padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(167,139,250,0.2); }
         .time-in-stage { margin-top: 10px; font-size: 11px; color: var(--amber); font-family: 'JetBrains Mono', monospace; background: var(--amber-soft); display: inline-block; padding: 4px 10px; border-radius: 4px; font-weight: 600; }
         .conversion-arrow { display: flex; flex-direction: column; align-items: center; padding: 0 14px; flex-shrink: 0; min-width: 74px; }
         .conversion-arrow span { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 4px; white-space: nowrap; background: var(--blue-soft); padding: 3px 10px; border-radius: 12px; }
@@ -282,7 +275,6 @@
         .bg-warning { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(251,191,36,0.15); }
         .bg-danger { background: var(--primary-soft); color: var(--primary); border: 1px solid rgba(230,57,70,0.15); }
 
-        /* ─── ANIMATIONS ─── */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes growBar { from { height: 0; } }
@@ -367,32 +359,30 @@
             </header>
 
             <div class="toolbar">
-    <div class="toolbar-filters">
-        <select id="client-selector" class="form-control">
-            <option value="todos">Todos os Clientes</option>
-        </select>
-        <select id="recorrencia-filter" class="form-control" title="Filtrar por recorrência">
-            <option value="todos">Todos (Recorrência)</option>
-            <option value="sim">Com Recorrência</option>
-            <option value="nao">Sem Recorrência</option>
-        </select>
-        <input type="date" id="date-start" class="form-control" title="Data Inicial">
-        <span class="date-separator">até</span>
-        <input type="date" id="date-end" class="form-control" title="Data Final">
-        <button id="btn-all-time" class="btn btn-secondary">Todo o Período</button>
-    </div> 
-    
-    <div class="toolbar-actions">
-        <button id="btn-export-view" class="btn btn-secondary" style="border: 2px solid lime !important; color: white;">
-            <i class="fa-solid fa-download"></i> Baixar Relatório
-        </button>
-        <button id="btn-update" class="btn btn-primary">
-            <i class="fa-solid fa-arrows-rotate"></i> Atualizar Dados BATATA
-        </button>
-    </div>
-</div>
-            
-        </div>
+                <div class="toolbar-filters">
+                    <select id="client-selector" class="form-control">
+                        <option value="todos">Todos os Clientes</option>
+                    </select>
+                    <select id="recorrencia-filter" class="form-control" title="Filtrar por recorrência">
+                        <option value="todos">Todos (Recorrência)</option>
+                        <option value="sim">Com Recorrência</option>
+                        <option value="nao">Sem Recorrência</option>
+                    </select>
+                    <input type="date" id="date-start" class="form-control" title="Data Inicial">
+                    <span class="date-separator">até</span>
+                    <input type="date" id="date-end" class="form-control" title="Data Final">
+                    <button id="btn-all-time" class="btn btn-secondary">Todo o Período</button>
+                </div> 
+                
+                <div class="toolbar-actions">
+                    <button id="btn-export-view" class="btn btn-secondary">
+                        <i class="fa-solid fa-download"></i> Baixar Relatório
+                    </button>
+                    <button id="btn-update" class="btn btn-primary">
+                        <i class="fa-solid fa-arrows-rotate"></i> Atualizar Dados
+                    </button>
+                </div>
+            </div>
 
             <div class="summary-cards">
                 <div class="card"><div class="card-accent"></div><h3>Total de Clientes</h3><div class="value" id="total-clients">0</div><div class="card-sub" id="total-leads-sub">0 leads no CRM</div></div>
@@ -416,12 +406,12 @@
                         <table id="clients-table">
                             <thead><tr>
                                 <th>Cliente</th>
-                                <th class="th-tip" data-tip="Indica a saúde geral do cliente com base em leads parados, data decay e número de usuários ativos.">Status <span class="tip-icon">?</span></th>
-                                <th class="th-tip" data-tip="Valor total (R$) dos leads convertidos em venda no período.">Receita <span class="tip-icon">?</span></th>
-                                <th class="th-tip" data-tip="Tempo médio em dias desde a criação do lead até o fechamento como ganho. Quanto menor, mais eficiente.">Ciclo Médio <span class="tip-icon">?</span></th>
+                                <th class="th-tip" data-tip="Saúde do FUNIL filtrado: 40% taxa de conversão, 35% vendedores ativos (últimos 7d), 25% leads parados em etapas ativas (excluindo Follow-up, Não Respondeu, Nutrição).">Status <span class="tip-icon">?</span></th>
+                                <th class="th-tip" data-tip="Valor (R$) dos leads convertidos no funil filtrado.">Receita <span class="tip-icon">?</span></th>
+                                <th class="th-tip" data-tip="Tempo médio em dias desde a criação do lead até o fechamento como ganho no funil filtrado.">Ciclo Médio <span class="tip-icon">?</span></th>
                                 <th class="th-tip" data-tip="Quantidade total de leads no CRM do cliente no período.">Leads <span class="tip-icon">?</span></th>
-                                <th class="th-tip" data-tip="Leads sem atualização há mais de 14 dias. Indica gargalos ou falta de follow-up.">Parados (&gt;14d) <span class="tip-icon">?</span></th>
-                                <th class="th-tip" data-tip="Leads sem atualização há mais de 30 dias e sem tarefa futura. Risco alto de perda.">Decay (&gt;30d) <span class="tip-icon">?</span></th>
+                                <th class="th-tip" data-tip="Leads sem atualização há mais de 14 dias em etapas ATIVAS (Follow-up, Não Respondeu, etc. são ignorados).">Parados (&gt;14d) <span class="tip-icon">?</span></th>
+                                <th class="th-tip" data-tip="Leads sem atualização há mais de 30 dias e sem tarefa futura em etapas ATIVAS.">Decay (&gt;30d) <span class="tip-icon">?</span></th>
                                 <th class="th-tip" data-tip="Tarefas no CRM que já passaram da data e não foram finalizadas.">Tarefas Atr. <span class="tip-icon">?</span></th>
                                 <th class="th-tip" data-tip="Usuários ativos na conta Kommo (administradores entre parênteses).">Usuários <span class="tip-icon">?</span></th>
                                 <th>Ação</th>
@@ -497,7 +487,6 @@
     </main>
 
     <script>
-        // Lógica visual simples para os menus laterais novos
         function handleMenuClick(menuName) {
             console.log(`Menu [${menuName}] clicado!`);
         }
@@ -559,7 +548,15 @@
 
         const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
-        // ─── CARREGAR CLIENTES ───
+        // ─── 🎯 HELPER: pega o pipeline ativo de um cliente ───
+        // Centraliza a lógica usada em todo lado: pega o pipeline que está no select,
+        // ou o primeiro como fallback. Retorna null se não houver funis.
+        function getActivePipelineForClient(client) {
+            if (!client || !client.pipelines || client.pipelines.length === 0) return null;
+            const selectedPipelineId = parseInt(document.getElementById('pipeline-selector').value);
+            return client.pipelines.find(p => p.id === selectedPipelineId) || client.pipelines[0];
+        }
+
         async function carregarClientesDropdown() {
             if (isPreviewEnv) return; 
             try {
@@ -577,7 +574,6 @@
             }
         }
 
-        // ─── SCROLL FADE LOGIC ───
         function setupTableScroll() {
             const scroll = document.getElementById('table-scroll');
             const fadeL = document.getElementById('fade-left');
@@ -608,12 +604,28 @@
             update();
         }
 
+        // ─── 🎯 NOVO: Lê o health score calculado pelo backend, baseado no FUNIL ATIVO ───
         function calculateHealthStatus(client) {
-            if (client.dataDecayLeads >= 5 || client.stagnantLeads >= 15 || client.usersTotal === 0)
-                return { class: 'status-danger', label: 'Em Risco', action: 'Limpar Pipeline Urgente', level: 'danger' };
-            if (client.dataDecayLeads >= 1 || client.stagnantLeads >= 5)
-                return { class: 'status-warning', label: 'Atenção', action: 'Revisar Gargalos', level: 'warning' };
-            return { class: 'status-good', label: 'Saudável', action: 'Tudo OK', level: 'good' };
+            const pipeline = getActivePipelineForClient(client);
+            
+            if (pipeline && pipeline.healthScore) {
+                const hs = pipeline.healthScore;
+                return {
+                    class: hs.classClass,
+                    label: hs.label,
+                    action: hs.action,
+                    level: hs.level,
+                    score: hs.score,
+                    breakdown: hs.breakdown
+                };
+            }
+            
+            return { 
+                class: 'status-warning', 
+                label: 'Sem Funil', 
+                action: 'Configurar CRM', 
+                level: 'warning' 
+            };
         }
 
         function getCycleClass(days) {
@@ -641,30 +653,46 @@
 
             clientesReais.forEach(client => {
                 const health = calculateHealthStatus(client);
+                
+                // 🎯 Pega métricas do FUNIL ATIVO (não da conta inteira)
+                const pipeline = getActivePipelineForClient(client);
+                
+                const stagnantValue = pipeline ? pipeline.stagnantLeads : (client.stagnantLeads || 0);
+                const decayValue = pipeline ? pipeline.dataDecayLeads : (client.dataDecayLeads || 0);
+                const cycleValue = pipeline ? pipeline.avgSalesCycle : (client.avgSalesCycle || 0);
+                const revenueValue = pipeline ? pipeline.wonRevenue : (client.wonRevenue || 0);
+                
                 if (health.level === 'good') healthyCount++;
                 else if (health.level === 'warning') warningCount++;
                 else if (health.level === 'danger') dangerCount++;
                 totalLeads += client.leadsLast30Days;
 
-                const estagnadoClass = client.stagnantLeads >= 15 ? 'danger-text' : (client.stagnantLeads > 0 ? 'overdue' : '');
-                const decayClass = client.dataDecayLeads >= 5 ? 'danger-text' : (client.dataDecayLeads > 0 ? 'decay-text' : '');
+                const estagnadoClass = stagnantValue >= 15 ? 'danger-text' : (stagnantValue > 0 ? 'overdue' : '');
+                const decayClass = decayValue >= 5 ? 'danger-text' : (decayValue > 0 ? 'decay-text' : '');
                 const overdueTaskClass = client.overdueTasks > 10 ? 'danger-text' : (client.overdueTasks > 0 ? 'tasks-overdue-text' : '');
-                const cycleClass = getCycleClass(client.avgSalesCycle);
-                const cycleDisplay = client.avgSalesCycle > 0 ? `${client.avgSalesCycle}d` : '—';
+                const cycleClass = getCycleClass(cycleValue);
+                const cycleDisplay = cycleValue > 0 ? `${cycleValue}d` : '—';
 
                 const recBadge = client.recorrencia
                     ? '<span class="rec-badge rec-yes">Recorrente</span>'
                     : '<span class="rec-badge rec-no">Avulso</span>';
 
+                // Tooltip do badge de status com breakdown do score
+                let healthTooltip = '';
+                if (health.score !== undefined && health.breakdown) {
+                    const b = health.breakdown;
+                    healthTooltip = `title="Score: ${health.score}/100&#10;• Conversão: ${b.conversao.pontos.toFixed(0)}/${b.conversao.max} (${b.conversao.detalhe})&#10;• Vendedores ativos: ${b.vendedoresAtivos.pontos.toFixed(0)}/${b.vendedoresAtivos.max} (${b.vendedoresAtivos.detalhe})&#10;• Leads parados: ${b.leadsParados.pontos.toFixed(0)}/${b.leadsParados.max} (${b.leadsParados.detalhe})"`;
+                }
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${client.name}</strong>${recBadge}</td>
-                    <td><span class="status-badge ${health.class}">${health.label}</span></td>
-                    <td class="finance-text">${formatCurrency(client.wonRevenue || 0)}</td>
+                    <td><span class="status-badge ${health.class}" ${healthTooltip} style="cursor:help;">${health.label}</span></td>
+                    <td class="finance-text">${formatCurrency(revenueValue)}</td>
                     <td><span class="cycle-text ${cycleClass}">${cycleDisplay}</span></td>
                     <td>${client.leadsLast30Days}</td>
-                    <td class="${estagnadoClass}">${client.stagnantLeads}</td>
-                    <td class="${decayClass}">${client.dataDecayLeads}</td>
+                    <td class="${estagnadoClass}">${stagnantValue}</td>
+                    <td class="${decayClass}">${decayValue}</td>
                     <td class="${overdueTaskClass}">${client.overdueTasks}</td>
                     <td><strong>${client.usersTotal}</strong><span class="admin-count">(${client.usersAdmins} Admins)</span></td>
                     <td><a href="#" class="action-link">${health.action}</a></td>`;
@@ -874,7 +902,9 @@
                     let rate = ant.passaram === 0 ? 0 : ((stage.passaram / ant.passaram) * 100).toFixed(1);
                     container.insertAdjacentHTML('beforeend', `<div class="conversion-arrow"><span>${rate}%</span><div class="arrow-icon">›››</div></div>`);
                 }
-                container.insertAdjacentHTML('beforeend', `<div class="funnel-stage"><h4>${stage.name}</h4><div class="count">${stage.count}</div><div class="time-in-stage">⏱ ${stage.avgDays}d média</div></div>`);
+                // 🎯 NOVO: marca visualmente as etapas tolerantes
+                const tolerantClass = stage.tolerante ? ' tolerant-stage' : '';
+                container.insertAdjacentHTML('beforeend', `<div class="funnel-stage${tolerantClass}"><h4>${stage.name}</h4><div class="count">${stage.count}</div><div class="time-in-stage">⏱ ${stage.avgDays}d média</div></div>`);
             });
 
             const decided = pd.results.won + pd.results.lost;
@@ -886,268 +916,268 @@
             document.getElementById('funnel-lost-percent').innerText = `${lostP}% de perda`;
         }
 
-        // ─── GERAÇÃO DO ONE PAGE REPORT COM 100% DE ACURÁCIA ───
-function gerarOnePageReport() {
-    // 1. Pegar os dados já filtrados (Recorrência + Cliente)
-    const dados = getDadosFiltrados();
-    const cid = document.getElementById('client-selector').value;
-    const isTodos = cid === 'todos';
+        // ─── GERAÇÃO DO ONE PAGE REPORT ───
+        function gerarOnePageReport() {
+            const dados = getDadosFiltrados();
+            const cid = document.getElementById('client-selector').value;
+            const isTodos = cid === 'todos';
 
-    if (!dados || dados.length === 0) {
-        alert("Nenhum dado disponível para gerar o relatório com os filtros atuais.");
-        return;
-    }
+            if (!dados || dados.length === 0) {
+                alert("Nenhum dado disponível para gerar o relatório com os filtros atuais.");
+                return;
+            }
 
-    const nomeOperacao = isTodos ? "Consolidado (Todos os Clientes)" : dados[0].name;
-    const dataInicio = document.getElementById('date-start').value || "Início";
-    const dataFim = document.getElementById('date-end').value || "Hoje";
-    const periodoStr = dataInicio !== "Início" ? `${dataInicio} até ${dataFim}` : "Todo o Período";
+            const nomeOperacao = isTodos ? "Consolidado (Todos os Clientes)" : dados[0].name;
+            const dataInicio = document.getElementById('date-start').value || "Início";
+            const dataFim = document.getElementById('date-end').value || "Hoje";
+            const periodoStr = dataInicio !== "Início" ? `${dataInicio} até ${dataFim}` : "Todo o Período";
 
-    // 2. Agregação Geral de Métricas
-    const leadsTotais = dados.reduce((acc, c) => acc + (c.leadsLast30Days || 0), 0);
-    const receita = dados.reduce((acc, c) => acc + (c.wonRevenue || 0), 0);
-    const cicloSoma = dados.reduce((acc, c) => acc + (c.avgSalesCycle || 0), 0);
-    const ciclo = dados.length > 0 ? parseFloat((cicloSoma / dados.length).toFixed(1)) : 0;
-    const estagnados = dados.reduce((acc, c) => acc + (c.stagnantLeads || 0), 0);
+            // 🎯 NOVO: agrega métricas do FUNIL ATIVO de cada cliente (não da conta inteira)
+            const leadsTotais = dados.reduce((acc, c) => acc + (c.leadsLast30Days || 0), 0);
+            const receita = dados.reduce((acc, c) => {
+                const p = getActivePipelineForClient(c);
+                return acc + (p ? (p.wonRevenue || 0) : (c.wonRevenue || 0));
+            }, 0);
+            const cicloSoma = dados.reduce((acc, c) => {
+                const p = getActivePipelineForClient(c);
+                return acc + (p ? (p.avgSalesCycle || 0) : (c.avgSalesCycle || 0));
+            }, 0);
+            const ciclo = dados.length > 0 ? parseFloat((cicloSoma / dados.length).toFixed(1)) : 0;
+            const estagnados = dados.reduce((acc, c) => {
+                const p = getActivePipelineForClient(c);
+                return acc + (p ? (p.stagnantLeads || 0) : (c.stagnantLeads || 0));
+            }, 0);
 
-    // 3. Agregação do Funil Selecionado (Exatamente o que está na tela)
-    const pd = getSelectedPipeline();
-    const vendas = pd ? pd.results.won : 0;
-    const perdas = pd ? pd.results.lost : 0;
-    const totalDecididos = vendas + perdas;
-    const taxaConversao = totalDecididos > 0 ? ((vendas / totalDecididos) * 100).toFixed(1) : 0;
-    const taxaPerda = totalDecididos > 0 ? ((perdas / totalDecididos) * 100).toFixed(1) : 0;
+            const pd = getSelectedPipeline();
+            const vendas = pd ? pd.results.won : 0;
+            const perdas = pd ? pd.results.lost : 0;
+            const totalDecididos = vendas + perdas;
+            const taxaConversao = totalDecididos > 0 ? ((vendas / totalDecididos) * 100).toFixed(1) : 0;
+            const taxaPerda = totalDecididos > 0 ? ((perdas / totalDecididos) * 100).toFixed(1) : 0;
 
-    // 4. Lógica de Saúde (Score)
-    let nota = 5;
-    let badgeColor = 'bg-yellow-500 text-black';
-    let statusText = 'Atenção — Oportunidade de Otimização';
-    let statusDot = 'bg-yellow-500';
+            // 🎯 NOVO: usa o health score real do funil em vez de regra local
+            let nota = 5, badgeColor = 'bg-yellow-500 text-black', statusText = 'Atenção', statusDot = 'bg-yellow-500';
+            if (pd && pd.healthScore) {
+                const hs = pd.healthScore;
+                nota = Math.round(hs.score / 10);
+                if (hs.level === 'good') {
+                    badgeColor = 'bg-green-500 text-white';
+                    statusText = `Saudável — ${hs.label}`;
+                    statusDot = 'bg-green-500';
+                } else if (hs.level === 'danger') {
+                    badgeColor = 'bg-red-500 text-white';
+                    statusText = `Risco Alto — ${hs.action}`;
+                    statusDot = 'bg-red-500';
+                } else {
+                    statusText = `${hs.label} — ${hs.action}`;
+                }
+            }
 
-    if (taxaConversao >= 30 && ciclo <= 15) {
-        nota = Math.min(10, 7 + (taxaConversao > 40 ? 1 : 0));
-        badgeColor = 'bg-green-500 text-white';
-        statusText = 'Saudável — Alta Performance';
-        statusDot = 'bg-green-500';
-    } else if (taxaPerda > 60 || ciclo > 45 || estagnados > 15) {
-        nota = Math.max(1, 4 - (taxaPerda > 80 ? 1 : 0));
-        badgeColor = 'bg-red-500 text-white';
-        statusText = 'Risco Alto — Revisão Urgente';
-        statusDot = 'bg-red-500';
-    } else {
-        nota = 6;
-    }
+            let leituraEstrategica = `<p class="text-gray-400 text-sm leading-relaxed mb-4">A operação registrou <strong>${leadsTotais} leads</strong> no CRM no período filtrado, gerando <strong>${formatCurrency(receita)}</strong> em receita com ${vendas} vendas e um ciclo médio de fechamento de ${ciclo} dias.</p>`;
+            
+            if (taxaPerda >= 50) {
+                leituraEstrategica += `<p class="text-gray-400 text-sm leading-relaxed mb-4">Apesar do volume, a taxa de perda de <strong>${taxaPerda}%</strong> é o principal ponto de atenção, sugerindo necessidade de ajustes em follow-up ou qualificação dos leads de entrada.</p>`;
+            } else if (taxaConversao > 0) {
+                leituraEstrategica += `<p class="text-gray-400 text-sm leading-relaxed mb-4">A operação sustenta uma taxa de conversão de <strong>${taxaConversao}%</strong>. O foco deve ser manter a eficiência e escalar campanhas de aquisição.</p>`;
+            }
 
-    // 5. Textos Dinâmicos e Leitura Estratégica
-    let leituraEstrategica = `<p class="text-gray-400 text-sm leading-relaxed mb-4">A operação registrou <strong>${leadsTotais} leads</strong> no CRM no período filtrado, gerando <strong>${formatCurrency(receita)}</strong> em receita com ${vendas} vendas e um ciclo médio de fechamento de ${ciclo} dias.</p>`;
-    
-    if (taxaPerda >= 50) {
-        leituraEstrategica += `<p class="text-gray-400 text-sm leading-relaxed mb-4">Apesar do volume, a taxa de perda de <strong>${taxaPerda}%</strong> é o principal ponto de atenção, sugerindo necessidade de ajustes em follow-up ou qualificação dos leads de entrada.</p>`;
-    } else if (taxaConversao > 0) {
-        leituraEstrategica += `<p class="text-gray-400 text-sm leading-relaxed mb-4">A operação sustenta uma taxa de conversão de <strong>${taxaConversao}%</strong>. O foco deve ser manter a eficiência e escalar campanhas de aquisição.</p>`;
-    }
+            let funilHTML = '';
+            if (pd && pd.stages) {
+                let acum = pd.results.won;
+                const etapas = [];
+                for (let i = pd.stages.length - 1; i >= 0; i--) {
+                    acum += pd.stages[i].count;
+                    etapas.unshift({ ...pd.stages[i], passaram: acum });
+                }
+                funilHTML = etapas.map(s => {
+                    const tolerantBadge = s.tolerante ? '<span class="text-purple-400 text-[9px] uppercase ml-2 font-bold tracking-wider">Tolerante</span>' : '';
+                    return `
+                    <div class="flex justify-between items-center bg-[#1a1a1a] p-4 rounded-lg mb-2 border border-gray-800">
+                        <div>
+                            <span class="text-gray-300 text-xs font-bold uppercase tracking-wider">${s.name}${tolerantBadge}</span>
+                            <span class="text-gray-500 text-xs block mt-1">Tempo Médio: ${s.avgDays} dias</span>
+                        </div>
+                        <span class="text-white font-mono font-bold text-xl">${s.count}</span>
+                    </div>
+                `;}).join('');
+            } else {
+                funilHTML = '<p class="text-gray-500 text-sm">Dados de funil indisponíveis.</p>';
+            }
 
-    // 6. Construir HTML do Funil Dinâmico
-    let funilHTML = '';
-    if (pd && pd.stages) {
-        let acum = pd.results.won;
-        const etapas = [];
-        for (let i = pd.stages.length - 1; i >= 0; i--) {
-            acum += pd.stages[i].count;
-            etapas.unshift({ ...pd.stages[i], passaram: acum });
+            const mergedLoss = {};
+            dados.forEach(c => {
+                if (!c.lossReasons) return;
+                c.lossReasons.forEach(lr => { mergedLoss[lr.name] = (mergedLoss[lr.name] || 0) + lr.count; });
+            });
+            const lossData = Object.entries(mergedLoss).map(([name, count]) => ({name, count})).sort((a,b) => b.count - a.count);
+            const totalPerdasVal = lossData.reduce((acc, curr) => acc + curr.count, 0);
+
+            let motivosPerdaHTML = '';
+            let planoAcaoHTML = '';
+            let usaMotivoGenerico = false;
+
+            if (lossData.length > 0) {
+                motivosPerdaHTML = lossData.map((motivo, index) => {
+                    const pct = totalPerdasVal > 0 ? ((motivo.count / totalPerdasVal) * 100).toFixed(1) : 0;
+                    if (motivo.name.toLowerCase().includes("sem motivo") && pct > 15) usaMotivoGenerico = true;
+                    return `
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-red-500/20 text-red-500 text-xs font-bold w-6 h-6 flex items-center justify-center rounded">${index + 1}</span>
+                                <span class="text-gray-200 text-sm font-medium truncate max-w-[200px]">${motivo.name}</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm font-mono">
+                                <span class="text-red-500 font-bold">${motivo.count}</span>
+                                <span class="text-gray-500">${pct}%</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-[#1e1e1e] h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-red-500 h-full rounded-full" style="width: ${pct}%"></div>
+                        </div>
+                    </div>`;
+                }).join('');
+            } else {
+                motivosPerdaHTML = '<p class="text-gray-500 text-sm">Sem motivos de perda registrados.</p>';
+            }
+
+            if (usaMotivoGenerico) {
+                planoAcaoHTML += `
+                <div class="border border-yellow-500/30 bg-[#1a1505] rounded-xl p-6 mb-4 border-l-4 border-l-yellow-500">
+                    <span class="bg-yellow-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Importante</span>
+                    <h4 class="text-lg font-bold text-white mb-2">Reduzir Uso do Motivo Genérico</h4>
+                    <p class="text-gray-400 text-sm mb-4">Muitos negócios estão sendo perdidos sem clareza do motivo real. É necessário treinar a equipe para classificar as perdas corretamente no CRM.</p>
+                </div>`;
+            }
+            if (estagnados > 0) {
+                planoAcaoHTML += `
+                <div class="border border-green-500/30 bg-[#0a1a10] rounded-xl p-6 mb-4 border-l-4 border-l-green-500">
+                    <span class="bg-green-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Melhoria</span>
+                    <h4 class="text-lg font-bold text-white mb-2">Higienizar Base Estagnada</h4>
+                    <p class="text-gray-400 text-sm">Existem ${estagnados} leads sem interação recente em etapas ativas. Criar um fluxo de reativação ou descartá-los para manter as métricas precisas.</p>
+                </div>`;
+            }
+            if(planoAcaoHTML === '') {
+                planoAcaoHTML = `
+                <div class="border border-blue-500/30 bg-[#0a121a] rounded-xl p-6 mb-4 border-l-4 border-l-blue-500">
+                    <span class="bg-blue-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Tração</span>
+                    <h4 class="text-lg font-bold text-white mb-2">Escalar Operação</h4>
+                    <p class="text-gray-400 text-sm">A operação não apresenta gargalos críticos no CRM. Momento ideal para escalar o volume de geração de demanda (Topo de Funil).</p>
+                </div>`;
+            }
+
+            const htmlContent = `
+            <!DOCTYPE html>
+            <html lang="pt-BR">
+            <head>
+                <meta charset="UTF-8">
+                <title>OnePage Report - ${nomeOperacao}</title>
+                <script src="https://cdn.tailwindcss.com"><\/script>
+                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+                <style>
+                    body { font-family: 'Outfit', sans-serif; background-color: #0d0d0d; color: #ffffff; }
+                    .font-mono { font-family: 'JetBrains Mono', monospace; }
+                    .card { background-color: #141414; border: 1px solid #262626; border-radius: 12px; }
+                </style>
+            </head>
+            <body class="p-8 max-w-5xl mx-auto">
+                <header class="flex items-center justify-between mb-8 pb-4 border-b border-gray-800">
+                    <div class="flex items-center gap-4">
+                        <h1 class="text-2xl font-black text-red-600 tracking-tighter">V4 COMPANY</h1>
+                        <span class="border border-gray-700 bg-[#1a1a1a] text-gray-300 text-xs px-3 py-1 rounded-full">Operação: ${nomeOperacao}</span>
+                        <span class="border border-gray-700 bg-[#1a1a1a] text-gray-300 text-xs px-3 py-1 rounded-full">Funil: ${pd ? pd.name : '—'}</span>
+                        <span class="border border-gray-700 bg-[#1a1a1a] text-gray-300 text-xs px-3 py-1 rounded-full">${periodoStr}</span>
+                    </div>
+                </header>
+
+                <h2 class="text-3xl font-bold mb-8">Relatório de Saúde CRM</h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div class="card p-6">
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Total de Leads</p>
+                        <p class="text-3xl font-bold font-mono text-white">${leadsTotais}</p>
+                        <p class="text-xs text-gray-500 mt-2">Visão Geral</p>
+                    </div>
+                    <div class="card p-6">
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Vendas (Ganho)</p>
+                        <p class="text-3xl font-bold font-mono text-green-500">${vendas}</p>
+                        <p class="text-xs text-gray-500 mt-2">${taxaConversao}% de conversão</p>
+                    </div>
+                    <div class="card p-6">
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Perdas (Lost)</p>
+                        <p class="text-3xl font-bold font-mono text-red-500">${perdas}</p>
+                        <p class="text-xs text-gray-500 mt-2">${taxaPerda}% de perda</p>
+                    </div>
+                    <div class="card p-6">
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Receita Gerada</p>
+                        <p class="text-3xl font-bold font-mono text-green-500">${formatCurrency(receita)}</p>
+                        <p class="text-xs text-gray-500 mt-2">Ciclo de ${ciclo} dias</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-10">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 border-l-2 border-red-500 pl-3">Arquitetura do Funil</h3>
+                        <div class="card p-6 mb-6 bg-[#0a0a0a]">
+                            ${funilHTML}
+                        </div>
+                    </div>
+                    <div class="card p-8 h-fit">
+                        <h3 class="text-xl font-bold mb-6 border-l-2 border-red-500 pl-3">Principais Motivos de Perda</h3>
+                        <div class="pr-2">
+                            ${motivosPerdaHTML}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-10">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Leitura Estratégica</h3>
+                        <div class="mb-8">${leituraEstrategica}</div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Plano de Ação Executivo</h3>
+                        ${planoAcaoHTML}
+                    </div>
+                </div>
+
+                <div class="card p-8 flex justify-between items-center bg-[#0a0a0a] border-gray-800">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase font-bold mb-1">Saúde Operacional</p>
+                        <div class="flex items-center gap-3 mt-2">
+                            <span class="w-3 h-3 rounded-full ${statusDot}"></span>
+                            <span class="text-lg font-semibold text-white">${statusText}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="${badgeColor} px-4 py-2 rounded-lg font-bold font-mono text-xl inline-block mb-2">Score: ${nota}/10</div>
+                        <p class="text-xs text-gray-500 uppercase font-bold mt-1">Gerado via API Kommo</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            `;
+
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Report_${nomeOperacao.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.html`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
-        funilHTML = etapas.map(s => `
-            <div class="flex justify-between items-center bg-[#1a1a1a] p-4 rounded-lg mb-2 border border-gray-800">
-                <div>
-                    <span class="text-gray-300 text-xs font-bold uppercase tracking-wider">${s.name}</span>
-                    <span class="text-gray-500 text-xs block mt-1">Tempo Médio: ${s.avgDays} dias</span>
-                </div>
-                <span class="text-white font-mono font-bold text-xl">${s.count}</span>
-            </div>
-        `).join('');
-    } else {
-        funilHTML = '<p class="text-gray-500 text-sm">Dados de funil indisponíveis.</p>';
-    }
 
-    // 7. Construir HTML dos Motivos de Perda Consolidado
-    const mergedLoss = {};
-    dados.forEach(c => {
-        if (!c.lossReasons) return;
-        c.lossReasons.forEach(lr => { mergedLoss[lr.name] = (mergedLoss[lr.name] || 0) + lr.count; });
-    });
-    const lossData = Object.entries(mergedLoss).map(([name, count]) => ({name, count})).sort((a,b) => b.count - a.count);
-    const totalPerdasVal = lossData.reduce((acc, curr) => acc + curr.count, 0);
-
-    let motivosPerdaHTML = '';
-    let planoAcaoHTML = '';
-    let usaMotivoGenerico = false;
-
-    if (lossData.length > 0) {
-        motivosPerdaHTML = lossData.map((motivo, index) => {
-            const pct = totalPerdasVal > 0 ? ((motivo.count / totalPerdasVal) * 100).toFixed(1) : 0;
-            if (motivo.name.toLowerCase().includes("sem motivo") && pct > 15) usaMotivoGenerico = true;
-            return `
-            <div class="mb-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center gap-3">
-                        <span class="bg-red-500/20 text-red-500 text-xs font-bold w-6 h-6 flex items-center justify-center rounded">${index + 1}</span>
-                        <span class="text-gray-200 text-sm font-medium truncate max-w-[200px]">${motivo.name}</span>
-                    </div>
-                    <div class="flex items-center gap-4 text-sm font-mono">
-                        <span class="text-red-500 font-bold">${motivo.count}</span>
-                        <span class="text-gray-500">${pct}%</span>
-                    </div>
-                </div>
-                <div class="w-full bg-[#1e1e1e] h-1.5 rounded-full overflow-hidden">
-                    <div class="bg-red-500 h-full rounded-full" style="width: ${pct}%"></div>
-                </div>
-            </div>`;
-        }).join('');
-    } else {
-        motivosPerdaHTML = '<p class="text-gray-500 text-sm">Sem motivos de perda registrados.</p>';
-    }
-
-    // 8. Construir Plano de Ação Dinâmico
-    if (usaMotivoGenerico) {
-        planoAcaoHTML += `
-        <div class="border border-yellow-500/30 bg-[#1a1505] rounded-xl p-6 mb-4 border-l-4 border-l-yellow-500">
-            <span class="bg-yellow-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Importante</span>
-            <h4 class="text-lg font-bold text-white mb-2">Reduzir Uso do Motivo Genérico</h4>
-            <p class="text-gray-400 text-sm mb-4">Muitos negócios estão sendo perdidos sem clareza do motivo real. É necessário treinar a equipe para classificar as perdas corretamente no CRM.</p>
-        </div>`;
-    }
-    if (estagnados > 0) {
-        planoAcaoHTML += `
-        <div class="border border-green-500/30 bg-[#0a1a10] rounded-xl p-6 mb-4 border-l-4 border-l-green-500">
-            <span class="bg-green-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Melhoria</span>
-            <h4 class="text-lg font-bold text-white mb-2">Higienizar Base Estagnada</h4>
-            <p class="text-gray-400 text-sm">Existem ${estagnados} leads sem interação recente. Criar um fluxo de reativação ou descartá-los para manter as métricas precisas.</p>
-        </div>`;
-    }
-    if(planoAcaoHTML === '') {
-        planoAcaoHTML = `
-        <div class="border border-blue-500/30 bg-[#0a121a] rounded-xl p-6 mb-4 border-l-4 border-l-blue-500">
-            <span class="bg-blue-500 text-black text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-3 inline-block">Tração</span>
-            <h4 class="text-lg font-bold text-white mb-2">Escalar Operação</h4>
-            <p class="text-gray-400 text-sm">A operação não apresenta gargalos críticos no CRM. Momento ideal para escalar o volume de geração de demanda (Topo de Funil).</p>
-        </div>`;
-    }
-
-    // 9. Montar HTML Final (Template)
-    const htmlContent = `
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <title>OnePage Report - ${nomeOperacao}</title>
-        <script src="https://cdn.tailwindcss.com"><\/script>
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <style>
-            body { font-family: 'Outfit', sans-serif; background-color: #0d0d0d; color: #ffffff; }
-            .font-mono { font-family: 'JetBrains Mono', monospace; }
-            .card { background-color: #141414; border: 1px solid #262626; border-radius: 12px; }
-        </style>
-    </head>
-    <body class="p-8 max-w-5xl mx-auto">
-        <header class="flex items-center justify-between mb-8 pb-4 border-b border-gray-800">
-            <div class="flex items-center gap-4">
-                <h1 class="text-2xl font-black text-red-600 tracking-tighter">V4 COMPANY</h1>
-                <span class="border border-gray-700 bg-[#1a1a1a] text-gray-300 text-xs px-3 py-1 rounded-full">Operação: ${nomeOperacao}</span>
-                <span class="border border-gray-700 bg-[#1a1a1a] text-gray-300 text-xs px-3 py-1 rounded-full">${periodoStr}</span>
-            </div>
-        </header>
-
-        <h2 class="text-3xl font-bold mb-8">Relatório de Saúde CRM</h2>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="card p-6">
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Total de Leads</p>
-                <p class="text-3xl font-bold font-mono text-white">${leadsTotais}</p>
-                <p class="text-xs text-gray-500 mt-2">Visão Geral</p>
-            </div>
-            <div class="card p-6">
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Vendas (Ganho)</p>
-                <p class="text-3xl font-bold font-mono text-green-500">${vendas}</p>
-                <p class="text-xs text-gray-500 mt-2">${taxaConversao}% de conversão</p>
-            </div>
-            <div class="card p-6">
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Perdas (Lost)</p>
-                <p class="text-3xl font-bold font-mono text-red-500">${perdas}</p>
-                <p class="text-xs text-gray-500 mt-2">${taxaPerda}% de perda</p>
-            </div>
-            <div class="card p-6">
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Receita Gerada</p>
-                <p class="text-3xl font-bold font-mono text-green-500">${formatCurrency(receita)}</p>
-                <p class="text-xs text-gray-500 mt-2">Ciclo de ${ciclo} dias</p>
-            </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-8 mb-10">
-            <div>
-                <h3 class="text-xl font-bold mb-4 border-l-2 border-red-500 pl-3">Arquitetura do Funil</h3>
-                <div class="card p-6 mb-6 bg-[#0a0a0a]">
-                    ${funilHTML}
-                </div>
-            </div>
-            <div class="card p-8 h-fit">
-                <h3 class="text-xl font-bold mb-6 border-l-2 border-red-500 pl-3">Principais Motivos de Perda</h3>
-                <div class="pr-2">
-                    ${motivosPerdaHTML}
-                </div>
-            </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-8 mb-10">
-            <div>
-                <h3 class="text-xl font-bold mb-4">Leitura Estratégica</h3>
-                <div class="mb-8">${leituraEstrategica}</div>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold mb-4">Plano de Ação Executivo</h3>
-                ${planoAcaoHTML}
-            </div>
-        </div>
-
-        <div class="card p-8 flex justify-between items-center bg-[#0a0a0a] border-gray-800">
-            <div>
-                <p class="text-xs text-gray-500 uppercase font-bold mb-1">Saúde Operacional</p>
-                <div class="flex items-center gap-3 mt-2">
-                    <span class="w-3 h-3 rounded-full ${statusDot}"></span>
-                    <span class="text-lg font-semibold text-white">${statusText}</span>
-                </div>
-            </div>
-            <div class="text-right">
-                <div class="${badgeColor} px-4 py-2 rounded-lg font-bold font-mono text-xl inline-block mb-2">Score: ${nota}/10</div>
-                <p class="text-xs text-gray-500 uppercase font-bold mt-1">Gerado via API Kommo</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    `;
-
-    // 10. Forçar Download
-    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Report_${nomeOperacao.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.html`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-}
-
-        // ─── API FETCH ───
         async function buscarDadosDaApi(dataInicioStr = '', dataFimStr = '') {
             try {
                 const tbody = document.querySelector('#clients-table tbody');
                 tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 48px; color: var(--text-muted);"><div style="display:inline-block;width:18px;height:18px;border:2px solid var(--border-light);border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite;margin-right:10px;vertical-align:middle;"></div>Analisando API do Kommo...</td></tr>';
                 document.getElementById('btn-update').innerText = 'Calculando...';
 
-                // Ignorar fetch local no preview codepen/etc
                 if (isPreviewEnv) {
                     tbody.innerHTML = `<tr><td colspan="10" style="color: var(--text-main); text-align: center; padding: 48px; background: rgba(255,255,255,0.02); border-radius: 8px;"><strong>⚠️ Ambiente de Visualização:</strong> O design está pronto! Rode este HTML junto com o seu servidor para visualizar os dados reais da API.</td></tr>`;
-                    document.getElementById('btn-update').innerHTML = '⟳ &nbsp;Atualizar Dados';
+                    document.getElementById('btn-update').innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Atualizar Dados';
                     return;
                 }
 
@@ -1168,25 +1198,30 @@ function gerarOnePageReport() {
                 console.error("Erro Fatal:", error);
                 document.querySelector('#clients-table tbody').innerHTML = `<tr><td colspan="10" style="color: var(--primary); text-align: center; padding: 48px;"><strong>ERRO:</strong> Não foi possível conectar ao servidor.</td></tr>`;
             } finally {
-                document.getElementById('btn-update').innerHTML = '⟳ &nbsp;Atualizar Dados';
+                document.getElementById('btn-update').innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Atualizar Dados';
             }
         }
 
         // ─── EVENTS ───
         document.getElementById('btn-all-time').addEventListener('click', () => { document.getElementById('date-start').value = ''; document.getElementById('date-end').value = ''; buscarDadosDaApi(); });
         document.getElementById('btn-update').addEventListener('click', () => { buscarDadosDaApi(document.getElementById('date-start').value, document.getElementById('date-end').value); });
-        
-        // EVENTO DO BOTÃO DE DOWNLOAD
         document.getElementById('btn-export-view').addEventListener('click', gerarOnePageReport);
-        
         document.getElementById('client-selector').addEventListener('change', () => { buscarDadosDaApi(document.getElementById('date-start').value, document.getElementById('date-end').value); });
         document.getElementById('recorrencia-filter').addEventListener('change', () => { aplicarFiltroRecorrencia(); });
+        
+        // 🎯 PATCH 3: Re-renderiza a tabela ao trocar funil (health score depende do funil ativo)
         document.getElementById('pipeline-selector').addEventListener('change', (e) => {
             const cid = document.getElementById('client-selector').value;
             const c = cid === "todos" ? dadosGlobais[0] : dadosGlobais.find(c => c.id === parseInt(cid));
             if (c && c.pipelines) {
                 const p = c.pipelines.find(p => p.id === parseInt(e.target.value));
-                if (p) { renderFunnel(p); atualizarGraficosPorPipeline(p); }
+                if (p) { 
+                    renderFunnel(p); 
+                    atualizarGraficosPorPipeline(p);
+                    // Re-renderiza tabela pra atualizar health score + métricas por funil
+                    const dados = getDadosFiltrados();
+                    renderDashboard(dados);
+                }
             }
         });
 
