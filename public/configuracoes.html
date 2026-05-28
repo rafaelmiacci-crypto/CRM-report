@@ -652,6 +652,9 @@
                     title: "Como ler a Matriz",
                     shortDesc: "Definição R.A.C.I.",
                     fullDesc: `
+                        <div class="mb-4">
+                            <p class="text-gray-400 text-sm">Passe por cada etapa e valide de onde vem a demanda (teste de mesa). Não pode haver ambiguidade de múltiplos <strong>Responsáveis (R)</strong> para a mesma origem, cada cenário tem um dono claro.</p>
+                        </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="bg-[#111] border border-white/5 p-5 rounded-xl">
                                 <span class="raci-badge raci-r mb-2 block">R</span>
@@ -688,152 +691,176 @@
                             <h2 class="text-2xl font-sans font-black text-white uppercase tracking-tight mb-2">Atribuições: Ciclo Completo do Projeto</h2>
                             <p class="text-gray-400 text-sm mb-6 max-w-2xl">Esta matriz mapeia as obrigações e aprovações de cada tarefa do Ekyte, blindando o processo contra ruídos entre as áreas. Você (Especialista CRM) centraliza a arquitetura e execução; Vendas, Operação e Account lideram as origens de monetização e relacionamento; e o Gestor afiança a qualidade técnica.</p>
                             
-                            <div class="overflow-hidden rounded-xl border border-white/10 shadow-2xl overflow-x-auto">
-                                <table class="w-full text-sm text-left border-collapse min-w-[1000px]">
-                                    <thead class="bg-[#1a1a1a] text-[11px] text-gray-300 uppercase tracking-widest">
+                            <div class="rounded-xl lg:border border-white/10 lg:shadow-2xl overflow-x-hidden lg:overflow-x-auto">
+                                <table class="w-full text-sm text-left border-collapse flex flex-col lg:table min-w-full">
+                                    <thead class="bg-[#1a1a1a] text-[11px] text-gray-300 uppercase tracking-widest hidden lg:table-header-group">
                                         <tr>
                                             <th class="px-5 py-4 border-b border-r border-white/5 font-bold w-1/4">Etapa Ekyte / Tarefa</th>
                                             <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight">Vendas <br><span class="text-[9px] font-normal text-gray-500">(Comum)</span></th>
                                             <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight">Operação <br><span class="text-[9px] font-normal text-gray-500">(Monetização)</span></th>
-                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight">Account <br><span class="text-[9px] font-normal text-gray-500">(Monetização)</span></th>
+                                            <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight">Account <br><span class="text-[9px] font-normal text-gray-500">(Saber)</span></th>
                                             <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight bg-v4red/10 text-white">Especialista CRM <br><span class="text-[9px] font-normal text-v4red">(Você - Squad TER)</span></th>
                                             <th class="px-3 py-4 border-b border-r border-white/5 text-center leading-tight bg-white/5">Pedro / Caio <br><span class="text-[9px] font-normal text-gray-500">(Gestão TER)</span></th>
                                             <th class="px-3 py-4 border-b border-white/5 text-center">Cliente</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-[#0f0f0f]">
+                                    <tbody class="flex flex-col lg:table-row-group bg-transparent lg:bg-[#0f0f0f]">
                                         
                                         <!-- GRUPO: PRÉ-PROJETO -->
-                                        <tr class="bg-black">
-                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-gray-500 uppercase tracking-widest">Fase 0: Pré-Projeto</td>
+                                        <tr class="flex lg:table-row bg-transparent lg:bg-black mt-2 lg:mt-0 mb-2 lg:mb-0">
+                                            <td colspan="7" class="block lg:table-cell px-2 lg:px-5 py-2 lg:border-y border-white/10 text-xs font-bold text-gray-500 uppercase tracking-widest border-l-2 border-gray-500 lg:border-l-0">Fase 0: Pré-Projeto (Por Origem)</td>
                                         </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-gray-200">Venda Original e Escopo Comercial</span><br>
-                                                <span class="text-[10px] text-gray-500">Garantir venda alinhada com o Guia do Produto.</span>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-gray-200">Venda: Origem Aquisição (Comercial)</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0">Escopo fechado pelo time de Vendas.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-c">C</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-3 py-4 text-center">-</td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vendas (Comum)</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-c">C</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-a">A</span></td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b border-white/5 text-center">-</td>
+                                        </tr>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-gray-200">Venda: Origem Monetização (Squad Saber)</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0">Escopo fechado pelo Account.</span>
+                                            </td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Account (Saber)</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-c">C</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-a">A</span></td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b border-white/5 text-center">-</td>
+                                        </tr>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-gray-200">Venda: Origem Monetização (Operação)</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0">Escopo fechado pelo time do Executar.</span>
+                                            </td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Operação (Monetização)</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-c">C</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-a">A</span></td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b border-white/5 text-center">-</td>
                                         </tr>
 
                                         <!-- GRUPO: SEMANA 1 -->
-                                        <tr class="bg-black">
-                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 1: Planejamento & Aceite (SLA: 5 Dias)</td>
+                                        <tr class="flex lg:table-row bg-transparent lg:bg-black mt-2 lg:mt-0 mb-2 lg:mb-0">
+                                            <td colspan="7" class="block lg:table-cell px-2 lg:px-5 py-2 lg:border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest border-l-2 border-v4red lg:border-l-0">Semana 1: Planejamento & Aceite (SLA: 5 Dias)</td>
                                         </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">1/2/3. Onboarding & Blueprint Estratégico</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Termos de aceite, Mapeamento e Aprovação.</span>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">1/2/3. Onboarding & Blueprint Estratégico</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0 pl-0 lg:pl-2.5">Termos de aceite, Mapeamento e Aprovação.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vendas (Comum)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Operação (Monetização)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Account (Saber)</span><span class="raci-badge raci-c">C</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-a">A</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cliente</span><span class="raci-badge raci-a">A</span></td>
                                         </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">4. [Gate] Faseamento de Tarefas / Pausa</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Follow-up Hardcore. Trava entre as semanas 1 e 2.</span>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">4. [Gate] Faseamento de Tarefas / Pausa</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0 pl-0 lg:pl-2.5">Follow-up Hardcore. Trava entre as semanas 1 e 2.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vendas (Comum)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Operação (Monetização)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Account (Saber)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-a">A</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cliente</span><span class="raci-badge raci-c">C</span></td>
                                         </tr>
 
                                         <!-- GRUPO: SEMANA 2 -->
-                                        <tr class="bg-black">
-                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 2: Engenharia e Conexões (SLA: 5 Dias)</td>
+                                        <tr class="flex lg:table-row bg-transparent lg:bg-black mt-2 lg:mt-0 mb-2 lg:mb-0">
+                                            <td colspan="7" class="block lg:table-cell px-2 lg:px-5 py-2 lg:border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest border-l-2 border-v4red lg:border-l-0">Semana 2: Engenharia e Conexões (SLA: 5 Dias)</td>
                                         </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">5/6/7. Deploy Sistêmico (Ekyte)</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Plataforma, Funis, Tags, Meta APIs e Zaps.</span>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">5/6/7. Deploy Sistêmico (Ekyte)</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0 pl-0 lg:pl-2.5">Plataforma, Funis, Tags, Meta APIs e Zaps.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Account (Saber)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cliente</span><span class="raci-badge raci-i">I</span></td>
                                         </tr>
 
                                         <!-- GRUPO: SEMANA 3 -->
-                                        <tr class="bg-black">
-                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest">Semana 3: Lançamento e Avaliação (SLA: 5 Dias)</td>
+                                        <tr class="flex lg:table-row bg-transparent lg:bg-black mt-2 lg:mt-0 mb-2 lg:mb-0">
+                                            <td colspan="7" class="block lg:table-cell px-2 lg:px-5 py-2 lg:border-y border-white/10 text-xs font-bold text-v4red uppercase tracking-widest border-l-2 border-v4red lg:border-l-0">Semana 3: Lançamento e Avaliação (SLA: 5 Dias)</td>
                                         </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">8. [QA] Quality Assurance</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Estresse técnico dos caminhos do Lead.</span>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">8. [QA] Quality Assurance</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0 pl-0 lg:pl-2.5">Estresse técnico dos caminhos do Lead.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-3 py-4 text-center">-</td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Account (Saber)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-a">A</span></td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b border-white/5 text-center">-</td>
                                         </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">9. [Call] Onboarding da Plataforma</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Habilitação técnica do time comercial.</span>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">9. [Call] Onboarding da Plataforma</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0 pl-0 lg:pl-2.5">Habilitação técnica do time comercial.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-c">C</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vendas (Comum)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Operação (Monetização)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Account (Saber)</span><span class="raci-badge raci-c">C</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cliente</span><span class="raci-badge raci-c">C</span></td>
                                         </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">10. [Trava] Gate NPS de Oficialização</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Auditoria de satisfação para passagem de bastão.</span>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-white border-l-2 border-v4red pl-2">10. [Trava] Gate NPS de Oficialização</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0 pl-0 lg:pl-2.5">Auditoria de satisfação para passagem de bastão.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-a">A</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vendas (Comum)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Operação (Monetização)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Account (Saber)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-a">A</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cliente</span><span class="raci-badge raci-a">A</span></td>
                                         </tr>
 
                                         <!-- GRUPO: MANUTENÇÃO & EXTRAS -->
-                                        <tr class="bg-black">
-                                            <td colspan="7" class="px-5 py-2 border-y border-white/10 text-xs font-bold text-blue-500 uppercase tracking-widest">Pós-Setup: Manutenção Orgânica</td>
+                                        <tr class="flex lg:table-row bg-transparent lg:bg-black mt-2 lg:mt-0 mb-2 lg:mb-0">
+                                            <td colspan="7" class="block lg:table-cell px-2 lg:px-5 py-2 lg:border-y border-white/10 text-xs font-bold text-blue-500 uppercase tracking-widest border-l-2 border-blue-500 lg:border-l-0">Pós-Setup: Manutenção Orgânica</td>
                                         </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">CRM Health Report</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Apresentação mensal de gargalos e taxa de uso.</span>
+                                        <tr class="flex flex-col lg:table-row mb-4 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">CRM Health Report</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0 pl-0 lg:pl-2.5">Apresentação mensal de gargalos e taxa de uso.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-c">C</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-a">A</span></td>
-                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Operação (Monetização)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Account (Saber)</span><span class="raci-badge raci-c">C</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-a">A</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cliente</span><span class="raci-badge raci-i">I</span></td>
                                         </tr>
-                                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                                            <td class="px-5 py-4 border-r border-white/5">
-                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">Suporte Técnico N1/N2</span><br>
-                                                <span class="text-[10px] text-gray-500 pl-2.5">Manutenção de conexões e dúvidas de plataforma.</span>
+                                        <tr class="flex flex-col lg:table-row mb-0 lg:mb-0 border border-white/10 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-white/5 rounded-xl lg:rounded-none bg-[#141414] lg:bg-transparent overflow-hidden lg:hover:bg-white/5 transition-colors shadow-lg lg:shadow-none">
+                                            <td class="flex flex-col lg:table-cell px-4 py-4 lg:px-5 border-b lg:border-r border-white/10 lg:border-white/5 bg-[#1a1a1a] lg:bg-transparent">
+                                                <span class="font-medium text-white border-l-2 border-blue-500 pl-2">Suporte Técnico N1/N2</span><br class="hidden lg:block">
+                                                <span class="text-[10px] text-gray-500 mt-1 lg:mt-0 pl-0 lg:pl-2.5">Manutenção de conexões e dúvidas de plataforma.</span>
                                             </td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center">-</td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-v4red/5"><span class="raci-badge raci-r">R</span></td>
-                                            <td class="px-3 py-4 border-r border-white/5 text-center bg-white/[0.02]"><span class="raci-badge raci-i">I</span></td>
-                                            <td class="px-3 py-4 text-center"><span class="raci-badge raci-i">I</span></td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="hidden lg:table-cell px-3 py-4 border-b lg:border-r border-white/5 text-center">-</td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Account (Saber)</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-v4red/5"><span class="lg:hidden text-[10px] font-bold text-v4red uppercase tracking-wider">Especialista CRM</span><span class="raci-badge raci-r">R</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-r border-white/5 lg:text-center lg:bg-white/[0.02]"><span class="lg:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Gestão TER</span><span class="raci-badge raci-i">I</span></td>
+                                            <td class="flex justify-between items-center lg:table-cell px-4 py-3 lg:px-3 lg:py-4 border-b lg:border-white/5 lg:text-center"><span class="lg:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cliente</span><span class="raci-badge raci-i">I</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
