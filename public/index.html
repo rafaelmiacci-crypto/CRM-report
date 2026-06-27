@@ -1205,7 +1205,20 @@
         // ─── EVENTS ───
         document.getElementById('btn-all-time').addEventListener('click', () => { document.getElementById('date-start').value = ''; document.getElementById('date-end').value = ''; buscarDadosDaApi(); });
         document.getElementById('btn-update').addEventListener('click', () => { buscarDadosDaApi(document.getElementById('date-start').value, document.getElementById('date-end').value); });
-        document.getElementById('btn-export-view').addEventListener('click', gerarOnePageReport);
+        document.getElementById('btn-export-view').addEventListener('click', async () => {
+            const btn = document.getElementById('btn-export-view');
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviando...';
+            btn.disabled = true;
+            await gerarOnePageReport();
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Enviado!';
+                setTimeout(() => {
+                    btn.innerHTML = textoOriginal;
+                    btn.disabled = false;
+                }, 2000);
+            }, 500);
+        });
         document.getElementById('client-selector').addEventListener('change', () => { buscarDadosDaApi(document.getElementById('date-start').value, document.getElementById('date-end').value); });
         document.getElementById('recorrencia-filter').addEventListener('change', () => { aplicarFiltroRecorrencia(); });
         
