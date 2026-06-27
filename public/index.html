@@ -1630,6 +1630,35 @@ Hub Operacional</span>
     </html>
     `;
  
+    // ─── 13.5 PAYLOAD PARA O N8N (dispara antes do download) ───
+    const payloadN8N = {
+        operacao: nomeOperacao,
+        funil: nomeFunil,
+        periodo: periodoStr,
+        dataGeracao: dataGeracao,
+        metricas: {
+            leadsTotais,
+            vendas,
+            perdas,
+            taxaConversao,
+            taxaPerda,
+            receita,
+            receitaPerdida,
+            ticketMedioGanho,
+            ticketMedioPerdido,
+            ciclo,
+            estagnados,
+            usuariosAtivos
+        },
+        saude: {
+            nota,
+            status: statusText
+        },
+        motivosPerda: pipe.lossReasons || [],
+        closers: pipe.closers || []
+    };
+    enviarRelatorioParaN8N(payloadN8N); // dispara em paralelo, não bloqueia o download
+
     // ─── 13. DOWNLOAD DO ARQUIVO ───
     try {
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
@@ -1654,6 +1683,26 @@ Hub Operacional</span>
         alert('Erro ao gerar o arquivo. Verifique o console (F12) para detalhes.');
     }
 }
+
+        // ─── ENVIO PARA O N8N ───
+        async function enviarRelatorioParaN8N(dadosRelatorio) {
+            const N8N_WEBHOOK_URL = 'https://SEU-N8N.com/webhook/relatorio-crm'; // 👈 troque pela sua URL
+
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosRelatorio)
+                });
+                if (response.ok) {
+                    console.log('[n8n] ✅ Relatório enviado ao Google Chat com sucesso.');
+                } else {
+                    console.error('[n8n] ❌ Erro ao enviar:', await response.text());
+                }
+            } catch (err) {
+                console.error('[n8n] ❌ Falha na requisição para o n8n:', err);
+            }
+        }
         // ─── API FETCH ───
         async function buscarDadosDaApi(dataInicioStr = '', dataFimStr = '') {
             try {
