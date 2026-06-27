@@ -1133,23 +1133,24 @@ Hub Operacional</span>
     }
  
     // ─── 3. IDENTIFICAÇÃO DO CLIENTE ───
-    // Quando "todos", agregamos métricas (mas o funil ainda precisa ser de UM cliente)
-    const isVisaoGlobal = cid === "todos";
-    const dadosFiltrados = (typeof getDadosFiltrados === 'function') ? getDadosFiltrados() : dadosGlobais;
- 
-    let cliente;
-    if (isVisaoGlobal) {
-        // Para visão global, usamos o primeiro cliente como referência de funil
-        // mas exibimos métricas agregadas onde aplicável
-        cliente = dadosFiltrados[0];
-    } else {
-        cliente = dadosGlobais.find(c => c.id == cid);
-    }
- 
-    if (!cliente) {
-        alert("⚠️ Cliente não encontrado nos dados carregados.");
-        return;
-    }
+const isVisaoGlobal = cid === "todos";
+const dadosFiltrados = (typeof getDadosFiltrados === 'function') ? getDadosFiltrados() : dadosGlobais;
+
+let cliente;
+if (isVisaoGlobal) {
+    // Visão global: usa o primeiro cliente dos dados JÁ filtrados (pelo filtro de recorrência)
+    cliente = dadosFiltrados[0];
+} else {
+    // Cliente específico: busca dentro dos dados filtrados (respeita filtro de recorrência)
+    cliente = dadosFiltrados.find(c => c.id == cid);
+    // Fallback: busca nos dados globais caso o filtro de recorrência tenha excluído o cliente
+    if (!cliente) cliente = dadosGlobais.find(c => c.id == cid);
+}
+
+if (!cliente) {
+    alert("⚠️ Cliente não encontrado nos dados carregados.\n\nVerifique se os dados foram atualizados e se o filtro de recorrência não está excluindo o cliente selecionado.");
+    return;
+}
  
     // ─── 4. CAPTURA DO FUNIL EXATO SELECIONADO NA TELA ───
     const selPid = document.getElementById('pipeline-selector').value;
@@ -1223,9 +1224,11 @@ Hub Operacional</span>
  
     const estagnados = (typeof pipe.stagnantLeads === 'number')
         ? pipe.stagnantLeads
-        : (cliente.stagnantLeads || 0);
- 
-    const usuariosAtivos = cliente.usersTotal || 0; // Usuários são por conta, não por funil
+        : (isVisaoGlobal ? (metricasAgregadas?.stagnantLeads || 0) : (cliente.stagnantLeads || 0));
+
+    const usuariosAtivos = isVisaoGlobal
+        ? (metricasAgregadas?.usersTotal || 0)
+        : (cliente.usersTotal || 0);
  
     // ═════════════════════════════════════════════════════════
     // ─── 6. GRÁFICO MENSAL (APENAS DO FUNIL SELECIONADO) ───
