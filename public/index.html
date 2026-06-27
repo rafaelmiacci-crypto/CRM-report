@@ -1107,7 +1107,8 @@ Hub Operacional</span>
             document.getElementById('funnel-lost-ticket').innerText = formatCurrency(ticketMedioLost);
         }
 
-        function gerarOnePageReport() {
+        // ✅ Como deve ficar
+async function gerarOnePageReport() {
     // ─── 1. CAPTURA DOS FILTROS ATUAIS DO DASHBOARD ───
     const cid = document.getElementById('client-selector').value;
     const dataInicioRaw = document.getElementById('date-start').value;
@@ -1635,23 +1636,60 @@ Hub Operacional</span>
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
- 
-        // Nome do arquivo descritivo: Cliente_Funil_Periodo.html
+
         const safeOp = nomeOperacao.replace(/[^\w]+/g, '_');
         const safeFunil = nomeFunil.replace(/[^\w]+/g, '_').substring(0, 30);
         const dataLabel = dataInicioRaw ? dataInicioRaw.replace(/-/g, '') : 'TodoPeriodo';
- 
+
         link.href = url;
         link.download = `V4_Report_${safeOp}_${safeFunil}_${dataLabel}.html`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
- 
+
         console.log('[Relatório] ✅ Download iniciado:', link.download);
     } catch (err) {
         console.error('[Relatório] ❌ Erro no download:', err);
         alert('Erro ao gerar o arquivo. Verifique o console (F12) para detalhes.');
+    }
+
+    // ─── 14. ENVIO AUTOMÁTICO AO GOOGLE CHAT (via backend) ───
+    try {
+        const summaryPayload = {
+            dataGeracao:     new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }),
+            nomeOperacao,
+            nomeFunil,
+            periodoStr,
+            totalClientes:   dadosGlobais.length,
+            leadsTotais,
+            vendas,
+            perdas,
+            taxaConversao:   parseFloat(taxaConversao),
+            taxaPerda:       parseFloat(taxaPerda),
+            receita,
+            cicloMedio:      ciclo,
+            leadsEstagnados: estagnados,
+            ticketMedioGanho,
+            ticketMedioPerdido,
+            nota
+        };
+
+        const resp = await fetch('/api/enviar-relatorio', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ summary: summaryPayload })
+        });
+
+        const result = await resp.json();
+        if (result.success) {
+            console.log('[Relatório] ✅ Enviado ao Google Chat com sucesso!');
+        } else {
+            console.warn('[Relatório] ⚠️ Falha ao enviar ao Google Chat:', result.error);
+        }
+    } catch (envioErr) {
+        // Não bloqueia o fluxo: o download já foi feito
+        console.warn('[Relatório] ⚠️ Erro na comunicação com o backend:', envioErr.message);
     }
 }
         // ─── API FETCH ───
@@ -1690,7 +1728,26 @@ Hub Operacional</span>
         }
 
         // ─── EVENTS ───
-        document.getElementById('btn-export-view').addEventListener('click', gerarOnePageReport);
+        document.getElementById('btn-export-view').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-export-view');
+    const textoOriginal = btn.innerHTML;
+
+    // Feedback visual imediato
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
+    btn.disabled = true;
+
+    try {
+        await gerarOnePageReport();
+    } finally {
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Enviado!';
+            setTimeout(() => {
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+            }, 2500);
+        }, 400);
+    }
+});
         document.getElementById('btn-all-time').addEventListener('click', () => { document.getElementById('date-start').value = ''; document.getElementById('date-end').value = ''; buscarDadosDaApi(); });
         document.getElementById('btn-update').addEventListener('click', () => { buscarDadosDaApi(document.getElementById('date-start').value, document.getElementById('date-end').value); });
         document.getElementById('client-selector').addEventListener('change', () => { buscarDadosDaApi(document.getElementById('date-start').value, document.getElementById('date-end').value); });
