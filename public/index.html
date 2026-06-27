@@ -1167,6 +1167,52 @@
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
+
+            // ─── ENVIO PARA O N8N ───
+            const payloadN8N = {
+                operacao: nomeOperacao,
+                funil: pd ? pd.name : '—',
+                periodo: periodoStr,
+                dataGeracao: new Date().toLocaleString('pt-BR'),
+                metricas: {
+                    leadsTotais,
+                    vendas,
+                    perdas,
+                    taxaConversao,
+                    taxaPerda,
+                    receita,
+                    ciclo,
+                    estagnados,
+                    usuariosAtivos: dadosGlobais.reduce((acc, c) => acc + (c.usersTotal || 0), 0)
+                },
+                saude: {
+                    nota,
+                    status: statusText
+                },
+                motivosPerda: lossData || [],
+                closers: pd ? (pd.closers || []) : []
+            };
+            enviarRelatorioParaN8N(payloadN8N);
+        }
+
+        // ─── ENVIO PARA O N8N ───
+        async function enviarRelatorioParaN8N(dadosRelatorio) {
+            const N8N_WEBHOOK_URL = 'https://SEU-N8N.com/webhook/relatorio-crm'; // 👈 troque pela sua URL
+
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosRelatorio)
+                });
+                if (response.ok) {
+                    console.log('[n8n] ✅ Relatório enviado ao Google Chat com sucesso.');
+                } else {
+                    console.error('[n8n] ❌ Erro ao enviar:', await response.text());
+                }
+            } catch (err) {
+                console.error('[n8n] ❌ Falha na requisição para o n8n:', err);
+            }
         }
 
         async function buscarDadosDaApi(dataInicioStr = '', dataFimStr = '') {
